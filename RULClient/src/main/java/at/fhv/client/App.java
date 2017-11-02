@@ -1,6 +1,9 @@
 package at.fhv.client;
 
+import at.fhv.client.presentation.home.HomeView;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -10,17 +13,20 @@ public class App extends Application {
         //load PersonManager
         //load WorkManager
         //load InstrumentationManager
+
+        launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        //LoginView appView = new LoginView();
 
-        //Scene scene = new Scene(appView.getView());
-        //stage.setTitle("OMAS");
-        //stage.setScene(scene);
-        //stage.getIcons().add(new Image("logo-omas.png"));
-        //stage.show();
+        HomeView appView = new HomeView();
+
+        Scene scene = new Scene(appView.getView());
+        stage.setTitle("RUL");
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("logo.png"));
+        stage.show();
     }
 
     @Override

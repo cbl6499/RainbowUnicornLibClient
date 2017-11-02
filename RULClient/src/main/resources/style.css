@@ -1,0 +1,15 @@
+.warningTextField {
+    -fx-text-box-border: orange;
+}
+
+.errorTextField {
+    -fx-text-box-border: red;
+}
+
+.warningSpecialField {
+    -fx-border-color: orange;
+}
+
+.errorSpecialField {
+    -fx-border-color: red;
+}

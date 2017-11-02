@@ -54,7 +54,7 @@
             <children>
                 <ImageView fitHeight="69.0" fitWidth="117.0" layoutX="16.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../../../../recources/logo.jpg" />
+                        <Image url="logo.png"/>
                     </image>
                 </ImageView>
                 <Label layoutX="105.0" layoutY="23.0" prefHeight="48.0" prefWidth="397.0" text="RainbowUnicornLib">

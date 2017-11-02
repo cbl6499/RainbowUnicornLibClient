@@ -1,4 +1,6 @@
 package at.fhv.client.presentation.viewcontainer;
 
-public class ViewcontainerView {
+import com.airhacks.afterburner.views.FXMLView;
+
+public class ViewcontainerView extends FXMLView {
 }

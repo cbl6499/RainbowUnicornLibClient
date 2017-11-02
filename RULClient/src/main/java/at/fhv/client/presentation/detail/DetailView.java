@@ -1,4 +1,6 @@
 package at.fhv.client.presentation.detail;
 
-public class DetailView {
+import com.airhacks.afterburner.views.FXMLView;
+
+public class DetailView extends FXMLView {
 }

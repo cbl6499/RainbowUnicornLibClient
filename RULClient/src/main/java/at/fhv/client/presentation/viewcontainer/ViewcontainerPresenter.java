@@ -1,4 +1,13 @@
 package at.fhv.client.presentation.viewcontainer;
 
-public class ViewcontainerPresenter {
+import javafx.fxml.Initializable;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ViewcontainerPresenter implements Initializable {
+
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }
