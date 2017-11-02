@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.client.presentation.home.HomePresenter">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.client.presentation.home.HomePresenter">
     <children>
         <Button fx:id="searchButton" layoutX="526.0" layoutY="169.0" mnemonicParsing="false" onAction="#search" text="Search" AnchorPane.rightAnchor="20.0" />
         <TabPane layoutY="211.0" prefHeight="430.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="220.0">
@@ -52,12 +52,12 @@
         <Button layoutX="526.0" layoutY="117.0" mnemonicParsing="false" text="Logout" AnchorPane.rightAnchor="20.0" />
         <Pane layoutX="13.0" layoutY="8.0" prefHeight="95.0" prefWidth="574.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
             <children>
-                <ImageView fitHeight="69.0" fitWidth="117.0" layoutX="16.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="69.0" fitWidth="117.0" layoutX="70.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@/logo.png"/>
+                        <Image url="@/logo.png" />
                     </image>
                 </ImageView>
-                <Label layoutX="105.0" layoutY="23.0" prefHeight="48.0" prefWidth="397.0" text="RainbowUnicornLib">
+                <Label layoutX="155.0" layoutY="23.0" prefHeight="48.0" prefWidth="397.0" text="RainbowUnicornLib">
                     <font>
                         <Font name="Apple Braille Outline 6 Dot" size="41.0" />
                     </font>
