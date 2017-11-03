@@ -47,10 +47,10 @@
                 </GridPane>
             </children>
         </GridPane>
-        <Pane layoutX="-58.0" layoutY="141.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="250.0" />
-        <Button layoutX="10.0" layoutY="175.0" mnemonicParsing="false" text="Bibliotheks Informationen" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
-        <Button layoutX="581.0" layoutY="155.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="149.0" text="Kundenverwaltung" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="155.0" />
-        <Button layoutX="717.8" layoutY="174.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" text="Logout" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0" />
+        <Pane layoutX="-58.0" layoutY="141.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="215.0" />
+        <Button layoutX="37.0" layoutY="157.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" text="Zurück" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="157.0" />
+        <Button layoutX="705.0" layoutY="157.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" text="Logout" AnchorPane.rightAnchor="15.799999999999955" AnchorPane.topAnchor="157.0" />
         <Separator layoutY="196.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Pane layoutX="15.0" layoutY="463.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="530.0" />
     </children>
 </AnchorPane>
