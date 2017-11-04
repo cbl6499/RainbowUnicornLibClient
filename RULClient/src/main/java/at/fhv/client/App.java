@@ -1,5 +1,8 @@
 package at.fhv.client;
 
+import at.fhv.client.presentation.detailbook.DetailBookView;
+import at.fhv.client.presentation.detaildvd.DetailDvdView;
+import at.fhv.client.presentation.detailmagazin.DetailMagazinView;
 import at.fhv.client.presentation.home.HomeView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,6 +24,9 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
 
         HomeView appView = new HomeView();
+        //DetailBookView appView = new DetailBookView();
+        //DetailDvdView appView = new DetailDvdView();
+        //DetailMagazinView appView = new DetailMagazinView();
 
         Scene scene = new Scene(appView.getView());
         stage.setTitle("RUL");

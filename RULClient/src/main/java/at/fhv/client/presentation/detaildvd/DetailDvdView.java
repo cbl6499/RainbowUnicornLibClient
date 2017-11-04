@@ -1,4 +1,6 @@
 package at.fhv.client.presentation.detaildvd;
 
-public class DetailDvdView {
+import com.airhacks.afterburner.views.FXMLView;
+
+public class DetailDvdView extends FXMLView {
 }

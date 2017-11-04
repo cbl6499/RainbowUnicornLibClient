@@ -1,4 +1,6 @@
 package at.fhv.client.presentation.detailmagazin;
 
-public class DetailMagazinView {
+import com.airhacks.afterburner.views.FXMLView;
+
+public class DetailMagazinView extends FXMLView {
 }
