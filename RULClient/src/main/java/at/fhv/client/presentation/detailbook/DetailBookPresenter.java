@@ -1,11 +1,11 @@
-package at.fhv.client.presentation.detail;
+package at.fhv.client.presentation.detailbook;
 
 import javafx.fxml.Initializable;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DetailPresenter implements Initializable {
+public class DetailBookPresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
 

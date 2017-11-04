@@ -24,6 +24,8 @@ public class App extends Application {
 
         Scene scene = new Scene(appView.getView());
         stage.setTitle("RUL");
+        stage.setMinWidth(820);
+        stage.setMinHeight(690);
         stage.setScene(scene);
         stage.getIcons().add(new Image("logo.png"));
         stage.show();
