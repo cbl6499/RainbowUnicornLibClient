@@ -131,6 +131,8 @@ public class HomePresenter implements Initializable {
         magazineEdition.setCellValueFactory(new PropertyValueFactory<>("_edition"));
 
         //bookResult = rmiCall.search(searchField.getText());
+        //dvdResult = rmiCall.search(searchField.getText());
+        //magazineResult = rmiCall.search(searchField.getText());
 
         ObservableList<Book> books = FXCollections.observableArrayList();
 
