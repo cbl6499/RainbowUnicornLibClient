@@ -144,21 +144,21 @@ public class HomePresenter implements Initializable {
                     ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
                     // buch hashmap iterieren und daten holen
-                    for (int i = 0; i<=bookArrayList.size(); i++) {
+                    for (int i = 0; i < bookArrayList.size(); i++) {
                         HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
                         books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
                                 bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
                     }
 
                     ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
-                    for (int i = 0; i<=dvdArrayList.size(); i++) {
+                    for (int i = 0; i < dvdArrayList.size(); i++) {
                         HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
                             dvds.add(new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
                                 dvdResult.get("pictureURL"), dvdResult.get("shelfPos")));
                     }
 
                     ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
-                    for (int i = 0; i<=magazineArrayList.size(); i++) {
+                    for (int i = 0; i < magazineArrayList.size(); i++) {
                         HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
                         magazines.add(new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
                                 magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
