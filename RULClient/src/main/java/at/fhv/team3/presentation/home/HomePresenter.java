@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.home;
 
+        import at.fhv.team3.domain.dto.simple.SimpleBook;
         import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
         import at.fhv.team3.domain.dto.BookDTO;
         import at.fhv.team3.domain.dto.DTO;
@@ -7,6 +8,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.domain.dto.MagazineDTO;
         import at.fhv.team3.presentation.bibinfo.BibInfoView;
         import at.fhv.team3.presentation.costumermanagement.CostumerManagementView;
+        import javafx.beans.property.SimpleStringProperty;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.event.ActionEvent;
@@ -31,7 +33,11 @@ package at.fhv.team3.presentation.home;
 public class HomePresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
+        bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
 
+        dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
+
+        magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
     }
 
     @FXML
@@ -120,15 +126,17 @@ public class HomePresenter implements Initializable {
     @FXML
     public void search(ActionEvent event) {
 
-        bookTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        bookAuthor.setCellValueFactory(new PropertyValueFactory<>("_author"));
-        bookIsbn.setCellValueFactory(new PropertyValueFactory<>("_isbn"));
+        bookTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        bookAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        bookIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
 
-        dvdTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        dvdRegisseur.setCellValueFactory(new PropertyValueFactory<>("_regisseur"));
+        dvdTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        dvdRegisseur.setCellValueFactory(new PropertyValueFactory<>("regisseur"));
 
-        magazineTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        magazineEdition.setCellValueFactory(new PropertyValueFactory<>("_edition"));
+        magazineTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        magazineEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
+
+
 
         if(!searchField.getText().isEmpty()) {
             try {
@@ -146,8 +154,17 @@ public class HomePresenter implements Initializable {
                     // buch hashmap iterieren und daten holen
                     for (int i = 0; i < bookArrayList.size(); i++) {
                         HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
+                        SimpleStringProperty id = new SimpleStringProperty(bookResult.get("id"));
+                        SimpleStringProperty title = new SimpleStringProperty(bookResult.get("title"));
+                        SimpleStringProperty publisher = new SimpleStringProperty(bookResult.get("publisher"));
+                        SimpleStringProperty author = new SimpleStringProperty(bookResult.get("author"));
+                        SimpleStringProperty isbn = new SimpleStringProperty(bookResult.get("isbn"));
+                        SimpleStringProperty edition = new SimpleStringProperty(bookResult.get("edition"));
+                        SimpleStringProperty pictureURL = new SimpleStringProperty(bookResult.get("pictureURL"));
+                        SimpleStringProperty shelfPos = new SimpleStringProperty(bookResult.get("shelfPos"));
                         books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
                                 bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
+
                     }
 
                     ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
@@ -164,17 +181,14 @@ public class HomePresenter implements Initializable {
                                 magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
                     }
 
+
                     bookTable.setItems(books);
 
                     dvdTable.setItems(dvds);
 
                     magazineTable.setItems(magazines);
 
-                    bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
 
-                    dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
-
-                    magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
 
 
             } catch (Exception e) {
