@@ -1,11 +1,12 @@
-package at.fhv.client.domain;
+package at.fhv.team3.domain.dto;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Created by ClemensB on 05.11.17.
+ * Created by David on 10/30/2017.
  */
-public class Book extends DTO{
+public class BookDTO extends DTO {
 
     private int _bookId;
     private String _title;
@@ -16,7 +17,7 @@ public class Book extends DTO{
     private String _pictureURL;
     private String _shelfPos;
 
-    public Book(int id, String title, String publisher, String author, String isbn, String edition, String pictureURL, String shelfPos){
+    public BookDTO(int id, String title, String publisher, String author, String isbn, String edition, String pictureURL, String shelfPos){
         _bookId = id;
         _title = title;
         _publisher = publisher;
@@ -71,8 +72,16 @@ public class Book extends DTO{
         _edition = edition;
     }
 
+    public String getEdition(){
+        return _edition;
+    }
+
     public void setPictureURL(String pictureURL){
         _pictureURL = pictureURL;
+    }
+
+    public String getPictureURL(){
+        return _pictureURL;
     }
 
     public void setShelfPos(String shelfPos){
@@ -91,7 +100,6 @@ public class Book extends DTO{
         return getBookId();
     }
 
-    @Override
     public HashMap<String, String> getAllData() {
         HashMap<String, String> allData = new HashMap<String, String>();
         allData.put("id", ""+_bookId);
@@ -106,7 +114,6 @@ public class Book extends DTO{
         return allData;
     }
 
-    @Override
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
         if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
@@ -114,4 +121,5 @@ public class Book extends DTO{
         }
         return false;
     }
+
 }

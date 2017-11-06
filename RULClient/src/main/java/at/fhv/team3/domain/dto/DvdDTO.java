@@ -1,18 +1,19 @@
-package at.fhv.client.domain;
+package at.fhv.team3.domain.dto;
 
 import java.util.HashMap;
 
 /**
- * Created by ClemensB on 05.11.17.
+ * Created by David on 10/30/2017.
  */
-public class Dvd extends DTO{
+public class DvdDTO extends DTO{
+
     private int _dvdId;
     private String _title;
     private String _regisseur;
     private String _pictureURL;
     private String _shelfPos;
 
-    public Dvd(int id, String title, String regisseur, String pictureURL, String shelfPos){
+    public DvdDTO(int id, String title, String regisseur, String pictureURL, String shelfPos){
         _dvdId = id;
         _title = title;
         _regisseur = regisseur;
@@ -64,7 +65,6 @@ public class Dvd extends DTO{
         return getDvdId();
     }
 
-    @Override
     public HashMap<String, String> getAllData() {
         HashMap<String, String> allData = new HashMap<String, String>();
         allData.put("id", ""+_dvdId);
@@ -75,7 +75,6 @@ public class Dvd extends DTO{
         return allData;
     }
 
-    @Override
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
         if(data.get("title").equals(_title) && data.get("regisseur").equals(_regisseur) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
