@@ -1,6 +1,8 @@
 package at.fhv.client.presentation.home;
 
+        import at.fhv.client.RMI.RMIMediaSearch;
         import at.fhv.client.domain.Book;
+        import at.fhv.client.domain.DTO;
         import at.fhv.client.domain.Dvd;
         import at.fhv.client.domain.Magazine;
         import at.fhv.client.presentation.bibinfo.BibInfoView;
@@ -19,6 +21,9 @@ package at.fhv.client.presentation.home;
         import javafx.stage.WindowEvent;
 
         import java.net.URL;
+        import java.rmi.registry.LocateRegistry;
+        import java.rmi.registry.Registry;
+        import java.util.ArrayList;
         import java.util.HashMap;
         import java.util.Optional;
         import java.util.ResourceBundle;
@@ -114,55 +119,71 @@ public class HomePresenter implements Initializable {
 
     @FXML
     public void search(ActionEvent event) {
-        HashMap<String, String> bookResult = new HashMap<String, String>();
-        HashMap<String, String> dvdResult = new HashMap<String, String>();
-        HashMap<String, String> magazineResult = new HashMap<String, String>();
 
-        bookTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        bookAuthor.setCellValueFactory(new PropertyValueFactory<>("_author"));
-        bookIsbn.setCellValueFactory(new PropertyValueFactory<>("_isbn"));
+        try {
+            Registry registry = LocateRegistry.getRegistry(1099);
+            RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
-        dvdTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        dvdRegisseur.setCellValueFactory(new PropertyValueFactory<>("_regisseur"));
+            if(searchField.getText()!= null) {
 
-        magazineTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
-        magazineEdition.setCellValueFactory(new PropertyValueFactory<>("_edition"));
+                ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());
 
-        //bookResult = rmiCall.search(searchField.getText());
-        //dvdResult = rmiCall.search(searchField.getText());
-        //magazineResult = rmiCall.search(searchField.getText());
+                ArrayList<DTO> bookArrayList= allMedias.get(0);
+                ArrayList<DTO> dvdArrayList = allMedias.get(1);
+                ArrayList<DTO> magazineArrayList = allMedias.get(2);
 
-        ObservableList<Book> books = FXCollections.observableArrayList();
+                bookTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
+                bookAuthor.setCellValueFactory(new PropertyValueFactory<>("_author"));
+                bookIsbn.setCellValueFactory(new PropertyValueFactory<>("_isbn"));
 
-        // buch hashmap iterieren und daten holen
-        for(String str : bookResult.values()){
-            books.add(new Book(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                    bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
+                dvdTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
+                dvdRegisseur.setCellValueFactory(new PropertyValueFactory<>("_regisseur"));
+
+                magazineTitle.setCellValueFactory(new PropertyValueFactory<>("_title"));
+                magazineEdition.setCellValueFactory(new PropertyValueFactory<>("_edition"));
+
+
+                ObservableList<Book> books = FXCollections.observableArrayList();
+
+                // buch hashmap iterieren und daten holen
+                for (int i = 0; i<=bookArrayList.size(); i++) {
+                    HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
+                    books.add(new Book(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
+                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
+                }
+
+                ObservableList<Dvd> dvds = FXCollections.observableArrayList();
+                for (int i = 0; i<=dvdArrayList.size(); i++) {
+                    HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
+                    dvds.add(new Dvd(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
+                            dvdResult.get("pictureURL"), dvdResult.get("shelfPos")));
+                }
+
+                ObservableList<Magazine> magazines = FXCollections.observableArrayList();
+                for (int i = 0; i<=magazineArrayList.size(); i++) {
+                    HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
+                    magazines.add(new Magazine(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
+                            magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
+                }
+
+                bookTable.setItems(books);
+
+                dvdTable.setItems(dvds);
+
+                magazineTable.setItems(magazines);
+
+                bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
+
+                dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
+
+                magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
+            }
+        } catch (Exception e) {
+            System.out.println("HelloClient exception: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        ObservableList<Dvd> dvds = FXCollections.observableArrayList();
-        for(String str : dvdResult.values()){
-            dvds.add(new Dvd(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
-                    dvdResult.get("pictureURL"), dvdResult.get("shelfPos")));
-        }
 
-        ObservableList<Magazine> magazines = FXCollections.observableArrayList();
-        for(String str : magazineResult.values()){
-            magazines.add(new Magazine(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
-                   magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
-        }
-
-        bookTable.setItems(books);
-
-        dvdTable.setItems(dvds);
-
-        magazineTable.setItems(magazines);
-
-        bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
-
-        dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
-
-        magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
     }
 
 }

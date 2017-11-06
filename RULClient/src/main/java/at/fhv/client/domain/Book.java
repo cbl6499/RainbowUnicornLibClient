@@ -1,9 +1,11 @@
 package at.fhv.client.domain;
 
+import java.util.HashMap;
+
 /**
  * Created by ClemensB on 05.11.17.
  */
-public class Book {
+public class Book extends DTO{
 
     private int _bookId;
     private String _title;
@@ -87,5 +89,29 @@ public class Book {
 
     public int getId() {
         return getBookId();
+    }
+
+    @Override
+    public HashMap<String, String> getAllData() {
+        HashMap<String, String> allData = new HashMap<String, String>();
+        allData.put("id", ""+_bookId);
+        allData.put("title", _title);
+        allData.put("publisher", _publisher);
+        allData.put("author", _author);
+        allData.put("isbn", _isbn);
+        allData.put("edition", _edition);
+        allData.put("pictureURL", _pictureURL);
+        allData.put("shelfPos", _shelfPos);
+
+        return allData;
+    }
+
+    @Override
+    public boolean equals(DTO dto) {
+        HashMap<String, String> data = dto.getAllData();
+        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
+            return true;
+        }
+        return false;
     }
 }
