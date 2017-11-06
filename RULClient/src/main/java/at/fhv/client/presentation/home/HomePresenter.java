@@ -25,7 +25,9 @@ package at.fhv.client.presentation.home;
 
 public class HomePresenter implements Initializable {
 
+    public void initialize(URL location, ResourceBundle resources) {
 
+    }
 
     @FXML
     private TableView<Book> bookTable;
@@ -49,16 +51,16 @@ public class HomePresenter implements Initializable {
     private TableColumn<Dvd, String> dvdRegisseur;
 
     @FXML
-    private Tab magazinTable;
-
-    @FXML
     private TableView<Magazine> magazineTable;
 
     @FXML
-    private TableColumn<Magazine, String > magazineTitle;
+    private TableColumn<Magazine, String> magazineTitle;
 
     @FXML
     private TableColumn<Magazine, String> magazineEdition;
+
+    @FXML
+    private Button searchButton;
 
     @FXML
     private TextField searchField;
@@ -69,11 +71,7 @@ public class HomePresenter implements Initializable {
     @FXML
     private Button CostumerManagementButton;
 
-    @FXML
-    private Button searchButton;
 
-    public void initialize(URL location, ResourceBundle resources) {
-    }
 
     @FXML
     private void handleButtonActionBibInfo(ActionEvent event) {
