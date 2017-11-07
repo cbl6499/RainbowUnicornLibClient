@@ -109,7 +109,6 @@ public class DetailBookPresenter implements Initializable {
                 ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
                 // buch hashmap iterieren und daten holen
-                System.out.println(bookArrayList.size());
                 for (int i = 0; i < bookArrayList.size(); i++) {
                     HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
                     books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),

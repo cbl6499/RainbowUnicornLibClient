@@ -49,6 +49,8 @@ public class DvdDTO extends DTO{
         _pictureURL = pictureURL;
     }
 
+    public String getPictureURL(){return _pictureURL;}
+
     public void setShelfPos(String shelfPos){
         _shelfPos = shelfPos;
     }

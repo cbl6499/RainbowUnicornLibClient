@@ -4,6 +4,8 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinView;
+        import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
+        import at.fhv.team3.presentation.detaildvd.DetailDvdView;
         import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
         import at.fhv.team3.domain.dto.BookDTO;
         import at.fhv.team3.domain.dto.DTO;
@@ -40,8 +42,11 @@ public class HomePresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         bookTable.getColumns();
+        bookTable.setPlaceholder(new Label("Bitte suchen!"));
         dvdTable.getColumns();
+        dvdTable.setPlaceholder(new Label("Bitte suchen!"));
         magazineTable.getColumns();
+        magazineTable.setPlaceholder(new Label("Bitte suchen!"));
     }
 
     @FXML
@@ -132,7 +137,7 @@ public class HomePresenter implements Initializable {
         bookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                if (event.getClickCount() == 1) {
                     BookDTO selectedItem = bookTable.getSelectionModel().getSelectedItem();
                     DetailBookView db = new DetailBookView();
                     Scene scene = new Scene(db.getView());
@@ -149,11 +154,32 @@ public class HomePresenter implements Initializable {
     }
 
     @FXML
+    public void clickdetaildvd(){
+        dvdTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (/*event.isPrimaryButtonDown() &&*/ event.getClickCount() == 1) {
+                    DvdDTO selectedItem = dvdTable.getSelectionModel().getSelectedItem();
+                    DetailDvdView dd = new DetailDvdView();
+                    Scene scene = new Scene(dd.getView());
+                    Stage stage = (Stage) dvdTable.getScene().getWindow();
+                    stage.setHeight(dvdTable.getScene().getWindow().getHeight());
+                    stage.setWidth(dvdTable.getScene().getWindow().getWidth());
+                    stage.setScene(scene);
+                    DetailDvdPresenter detailDvdPresenter = (DetailDvdPresenter) dd.getPresenter();
+                    detailDvdPresenter.setInfo(selectedItem);
+                    stage.show();
+                }
+            }
+        });
+    }
+
+    @FXML
     void clickdetailmagazine(MouseEvent event) {
         magazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                if (event.getClickCount() == 1) {
                     MagazineDTO selectedItem = magazineTable.getSelectionModel().getSelectedItem();
                     DetailMagazinView db = new DetailMagazinView();
                     Scene scene = new Scene(db.getView());
