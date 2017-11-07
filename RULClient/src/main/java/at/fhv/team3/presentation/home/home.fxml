@@ -55,7 +55,7 @@
       <Pane layoutX="-58.0" layoutY="141.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="250.0" />
         <TabPane prefHeight="356.0" prefWidth="718.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="252.0">
             <tabs>
-                <Tab text="Buch">
+                <Tab fx:id="bookTab" text="Buch">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="307.0" prefWidth="200.0">
                      <children>
@@ -70,7 +70,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="DVD">
+                <Tab fx:id="dvdTab" text="DVD">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -84,7 +84,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Magazin">
+                <Tab fx:id="magazineTab" text="Magazin">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="307.0" prefWidth="200.0">
                      <children>

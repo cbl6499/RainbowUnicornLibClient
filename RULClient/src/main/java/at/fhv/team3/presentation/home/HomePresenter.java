@@ -33,12 +33,19 @@ package at.fhv.team3.presentation.home;
 public class HomePresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
-        bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
-
-        dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
-
-        magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
+        bookTable.getColumns();
+        dvdTable.getColumns();
+        magazineTable.getColumns();
     }
+
+    @FXML
+    private Tab bookTab;
+
+    @FXML
+    private Tab dvdTab;
+
+    @FXML
+    private Tab magazineTab;
 
     @FXML
     private TableView<BookDTO> bookTable;
