@@ -79,7 +79,7 @@ public class DvdDTO extends DTO{
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("regisseur").equals(_regisseur) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
+        if(data.get("title").equals(_title) && data.get("regisseur").equals(_regisseur)){
             return true;
         }
         return false;

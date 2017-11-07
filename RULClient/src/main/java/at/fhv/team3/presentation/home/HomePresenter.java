@@ -235,34 +235,52 @@ public class HomePresenter implements Initializable {
 
                     ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
-                    // buch hashmap iterieren und daten holen
+
                     for (int i = 0; i < bookArrayList.size(); i++) {
                         HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
-                        SimpleStringProperty id = new SimpleStringProperty(bookResult.get("id"));
-                        SimpleStringProperty title = new SimpleStringProperty(bookResult.get("title"));
-                        SimpleStringProperty publisher = new SimpleStringProperty(bookResult.get("publisher"));
-                        SimpleStringProperty author = new SimpleStringProperty(bookResult.get("author"));
-                        SimpleStringProperty isbn = new SimpleStringProperty(bookResult.get("isbn"));
-                        SimpleStringProperty edition = new SimpleStringProperty(bookResult.get("edition"));
-                        SimpleStringProperty pictureURL = new SimpleStringProperty(bookResult.get("pictureURL"));
-                        SimpleStringProperty shelfPos = new SimpleStringProperty(bookResult.get("shelfPos"));
-                        books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                                bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
-
+                        BookDTO tempBook = new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
+                                bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
+                        Boolean bookfound = false;
+                        for(int j = 0; j < books.size(); j++){
+                            if(books.get(j).equals(tempBook)){
+                                bookfound = true;
+                            }
+                        }
+                        if(!bookfound){
+                            books.add(tempBook);
+                        }
                     }
 
                     ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
                     for (int i = 0; i < dvdArrayList.size(); i++) {
                         HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
-                            dvds.add(new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
-                                dvdResult.get("pictureURL"), dvdResult.get("shelfPos")));
+                        DvdDTO tempDvd = new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
+                                dvdResult.get("pictureURL"), dvdResult.get("shelfPos"));
+                        Boolean dvdfound = false;
+                        for(int j = 0; j < dvds.size(); j++){
+                            if(dvds.get(j).equals(tempDvd)){
+                                dvdfound = true;
+                            }
+                        }
+                        if(!dvdfound){
+                            dvds.add(tempDvd);
+                        }
                     }
 
                     ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
                     for (int i = 0; i < magazineArrayList.size(); i++) {
                         HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
-                        magazines.add(new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
-                                magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
+                        MagazineDTO tempMagazine = new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
+                                magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos"));
+                        Boolean magazinefound = false;
+                        for(int j = 0; j < magazines.size(); j++){
+                            if(magazines.get(j).equals(tempMagazine)){
+                                magazinefound = true;
+                            }
+                        }
+                        if(!magazinefound){
+                            magazines.add(tempMagazine);
+                        }
                     }
 
 
