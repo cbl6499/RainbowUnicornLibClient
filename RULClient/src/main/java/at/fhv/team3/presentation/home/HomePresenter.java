@@ -292,13 +292,18 @@ public class HomePresenter implements Initializable {
 
                     if(_books.isEmpty()){
                         tabPane.getSelectionModel().select(1);
-                    }
-                    if(_dvds.isEmpty()){
-                        tabPane.getSelectionModel().select(2);
-                    }
-                    if(_magazines.isEmpty()){
+                        if(_dvds.isEmpty()){
+                            tabPane.getSelectionModel().select(2);
+                            if(_magazines.isEmpty()){
+                                tabPane.getSelectionModel().select(0);
+                            }
+                        }
+                    }else if(!_books.isEmpty()){
                         tabPane.getSelectionModel().select(0);
                     }
+
+
+
 
                     bookTable.setItems(_books);
 
