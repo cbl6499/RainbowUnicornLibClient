@@ -291,6 +291,18 @@ public class HomePresenter implements Initializable {
                     }
 
                     if(_books.isEmpty()){
+                        bookTable.setPlaceholder(new Label("Es wurde kein Buch für diesen Suchbegriff gefunden!"));
+                    }
+
+                    if(_dvds.isEmpty()){
+                        dvdTable.setPlaceholder(new Label("Es wurde keine DVD für diesen Suchbegriff gefunden!"));
+                    }
+
+                    if(_magazines.isEmpty()){
+                        magazineTable.setPlaceholder(new Label("Es wurde kein Magazin für diesen Suchbegriff gefunden!"));
+                    }
+
+                    if(_books.isEmpty()){
                         tabPane.getSelectionModel().select(1);
                         if(_dvds.isEmpty()){
                             tabPane.getSelectionModel().select(2);
@@ -318,11 +330,8 @@ public class HomePresenter implements Initializable {
             }
 
         }else{
-            bookTable.getColumns().clear();
             bookTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
-            dvdTable.getColumns().clear();
             dvdTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
-            magazineTable.getColumns().clear();
             magazineTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
         }
     }
