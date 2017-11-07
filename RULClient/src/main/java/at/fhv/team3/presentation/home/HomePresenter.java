@@ -2,6 +2,8 @@ package at.fhv.team3.presentation.home;
 
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
+        import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
+        import at.fhv.team3.presentation.detailmagazin.DetailMagazinView;
         import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
         import at.fhv.team3.domain.dto.BookDTO;
         import at.fhv.team3.domain.dto.DTO;
@@ -146,6 +148,26 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    @FXML
+    void clickdetailmagazine(MouseEvent event) {
+        magazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                    MagazineDTO selectedItem = magazineTable.getSelectionModel().getSelectedItem();
+                    DetailMagazinView db = new DetailMagazinView();
+                    Scene scene = new Scene(db.getView());
+                    Stage stage = (Stage) magazineTable.getScene().getWindow();
+                    stage.setHeight(magazineTable.getScene().getWindow().getHeight());
+                    stage.setWidth(magazineTable.getScene().getWindow().getWidth());
+                    stage.setScene(scene);
+                    DetailMagazinPresenter detailMagazinPresenter = (DetailMagazinPresenter) db.getPresenter();
+                    detailMagazinPresenter.setInfo(selectedItem);
+                    stage.show();
+                }
+            }
+        });
+    }
     @FXML
     public void searchTroughEnter() {
         searchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {

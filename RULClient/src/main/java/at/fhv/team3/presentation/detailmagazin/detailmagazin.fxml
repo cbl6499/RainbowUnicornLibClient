@@ -89,12 +89,12 @@
                                 <Label text="Titel:" />
                                 <Label text="Verlag:" GridPane.rowIndex="1" />
                                 <Label text="Edition:" GridPane.rowIndex="2" />
-                                <TextField editable="false" GridPane.columnIndex="1" />
-                                <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <TextField fx:id="titel" editable="false" GridPane.columnIndex="1" />
+                                <TextField fx:id="verlag" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField fx:id="edition" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                        <ImageView fx:id="pictureUrl" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                             <image>
                                 <Image url="@/logo.png" />
                             </image></ImageView>
@@ -120,15 +120,15 @@
                 <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <TableView fx:id="detailMagazineTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columns>
-                        <TableColumn editable="false" prefWidth="237.0" text="Regalnummer" />
-                        <TableColumn editable="false" minWidth="0.0" prefWidth="237.0" text="Status" />
+                        <TableColumn fx:id="magazineShelfPos" editable="false" prefWidth="237.0" text="Regalnummer" />
+                        <TableColumn fx:id="magazineStatus" editable="false" minWidth="0.0" prefWidth="237.0" text="Status" />
                         <TableColumn prefWidth="237.0" style="-fx-background-color: #cd5c5c;" text="Ausleihen" />
                     </columns>
                 </TableView>
             </children>
         </GridPane>
-        <Button layoutX="17.0" layoutY="153.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="88.0" text="Zurück" />
+        <Button fx:id="DetailMagazineBackButton" layoutX="17.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailMagazineBackButton" prefHeight="31.0" prefWidth="88.0" text="Zurück" />
     </children>
 </AnchorPane>
