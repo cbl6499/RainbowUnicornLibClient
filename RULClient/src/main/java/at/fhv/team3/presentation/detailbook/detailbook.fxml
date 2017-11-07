@@ -124,12 +124,12 @@
           <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TableView fx:id="detailBookTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columns>
-                  <TableColumn prefWidth="177.5" text="Auflage" />
-                  <TableColumn editable="false" prefWidth="177.5" text="Regalnummer" />
-                  <TableColumn editable="false" minWidth="0.0" prefWidth="177.5" text="Status" />
-                  <TableColumn prefWidth="177.5" style="-fx-background-color: #cd5c5c;" text="Ausleihen" />
+                  <TableColumn fx:id="bookEdition" prefWidth="177.5" text="Auflage" />
+                  <TableColumn fx:id="bookShelfPos" editable="false" prefWidth="177.5" text="Regalnummer" />
+                  <TableColumn fx:id="bookStatus" editable="false" minWidth="0.0" prefWidth="177.5" text="Status" />
+                  <TableColumn fx:id="bookAktion" prefWidth="177.5" style="-fx-background-color: #cd5c5c;" text="Ausleihen" />
               </columns>
             </TableView>
          </children>

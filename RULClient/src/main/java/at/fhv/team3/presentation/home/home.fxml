@@ -61,8 +61,8 @@
                      <children>
                         <TableView fx:id="bookTable" onMouseClicked="#clickdetailbook" layoutX="102.0" layoutY="29.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="bookTitle" prefWidth="370.0" text="Title" />
-                            <TableColumn fx:id="bookAuthor" prefWidth="235.0" text="Autor" />
+                              <TableColumn fx:id="bookTitle" prefWidth="370.0" text="Title" />
+                              <TableColumn fx:id="bookAuthor" prefWidth="235.0" text="Author" />
                               <TableColumn fx:id="bookIsbn" prefWidth="179.0" text="ISBN" />
                           </columns>
                         </TableView>
