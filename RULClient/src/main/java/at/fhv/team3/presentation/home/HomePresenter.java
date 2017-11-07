@@ -50,6 +50,9 @@ public class HomePresenter implements Initializable {
     }
 
     @FXML
+    private TabPane tabPane;
+
+    @FXML
     private TableView<BookDTO> bookTable;
 
     @FXML
@@ -283,6 +286,15 @@ public class HomePresenter implements Initializable {
                         }
                     }
 
+                    if(books.isEmpty()){
+                        tabPane.getSelectionModel().select(1);
+                    }
+                    if(dvds.isEmpty()){
+                        tabPane.getSelectionModel().select(2);
+                    }
+                    if(magazines.isEmpty()){
+                        tabPane.getSelectionModel().select(0);
+                    }
 
                     bookTable.setItems(books);
 
