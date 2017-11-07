@@ -14,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -60,7 +62,8 @@ public class DetailBookPresenter implements Initializable {
     @FXML
     private TableColumn<BookDTO, String> bookAktion;
 
-
+    @FXML
+    private ImageView pictureUrl;
 
     @FXML
     private void handleDetailBookBackButton() {
@@ -85,6 +88,9 @@ public class DetailBookPresenter implements Initializable {
         }
         if (book.getIsbn() != null) {
             isbn.setText(book.getIsbn());
+        }
+        if(book.getPictureURL() != null){
+            pictureUrl.setImage(new Image(book.getPictureURL()));
         }
         bookEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
         bookShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
