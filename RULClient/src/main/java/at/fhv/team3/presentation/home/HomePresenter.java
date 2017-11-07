@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.home;
 
-        import at.fhv.team3.domain.dto.simple.SimpleBook;
+        import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
+        import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
         import at.fhv.team3.domain.dto.BookDTO;
         import at.fhv.team3.domain.dto.DTO;
@@ -18,6 +19,9 @@ package at.fhv.team3.presentation.home;
         import javafx.scene.Scene;
         import javafx.scene.control.*;
         import javafx.scene.control.cell.PropertyValueFactory;
+        import javafx.scene.input.KeyCode;
+        import javafx.scene.input.KeyEvent;
+        import javafx.scene.input.MouseEvent;
         import javafx.stage.Modality;
         import javafx.stage.Stage;
         import javafx.stage.WindowEvent;
@@ -33,10 +37,13 @@ package at.fhv.team3.presentation.home;
 public class HomePresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
+        bookTable.getColumns().clear();
         bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
 
+        dvdTable.getColumns().clear();
         dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
 
+        magazineTable.getColumns().clear();
         magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
     }
 
@@ -124,7 +131,41 @@ public class HomePresenter implements Initializable {
     }
 
     @FXML
-    public void search(ActionEvent event) {
+    public void clickdetailbook(){
+        bookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    BookDTO selectedItem = bookTable.getSelectionModel().getSelectedItem();
+                    DetailBookView db = new DetailBookView();
+                    Scene scene = new Scene(db.getView());
+                    Stage stage = (Stage) bookTable.getScene().getWindow();
+                    stage.setHeight(bookTable.getScene().getWindow().getHeight());
+                    stage.setWidth(bookTable.getScene().getWindow().getWidth());
+                    stage.setScene(scene);
+                    DetailBookPresenter detailBookPresenter = (DetailBookPresenter) db.getPresenter();
+                    detailBookPresenter.setInfo(selectedItem);
+                    stage.show();
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void searchTroughEnter() {
+        searchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)) {
+                    search();
+                }
+            }
+        });
+    }
+
+
+    @FXML
+    public void search() {
 
         bookTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         bookAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -189,16 +230,17 @@ public class HomePresenter implements Initializable {
                     magazineTable.setItems(magazines);
 
 
-
-
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
             }
 
         }else{
+            bookTable.getColumns().clear();
             bookTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
+            dvdTable.getColumns().clear();
             dvdTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
+            magazineTable.getColumns().clear();
             magazineTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
         }
     }
