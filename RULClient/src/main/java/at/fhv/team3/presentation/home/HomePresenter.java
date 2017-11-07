@@ -37,14 +37,9 @@ package at.fhv.team3.presentation.home;
 public class HomePresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
-        bookTable.getColumns().clear();
-        bookTable.getColumns().addAll(bookTitle, bookAuthor, bookIsbn);
-
-        dvdTable.getColumns().clear();
-        dvdTable.getColumns().addAll(dvdTitle, dvdRegisseur);
-
-        magazineTable.getColumns().clear();
-        magazineTable.getColumns().addAll(magazineTitle, magazineEdition);
+        bookTable.getColumns();
+        dvdTable.getColumns();
+        magazineTable.getColumns();
     }
 
     @FXML
@@ -135,7 +130,7 @@ public class HomePresenter implements Initializable {
         bookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
                     BookDTO selectedItem = bookTable.getSelectionModel().getSelectedItem();
                     DetailBookView db = new DetailBookView();
                     Scene scene = new Scene(db.getView());
