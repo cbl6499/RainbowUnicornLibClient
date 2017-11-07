@@ -39,6 +39,9 @@ package at.fhv.team3.presentation.home;
         import java.util.ResourceBundle;
 
 public class HomePresenter implements Initializable {
+    private ObservableList<BookDTO> _books;
+    private ObservableList<DvdDTO> _dvds;
+    private ObservableList<MagazineDTO> _magazines;
 
     public void initialize(URL location, ResourceBundle resources) {
         bookTable.getColumns();
@@ -150,6 +153,7 @@ public class HomePresenter implements Initializable {
                     stage.setScene(scene);
                     DetailBookPresenter detailBookPresenter = (DetailBookPresenter) db.getPresenter();
                     detailBookPresenter.setInfo(selectedItem);
+                    detailBookPresenter.setLastSearch(_books,_dvds,_magazines);
                     stage.show();
                 }
             }
@@ -171,6 +175,7 @@ public class HomePresenter implements Initializable {
                     stage.setScene(scene);
                     DetailDvdPresenter detailDvdPresenter = (DetailDvdPresenter) dd.getPresenter();
                     detailDvdPresenter.setInfo(selectedItem);
+                    detailDvdPresenter.setLastSearch(_books,_dvds,_magazines);
                     stage.show();
                 }
             }
@@ -192,6 +197,7 @@ public class HomePresenter implements Initializable {
                     stage.setScene(scene);
                     DetailMagazinPresenter detailMagazinPresenter = (DetailMagazinPresenter) db.getPresenter();
                     detailMagazinPresenter.setInfo(selectedItem);
+                    detailMagazinPresenter.setLastSearch(_books,_dvds,_magazines);
                     stage.show();
                 }
             }
@@ -236,71 +242,69 @@ public class HomePresenter implements Initializable {
                     ArrayList<DTO> dvdArrayList = allMedias.get(1);
                     ArrayList<DTO> magazineArrayList = allMedias.get(2);
 
-                    ObservableList<BookDTO> books = FXCollections.observableArrayList();
-
-
+                    _books = FXCollections.observableArrayList();
                     for (int i = 0; i < bookArrayList.size(); i++) {
                         HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
                         BookDTO tempBook = new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
                                 bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
                         Boolean bookfound = false;
-                        for(int j = 0; j < books.size(); j++){
-                            if(books.get(j).equals(tempBook)){
+                        for(int j = 0; j < _books.size(); j++){
+                            if(_books.get(j).equals(tempBook)){
                                 bookfound = true;
                             }
                         }
                         if(!bookfound){
-                            books.add(tempBook);
+                            _books.add(tempBook);
                         }
                     }
 
-                    ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
+                    _dvds = FXCollections.observableArrayList();
                     for (int i = 0; i < dvdArrayList.size(); i++) {
                         HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
                         DvdDTO tempDvd = new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
                                 dvdResult.get("pictureURL"), dvdResult.get("shelfPos"));
                         Boolean dvdfound = false;
-                        for(int j = 0; j < dvds.size(); j++){
-                            if(dvds.get(j).equals(tempDvd)){
+                        for(int j = 0; j < _dvds.size(); j++){
+                            if(_dvds.get(j).equals(tempDvd)){
                                 dvdfound = true;
                             }
                         }
                         if(!dvdfound){
-                            dvds.add(tempDvd);
+                            _dvds.add(tempDvd);
                         }
                     }
 
-                    ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
+                _magazines =  FXCollections.observableArrayList();
                     for (int i = 0; i < magazineArrayList.size(); i++) {
                         HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
                         MagazineDTO tempMagazine = new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
                                 magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos"));
                         Boolean magazinefound = false;
-                        for(int j = 0; j < magazines.size(); j++){
-                            if(magazines.get(j).equals(tempMagazine)){
+                        for(int j = 0; j < _magazines.size(); j++){
+                            if(_magazines.get(j).equals(tempMagazine)){
                                 magazinefound = true;
                             }
                         }
                         if(!magazinefound){
-                            magazines.add(tempMagazine);
+                            _magazines.add(tempMagazine);
                         }
                     }
 
-                    if(books.isEmpty()){
+                    if(_books.isEmpty()){
                         tabPane.getSelectionModel().select(1);
                     }
-                    if(dvds.isEmpty()){
+                    if(_dvds.isEmpty()){
                         tabPane.getSelectionModel().select(2);
                     }
-                    if(magazines.isEmpty()){
+                    if(_magazines.isEmpty()){
                         tabPane.getSelectionModel().select(0);
                     }
 
-                    bookTable.setItems(books);
+                    bookTable.setItems(_books);
 
-                    dvdTable.setItems(dvds);
+                    dvdTable.setItems(_dvds);
 
-                    magazineTable.setItems(magazines);
+                    magazineTable.setItems(_magazines);
 
 
             } catch (Exception e) {
@@ -316,6 +320,30 @@ public class HomePresenter implements Initializable {
             magazineTable.getColumns().clear();
             magazineTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
         }
+    }
+
+    public void reload(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
+        bookTable.getColumns();
+        dvdTable.getColumns();
+        magazineTable.getColumns();
+
+        bookTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        bookAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        bookIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
+
+        dvdTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        dvdRegisseur.setCellValueFactory(new PropertyValueFactory<>("regisseur"));
+
+        magazineTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        magazineEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
+
+        _magazines = magazines;
+        _dvds = dvds;
+        _books = books;
+
+        bookTable.setItems(_books);
+        dvdTable.setItems(_dvds);
+        magazineTable.setItems(_magazines);
     }
 }
 

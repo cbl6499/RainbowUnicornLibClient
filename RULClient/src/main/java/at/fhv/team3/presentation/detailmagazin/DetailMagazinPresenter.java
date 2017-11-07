@@ -2,7 +2,9 @@ package at.fhv.team3.presentation.detailmagazin;
 
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DTO;
+import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
+import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DetailMagazinPresenter {
+        ObservableList<BookDTO> _books;
+        ObservableList<DvdDTO> _dvds;
+        ObservableList<MagazineDTO> _magazines;
 
         @FXML
         private TextField titel;
@@ -58,6 +63,8 @@ public class DetailMagazinPresenter {
             stage.setHeight(DetailMagazineBackButton.getScene().getWindow().getHeight());
             stage.setWidth(DetailMagazineBackButton.getScene().getWindow().getWidth());
             stage.setScene(scene);
+            HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
+            homePresenter.reload(_books,_dvds,_magazines);
             stage.show();
         }
 
@@ -71,7 +78,7 @@ public class DetailMagazinPresenter {
         if (magazine.getEdition() != null) {
             edition.setText(magazine.getEdition());
         }
-        if(magazine.getPictureURL() != null){
+        if(magazine.getPictureURL() != null && !(magazine.getPictureURL().isEmpty())){
             pictureUrl.setImage(new Image(magazine.getPictureURL()));
         }
         magazineShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
@@ -103,4 +110,9 @@ public class DetailMagazinPresenter {
         }
     }
 
+    public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
+        _books = books;
+        _dvds = dvds;
+        _magazines = magazines;
+    }
 }

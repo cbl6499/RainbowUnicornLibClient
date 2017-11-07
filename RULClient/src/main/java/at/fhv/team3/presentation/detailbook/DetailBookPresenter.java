@@ -3,6 +3,8 @@ package at.fhv.team3.presentation.detailbook;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
+import at.fhv.team3.domain.dto.MagazineDTO;
+import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,6 +28,9 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class DetailBookPresenter implements Initializable {
+    ObservableList<BookDTO> _books;
+    ObservableList<DvdDTO> _dvds;
+    ObservableList<MagazineDTO> _magazines;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
@@ -73,6 +78,8 @@ public class DetailBookPresenter implements Initializable {
         stage.setHeight(DetailBookBackButton.getScene().getWindow().getHeight());
         stage.setWidth(DetailBookBackButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
+        HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
+        homePresenter.reload(_books,_dvds,_magazines);
         stage.show();
     }
 
@@ -89,7 +96,7 @@ public class DetailBookPresenter implements Initializable {
         if (book.getIsbn() != null) {
             isbn.setText(book.getIsbn());
         }
-        if(book.getPictureURL() != null){
+        if(book.getPictureURL() != null && !(book.getPictureURL().isEmpty())){
             pictureUrl.setImage(new Image(book.getPictureURL()));
         }
         bookEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
@@ -123,5 +130,11 @@ public class DetailBookPresenter implements Initializable {
         }else{
 
         }
+    }
+
+    public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
+        _books = books;
+        _dvds = dvds;
+        _magazines = magazines;
     }
 }

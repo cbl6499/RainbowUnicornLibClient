@@ -3,6 +3,8 @@ package at.fhv.team3.presentation.detaildvd;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
+import at.fhv.team3.domain.dto.MagazineDTO;
+import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
@@ -27,6 +29,10 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class DetailDvdPresenter implements Initializable {
+    ObservableList<BookDTO> _books;
+    ObservableList<DvdDTO> _dvds;
+    ObservableList<MagazineDTO> _magazines;
+
 
     public void initialize(URL location, ResourceBundle resources) {
         detailDvdTable.getColumns().clear();
@@ -66,6 +72,8 @@ public class DetailDvdPresenter implements Initializable {
         stage.setHeight(DetailDvdBackButton.getScene().getWindow().getHeight());
         stage.setWidth(DetailDvdBackButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
+        HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
+        homePresenter.reload(_books,_dvds,_magazines);
         stage.show();
     }
 
@@ -76,7 +84,7 @@ public class DetailDvdPresenter implements Initializable {
         if (dvd.getRegisseur() != null) {
             regisseur.setText(dvd.getRegisseur());
         }
-        if(dvd.getPictureURL() != null){
+        if(dvd.getPictureURL() != null && !(dvd.getPictureURL().isEmpty())){
             pictureUrl.setImage(new Image(dvd.getPictureURL()));
         }
         dvdShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
@@ -107,5 +115,11 @@ public class DetailDvdPresenter implements Initializable {
         }else{
 
         }
+    }
+
+    public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
+        _books = books;
+        _dvds = dvds;
+        _magazines = magazines;
     }
 }
