@@ -21,7 +21,7 @@ public class BibInfoPresenter implements Initializable {
     private Button BibInfoBackButton;
 
     @FXML
-    private void handleButtonActionBibInfoBackButton(ActionEvent event) {
+    private void handleButtonActionBibInfoBackButton() {
         HomeView hv = new HomeView();
         Scene scene = new Scene(hv.getView());
         Stage stage = (Stage) BibInfoBackButton.getScene().getWindow();
