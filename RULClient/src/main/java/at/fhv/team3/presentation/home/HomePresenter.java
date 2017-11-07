@@ -215,7 +215,6 @@ public class HomePresenter implements Initializable {
         });
     }
 
-
     @FXML
     public void search() {
 
