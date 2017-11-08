@@ -229,8 +229,7 @@ public class HomePresenter implements Initializable {
         magazineEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
 
 
-
-        if(!searchField.getText().isEmpty()) {
+        if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
@@ -314,7 +313,11 @@ public class HomePresenter implements Initializable {
                     }
 
 
-
+                    if(bookTable.getColumns().isEmpty() && dvdTable.getColumns().isEmpty() && magazineTable.getColumns().isEmpty()){
+                        bookTable.getColumns().setAll(bookTitle, bookAuthor, bookIsbn);
+                        dvdTable.getColumns().setAll(dvdTitle, dvdRegisseur);
+                        magazineTable.getColumns().setAll(magazineTitle, magazineEdition);
+                    }
 
                     bookTable.setItems(_books);
 
@@ -329,8 +332,11 @@ public class HomePresenter implements Initializable {
             }
 
         }else{
+            bookTable.getColumns().clear();
             bookTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
+            dvdTable.getColumns().clear();
             dvdTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
+            magazineTable.getColumns().clear();
             magazineTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
         }
     }
