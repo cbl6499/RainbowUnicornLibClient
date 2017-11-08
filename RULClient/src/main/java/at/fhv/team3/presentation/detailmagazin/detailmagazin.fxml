@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="687.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter">
+<AnchorPane prefHeight="687.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter">
     <children>
         <GridPane alignment="CENTER" prefHeight="142.0" prefWidth="607.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -122,13 +122,14 @@
             <children>
                 <TableView fx:id="detailMagazineTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columns>
-                        <TableColumn fx:id="magazineShelfPos" editable="false" prefWidth="237.0" text="Regalnummer" />
-                        <TableColumn fx:id="magazineStatus" editable="false" minWidth="0.0" prefWidth="237.0" text="Status" />
-                        <TableColumn prefWidth="237.0" style="-fx-background-color: #cd5c5c;" text="Ausleihen" />
+                        <TableColumn fx:id="magazineShelfPos" editable="false" prefWidth="370.39995115995407" text="Regalnummer" />
+                        <TableColumn fx:id="magazineStatus" editable="false" minWidth="0.0" prefWidth="336.00006103515625" text="Status" />
                     </columns>
                 </TableView>
             </children>
         </GridPane>
         <Button fx:id="DetailMagazineBackButton" layoutX="17.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailMagazineBackButton" prefHeight="31.0" prefWidth="88.0" text="Zurück" />
+      <Button fx:id="DetailDvdBackButton1" layoutX="625.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailDvdBackButton" prefHeight="31.0" prefWidth="88.0" style="-fx-background-color: #cd5c5c;" text="Reservieren" AnchorPane.rightAnchor="127.0" />
+      <Button layoutX="705.0" layoutY="153.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="17.0" />
     </children>
 </AnchorPane>
