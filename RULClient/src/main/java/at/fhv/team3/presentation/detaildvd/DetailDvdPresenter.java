@@ -36,7 +36,7 @@ public class DetailDvdPresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         detailDvdTable.getColumns().clear();
-        detailDvdTable.getColumns().addAll(dvdShelfPos,dvdStatus,dvdAktion);
+        detailDvdTable.getColumns().addAll(dvdShelfPos,dvdStatus);
     }
 
     @FXML
@@ -58,8 +58,6 @@ public class DetailDvdPresenter implements Initializable {
     @FXML
     private TableColumn<DvdDTO, String> dvdStatus;
 
-    @FXML
-    private TableColumn<DvdDTO, String> dvdAktion;
 
     @FXML
     private ImageView pictureUrl;
@@ -89,7 +87,6 @@ public class DetailDvdPresenter implements Initializable {
         }
         dvdShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
         dvdStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        dvdAktion.setCellValueFactory(new PropertyValueFactory<>("aktion"));
         if(!titel.getText().isEmpty()) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);

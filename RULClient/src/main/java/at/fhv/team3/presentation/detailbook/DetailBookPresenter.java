@@ -34,7 +34,7 @@ public class DetailBookPresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
-        detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus,bookAktion);
+        detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus);
     }
 
     @FXML
@@ -63,9 +63,6 @@ public class DetailBookPresenter implements Initializable {
 
     @FXML
     private TableColumn<BookDTO, String> bookStatus;
-
-    @FXML
-    private TableColumn<BookDTO, String> bookAktion;
 
     @FXML
     private ImageView pictureUrl;
@@ -102,7 +99,6 @@ public class DetailBookPresenter implements Initializable {
         bookEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
         bookShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
         bookStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        bookAktion.setCellValueFactory(new PropertyValueFactory<>("aktion"));
         if(!isbn.getText().isEmpty()) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);

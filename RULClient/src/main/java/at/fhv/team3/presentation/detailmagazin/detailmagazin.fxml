@@ -129,7 +129,7 @@
             </children>
         </GridPane>
         <Button fx:id="DetailMagazineBackButton" layoutX="17.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailMagazineBackButton" prefHeight="31.0" prefWidth="88.0" text="Zurück" />
-      <Button fx:id="DetailDvdBackButton1" layoutX="625.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailDvdBackButton" prefHeight="31.0" prefWidth="88.0" style="-fx-background-color: #cd5c5c;" text="Reservieren" AnchorPane.rightAnchor="127.0" />
+      <Button layoutX="625.0" layoutY="153.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="88.0" style="-fx-background-color: #cd5c5c;" text="Reservieren" AnchorPane.rightAnchor="127.0" />
       <Button layoutX="705.0" layoutY="153.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="17.0" />
     </children>
 </AnchorPane>
