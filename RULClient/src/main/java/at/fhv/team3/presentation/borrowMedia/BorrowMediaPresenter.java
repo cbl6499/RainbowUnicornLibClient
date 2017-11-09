@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -90,10 +91,11 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void customerSearch() {
-       if(!customerSearchField.getText().isEmpty() && !customerSearchField.getText().equals(" ")) {
+        customerDropdown.setCellFactory(new PropertyValueFactory("firstname" + " " + "lastname"));
+        if(!customerSearchField.getText().isEmpty() && !customerSearchField.getText().equals(" ")) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);
-                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Search");
+                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
                 List<DTO> allMedias = rmiCustomer.findCustomer(customerSearchField.getText());
 
@@ -105,6 +107,7 @@ public class BorrowMediaPresenter implements Initializable {
 
                     _customer.add(tempCustomer);
                 }
+                customerDropdown.setItems(_customer);
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
