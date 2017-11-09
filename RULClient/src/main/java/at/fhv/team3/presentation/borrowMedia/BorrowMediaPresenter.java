@@ -90,20 +90,19 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void customerSearch() {
-       /* if(!customerSearchField.getText().isEmpty() && !customerSearchField.getText().equals(" ")) {
+       if(!customerSearchField.getText().isEmpty() && !customerSearchField.getText().equals(" ")) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Search");
 
-               List<Customer> allMedias = rmiCustomer.findCustomer(customerSearchField.getText());
-
-                List<DTO> customerList= allMedias.get(0);
+                List<DTO> allMedias = rmiCustomer.findCustomer(customerSearchField.getText());
 
                 _customer = FXCollections.observableArrayList();
-                for (int i = 0; i < bookArrayList.size(); i++) {
-                    HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
-                    CustomerDTO tempCustomer = new CustomerDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
+                for (int i = 0; i < allMedias.size(); i++) {
+                    HashMap<String, String> customerResult = allMedias.get(i).getAllData();
+                    CustomerDTO tempCustomer = new CustomerDTO(Integer.parseInt(customerResult.get("id")), customerResult.get("firstname"), customerResult.get("lastname"),
+                            Boolean.parseBoolean(customerResult.get("subscription")), customerResult.get("email"), customerResult.get("phonenumber"));
+
                     _customer.add(tempCustomer);
                 }
             } catch (Exception e) {
@@ -113,7 +112,7 @@ public class BorrowMediaPresenter implements Initializable {
 
         }else{
             customerDropdown.setPlaceholder(new Label("A man has no name"));
-        }*/
+        }
     }
 
     @FXML

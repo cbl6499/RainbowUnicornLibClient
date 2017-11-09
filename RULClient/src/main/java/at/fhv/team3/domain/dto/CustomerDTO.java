@@ -18,6 +18,15 @@ public class CustomerDTO extends DTO{
 
     }
 
+    public CustomerDTO(int id, String firstName, String lastname, Boolean subscription, String email, String phoneNumber){
+        _customerId = id;
+        _firstName = firstName;
+        _lastName = lastname;
+        _subscription = subscription;
+        _email = email;
+        _phoneNumber = phoneNumber;
+    }
+
     public void setCustomerId(int id){
         _customerId = id;
     }
