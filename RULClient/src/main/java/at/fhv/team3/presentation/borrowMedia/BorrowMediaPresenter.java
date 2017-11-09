@@ -1,9 +1,7 @@
 package at.fhv.team3.presentation.borrowMedia;
 
-import at.fhv.team3.domain.Customer;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
-import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
