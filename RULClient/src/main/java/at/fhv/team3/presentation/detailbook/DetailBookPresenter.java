@@ -152,7 +152,7 @@ public class DetailBookPresenter implements Initializable {
                     stage.setScene(new Scene(bmp.getView()));
                     stage.setResizable(false);
                     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
+                       @Override
                         public void handle(WindowEvent event) {
                             Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
                             alert.setTitle("Attention");
