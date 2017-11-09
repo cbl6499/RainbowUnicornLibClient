@@ -95,7 +95,7 @@ public class BorrowMediaPresenter implements Initializable {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
-                List<DTO> allMedias = rmiCustomer.findCustomer(customerSearchField.getText());
+                ArrayList<DTO> allMedias = rmiCustomer.findCustomer(customerSearchField.getText());
 
                 _customer = FXCollections.observableArrayList();
                 for (int i = 0; i < allMedias.size(); i++) {
