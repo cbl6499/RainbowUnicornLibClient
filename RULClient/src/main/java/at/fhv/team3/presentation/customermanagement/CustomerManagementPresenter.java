@@ -1,5 +1,6 @@
-package at.fhv.team3.presentation.costumermanagement;
+package at.fhv.team3.presentation.customermanagement;
 
+import at.fhv.team3.domain.dto.DTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,7 +13,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class CostumerManagementPresenter implements Initializable {
+public class CustomerManagementPresenter implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
     }
@@ -31,6 +32,10 @@ public class CostumerManagementPresenter implements Initializable {
             Stage stage = (Stage) CostumerManagementCancelButton.getScene().getWindow();
             stage.close();
         }
+
+    }
+
+    public void setInfo(DTO media){
 
     }
 
