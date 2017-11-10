@@ -12,8 +12,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.domain.dto.DvdDTO;
         import at.fhv.team3.domain.dto.MagazineDTO;
         import at.fhv.team3.presentation.bibinfo.BibInfoView;
-        import at.fhv.team3.presentation.costumermanagement.CostumerManagementView;
-        import javafx.beans.property.SimpleStringProperty;
+        import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.event.ActionEvent;
@@ -95,7 +94,7 @@ public class HomePresenter implements Initializable {
     private Button BibInfoButton;
 
     @FXML
-    private Button CostumerManagementButton;
+    private Button CustomerManagementButton;
 
 
 
@@ -112,8 +111,8 @@ public class HomePresenter implements Initializable {
 
 
     @FXML
-    private void handleButtonActionCostumerManagement(ActionEvent event) {
-        CostumerManagementView cm = new CostumerManagementView();
+    private void handleButtonActionCustomerManagement(ActionEvent event) {
+        CustomerManagementView cm = new CustomerManagementView();
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(new Scene(cm.getView()));

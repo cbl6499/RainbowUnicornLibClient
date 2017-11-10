@@ -75,23 +75,6 @@ public class Customer {
         return getCustomerId();
     }
 
-    public HashMap<String, String> getAllData() {
-        String subscription;
-        if(_subscription){
-            subscription = "true";
-        } else {
-            subscription = "false";
-        }
-        HashMap<String, String> allData = new HashMap<String, String>();
-        allData.put("id", ""+_customerId);
-        allData.put("firstname", _firstName);
-        allData.put("lastname", _lastName);
-        allData.put("subscription", subscription);
-        allData.put("email", _email);
-        allData.put("phonenumber", _phoneNumber);
-        return allData;
-    }
-
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
         if(data.get("firstname").equals(_firstName) && data.get("lastname").equals(_lastName) && data.get("email").equals(_email) && data.get("phonenumber").equals(_phoneNumber)){

@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -12,9 +11,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="650.0" prefWidth="375.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.costumermanagement.CostumerManagementPresenter">
+<AnchorPane prefHeight="522.0" prefWidth="375.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter">
    <children>
-      <GridPane layoutX="-3.0" layoutY="132.0" prefHeight="507.0" prefWidth="373.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane layoutX="-3.0" layoutY="132.0" prefHeight="522.0" prefWidth="375.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="90.0" prefWidth="100.0" />
@@ -27,25 +26,21 @@
             <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="43.79998168945312" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="40.0" minHeight="7.599990081787112" prefHeight="39.79998779296875" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="41.4000244140625" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="20.0" minHeight="2.9999938964843693" prefHeight="16.20001220703125" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="141.4" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="36.1999450683594" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="38.39996337890625" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="179.60000000000002" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="179.60000000000002" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="179.60000000000002" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="59.60000000000002" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="42.0" minHeight="2.9999938964843693" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="204.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="110.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label style="-fx-font-weight: bold;" text="Kundenverwaltung:" GridPane.columnIndex="1">
+            <Label style="-fx-font-weight: bold;" text="Ausleihen" GridPane.columnIndex="1">
                <padding>
                   <Insets left="5.0" top="10.0" />
                </padding>
             </Label>
             <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Kundensuche:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="searchCostumerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Button fx:id="searchCostumerButton" mnemonicParsing="false" onAction="#findCustomer" prefHeight="26.0" prefWidth="364.0" text="Suchen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="customerSearchField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="customerSearchButton" mnemonicParsing="false" onAction="#customerSearch" prefHeight="26.0" prefWidth="364.0" text="Suchen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.19994354248047" minWidth="10.0" percentWidth="30.0" prefWidth="58.99999237060547" />
@@ -56,11 +51,11 @@
                </rowConstraints>
                <children>
                   <Label text="Ergebnisse:" />
-                  <ComboBox fx:id="resultCostumer" prefHeight="26.0" prefWidth="246.0" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="customerDropdown" onMouseClicked="#handleSelectedCustomer" prefHeight="26.0" prefWidth="246.0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <GridPane prefHeight="219.0" prefWidth="337.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="70.0" prefWidth="100.0" />
@@ -71,7 +66,6 @@
                 <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Vorname:" />
@@ -79,33 +73,27 @@
                   <Label text="Telefon:" GridPane.rowIndex="2" />
                   <Label text="Email:" GridPane.rowIndex="3" />
                   <Label text="Vertragstatus:" GridPane.rowIndex="4" />
-                  <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" />
-                  <Label text="Vertragende:" GridPane.rowIndex="5" />
-                  <DatePicker editable="false" prefHeight="26.0" prefWidth="270.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="contractStatusField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="emailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="phoneNrField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="lastNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="firstNameField" editable="false" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label text="Vertrag-Managment:" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="364.0" text="Vertrag verlängern" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="364.0" text="Vertrag kündigen" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="13">
+            <GridPane prefHeight="15.0" prefWidth="337.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.0" minWidth="10.0" prefWidth="169.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="168.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="CostumerManagementCancelButton" mnemonicParsing="false" onAction="#handleButtonActionCostumerManagementCancel" prefHeight="26.0" prefWidth="144.0" text="Abbrechen" />
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="144.0" text="Speichern" GridPane.columnIndex="1" />
+                  <Button fx:id="borrowMediaCancelButton" mnemonicParsing="false" onAction="#borrowMediaCancelAction" prefHeight="26.0" prefWidth="144.0" text="Abbrechen" />
+                  <Button fx:id="borrowButton" mnemonicParsing="false" onAction="#borrowMediaAction" prefHeight="26.0" prefWidth="144.0" text="Ausleihen" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
          </children>
       </GridPane>
    </children>
