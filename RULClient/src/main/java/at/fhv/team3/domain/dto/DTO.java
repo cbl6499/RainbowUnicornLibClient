@@ -9,6 +9,7 @@ import java.util.HashMap;
 public abstract class DTO implements Serializable{
 
     protected int _id;
+    protected boolean _available = true;
 
     public abstract void setId(int id);
 
@@ -17,4 +18,12 @@ public abstract class DTO implements Serializable{
     public abstract HashMap<String, String> getAllData();
 
     public abstract boolean equals(DTO dto);
+
+    public void setAvailability(boolean b){
+        _available = b;
+    }
+
+    public boolean isAvailable(){
+        return _available;
+    }
 }
