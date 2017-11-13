@@ -26,6 +26,7 @@ public class BorrowMediaPresenter implements Initializable {
     private ObservableList<CustomerDTO> _customer;
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
+    private int _id;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -33,7 +34,7 @@ public class BorrowMediaPresenter implements Initializable {
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
-            setInfo();
+            setInfo(null);
         });
     }
 
@@ -69,7 +70,15 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void borrowMediaAction(ActionEvent event) {
+        try {
+            Registry registry = LocateRegistry.getRegistry(1099);
+            RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Borrow");
 
+           // BorrowedItemDTO borrowedItemDTO = new BorrowedItemDTO(())
+        } catch (Exception e) {
+            System.out.println("HelloClient exception: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -177,7 +186,7 @@ public class BorrowMediaPresenter implements Initializable {
         }
     }
 
-    public void setInfo(){
+    public void setInfo(DTO dto){
         if(selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
                 firstNameField.setText(selectedItemfromComboBox.getFirstName());
@@ -198,6 +207,9 @@ public class BorrowMediaPresenter implements Initializable {
                 contractStatusField.setText("InAktiv");
             }
         }
+
+        _id = dto.getId();
+
     }
 
 
