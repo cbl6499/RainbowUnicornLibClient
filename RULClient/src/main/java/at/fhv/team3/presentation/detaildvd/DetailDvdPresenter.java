@@ -136,6 +136,7 @@ public class DetailDvdPresenter implements Initializable {
                     stage.initModality(Modality.WINDOW_MODAL);
                     stage.setScene(new Scene(bmp.getView()));
                     stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                         @Override
                         public void handle(WindowEvent event) {
@@ -154,7 +155,7 @@ public class DetailDvdPresenter implements Initializable {
                     });
                     stage.show();
                     BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                    borrowMediaPresenter.setInfo(selectedItem);
+                    //borrowMediaPresenter.setInfo();
                     //detailBookPresenter.setLastSearch(_books,_dvds,_magazines);
                 }
             }
