@@ -117,6 +117,7 @@ public class HomePresenter implements Initializable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(new Scene(cm.getView()));
         stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

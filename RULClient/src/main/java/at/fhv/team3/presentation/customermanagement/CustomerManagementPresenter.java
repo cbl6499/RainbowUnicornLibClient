@@ -1,15 +1,23 @@
-package at.fhv.team3.presentation.costumermanagement;
+package at.fhv.team3.presentation.customermanagement;
 
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.CustomerDTO;
 import at.fhv.team3.domain.dto.DTO;
+import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
+import at.fhv.team3.presentation.detailbook.DetailBookView;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -17,14 +25,23 @@ import java.net.URL;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class CostumerManagementPresenter implements Initializable {
+public class CustomerManagementPresenter implements Initializable {
     private ObservableList<CustomerDTO> _customers;
+    private Label placeholder;
+    CustomerDTO selectedItemfromComboBox;
 
     public void initialize(URL location, ResourceBundle resources) {
+        placeholder = new Label("Bitte suchen!");
+        resultCustomer.setPlaceholder(placeholder);
 
+        resultCustomer.setOnAction((event) -> {
+            selectedItemfromComboBox = resultCustomer.getSelectionModel().getSelectedItem();
+            setInfo();
+        });
     }
 
     @FXML
@@ -34,16 +51,25 @@ public class CostumerManagementPresenter implements Initializable {
     private TextField searchCostumerField;
 
     @FXML
+    private TextField fistname;
+
+    @FXML
+    private TextField secondname;
+
+    @FXML
+    private TextField tel;
+
+    @FXML
+    private TextField email;
+
+    @FXML
+    private TextField subscription;
+
+    @FXML
     private Button searchCostumerButton;
 
     @FXML
     private ComboBox<CustomerDTO> resultCustomer;
-
-
-
-
-
-
 
     @FXML
     private void handleButtonActionCostumerManagementCancel(ActionEvent event) {
@@ -60,66 +86,113 @@ public class CostumerManagementPresenter implements Initializable {
     }
 
     @FXML
+    public void findCustomerTroughEnter() {
+        searchCostumerButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)) {
+                    findCustomer();
+                }
+            }
+        });
+    }
+
+    @FXML
     public void findCustomer(){
-        if(!searchCostumerField.getText().isEmpty() && !searchCostumerField.getText().equals(" ")) {
+        if((!(searchCostumerField.getText().trim().equals("")))) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);
-                RMICustomer findCustomer = (RMICustomer) registry.lookup("Customer");
+                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
-                ArrayList<DTO> CustomersFound = (ArrayList)findCustomer.findCustomer(searchCostumerField.getText());
+                ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(searchCostumerField.getText());
+
                 _customers = FXCollections.observableArrayList();
                 for (int i = 0; i < CustomersFound.size(); i++) {
-                    _customers.add((CustomerDTO) CustomersFound.get(i));
+                    HashMap<String, String> customerResult = CustomersFound.get(i).getAllData();
+                    CustomerDTO tempCustomer = new CustomerDTO(Integer.parseInt(customerResult.get("id")), customerResult.get("firstname"), customerResult.get("lastname"),
+                            Boolean.parseBoolean(customerResult.get("subscription")), customerResult.get("email"), customerResult.get("phonenumber"));
+
+                    _customers.add(tempCustomer);
                 }
+                resultCustomer.setItems(null);
                 resultCustomer.setItems(_customers);
-                renderCustomder();
+                renderCustomer();
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
             }
         }else{
-
+            resultCustomer.setItems(null);
+            placeholder = new Label("Falsche Eingabe!");
+            resultCustomer.setPlaceholder(placeholder);
+            resultCustomer.show();
         }
     }
 
-    public void renderCustomder(){
-        // Define rendering of the list of values in ComboBox drop down.
-        resultCustomer.setCellFactory((ComboBox) -> {
-            return new ListCell<CustomerDTO>() {
-                @Override
-                protected void updateItem(CustomerDTO item, boolean empty) {
-                    super.updateItem(item, empty);
+    public void renderCustomer(){
+        // placeholder
+        if(resultCustomer.getItems().isEmpty()){
+            resultCustomer.setItems(null);
+            placeholder = new Label("Keine Ergebnisse!");
+            resultCustomer.setPlaceholder(placeholder);
+            resultCustomer.show();
+        } else {
+            // Define rendering of the list of values in ComboBox drop down.
+            resultCustomer.setCellFactory((ComboBox) -> {
+                return new ListCell<CustomerDTO>() {
+                    @Override
+                    protected void updateItem(CustomerDTO item, boolean empty) {
+                        super.updateItem(item, empty);
 
-                    if (item == null || empty) {
-                        setText(null);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getFirstName() + " " + item.getLastName());
+                        }
+                    }
+                };
+            });
+            // Define rendering of selected value shown in ComboBox.
+            resultCustomer.setConverter(new StringConverter<CustomerDTO>() {
+                @Override
+                public String toString(CustomerDTO person) {
+                    if (person == null) {
+                        return null;
                     } else {
-                        setText(item.getFirstName() + " " + item.getLastName());
+                        return person.getFirstName() + " " + person.getLastName();
                     }
                 }
-            };
-        });
 
-        // Define rendering of selected value shown in ComboBox.
-        resultCustomer.setConverter(new StringConverter<CustomerDTO>() {
-            @Override
-            public String toString(CustomerDTO person) {
-                if (person == null) {
-                    return null;
-                } else {
-                    return person.getFirstName() + " " + person.getLastName();
+                @Override
+                public CustomerDTO fromString(String personString) {
+                    return null; // No conversion fromString needed.
                 }
-            }
-
-            @Override
-            public CustomerDTO fromString(String personString) {
-                return null; // No conversion fromString needed.
-            }
-        });
+            });
+            resultCustomer.show();
+        }
     }
 
-
-
-    public void selectCombobox(){
-
+    public void setInfo(){
+        if(selectedItemfromComboBox != null) {
+            if (selectedItemfromComboBox.getFirstName() != null) {
+                fistname.setText(selectedItemfromComboBox.getFirstName());
+            }
+            if (selectedItemfromComboBox.getLastName() != null) {
+                secondname.setText(selectedItemfromComboBox.getLastName());
+            }
+            if (selectedItemfromComboBox.getPhoneNumber() != null) {
+                tel.setText(selectedItemfromComboBox.getPhoneNumber());
+            }
+            if (selectedItemfromComboBox.getEmail() != null) {
+                email.setText(selectedItemfromComboBox.getEmail());
+            }
+            if (selectedItemfromComboBox.getSubscription() == true) {
+                subscription.setText("Aktiv");
+            }
+            if (selectedItemfromComboBox.getSubscription() == false) {
+                subscription.setText("InAktiv");
+            }
+        }
     }
+
 }
