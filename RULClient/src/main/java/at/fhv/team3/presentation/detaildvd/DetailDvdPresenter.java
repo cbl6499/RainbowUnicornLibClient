@@ -155,7 +155,7 @@ public class DetailDvdPresenter implements Initializable {
                     });
                     stage.show();
                     BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                    //borrowMediaPresenter.setInfo();
+                    borrowMediaPresenter.setInfo(selectedItem);
                     //detailBookPresenter.setLastSearch(_books,_dvds,_magazines);
                 }
             }
