@@ -81,6 +81,13 @@ public class DvdDTO extends DTO{
         allData.put("regisseur", _regisseur);
         allData.put("pictureURL", _pictureURL);
         allData.put("shelfPos", _shelfPos);
+        String available;
+        if(_available){
+            available = "true";
+        } else {
+            available = "false";
+        }
+        allData.put("available", available);
         return allData;
     }
 
