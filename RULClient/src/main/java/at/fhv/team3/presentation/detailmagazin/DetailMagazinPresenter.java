@@ -123,16 +123,16 @@ public class DetailMagazinPresenter {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
-                ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(titel.getText());
+                ArrayList<MagazineDTO> magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
 
-                ArrayList<DTO> magazineArrayList = allMedias.get(2);
-
+                System.out.println(magazineArrayList);
 
                 ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
                 for (int i = 0; i < magazineArrayList.size(); i++) {
                     HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
                     magazines.add(new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
-                            magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos")));
+                            magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos"), magazineResult.get("available")));
+
                 }
                 detailMagazineTable.setItems(magazines);
 

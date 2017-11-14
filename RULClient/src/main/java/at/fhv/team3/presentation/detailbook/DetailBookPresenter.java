@@ -141,10 +141,7 @@ public class DetailBookPresenter implements Initializable {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
-                ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(isbn.getText());
-
-                ArrayList<DTO> bookArrayList= allMedias.get(0);
-
+                ArrayList<BookDTO> bookArrayList = searchMedia.getBooksByISBN(isbn.getText());
 
                 ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
@@ -152,7 +149,7 @@ public class DetailBookPresenter implements Initializable {
                 for (int i = 0; i < bookArrayList.size(); i++) {
                     HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
                     books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
+                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"), bookResult.get("available")));
                 }
                 detailBookTable.setItems(books);
 

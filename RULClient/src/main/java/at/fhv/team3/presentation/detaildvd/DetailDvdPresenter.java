@@ -128,16 +128,14 @@ public class DetailDvdPresenter implements Initializable {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
-                ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(titel.getText());
-
-                ArrayList<DTO> dvdArrayList = allMedias.get(1);
+                ArrayList<DvdDTO> dvdArrayList = searchMedia.getDvdByTitle(titel.getText());
 
                 // buch hashmap iterieren und daten holen
                 ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
                 for (int i = 0; i < dvdArrayList.size(); i++) {
                     HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
                     dvds.add(new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
-                            dvdResult.get("pictureURL"), dvdResult.get("shelfPos")));
+                            dvdResult.get("pictureURL"), dvdResult.get("shelfPos"), dvdResult.get("available")));
                 }
                 detailDvdTable.setItems(dvds);
 
