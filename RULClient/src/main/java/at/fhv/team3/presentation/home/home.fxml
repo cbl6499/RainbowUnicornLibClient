@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane onKeyPressed="#searchTroughEnter" prefHeight="690.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.home.HomePresenter">
+<AnchorPane onKeyPressed="#searchTroughEnter" prefHeight="690.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.team3.presentation.home.HomePresenter">
     <children>
       <GridPane alignment="CENTER" prefHeight="142.0" prefWidth="607.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -102,9 +102,9 @@
         </TabPane>
         <Button fx:id="searchButton" layoutX="716.0" layoutY="222.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="95.0" text="Suchen" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="210.0" />
         <TextField fx:id="searchField" layoutX="15.0" layoutY="211.0" prefHeight="26.0" prefWidth="682.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="210.0" />
-        <Button fx:id="BibInfoButton" layoutX="10.0" layoutY="175.0" mnemonicParsing="false" onAction="#handleButtonActionBibInfo" text="Bibliotheks Informationen" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
-        <Button fx:id="CustomerManagementButton" layoutX="581.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleButtonActionCustomerManagement" prefHeight="26.0" prefWidth="149.0" style="-fx-background-color: #cd5c5c;" text="Kundenverwaltung" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="155.0" />
-        <Button layoutX="717.8" layoutY="174.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0" />
+        <Button fx:id="BibInfoButton" layoutX="10.0" layoutY="175.0" mnemonicParsing="false" onAction="#handleButtonActionBibInfo" prefHeight="30.0" prefWidth="180.0" text="Bibliotheks Informationen" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
+        <Button fx:id="CustomerManagementButton" layoutX="581.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleButtonActionCustomerManagement" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #cd5c5c;" text="Kundenverwaltung" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="155.0" />
+        <Button layoutX="717.8" layoutY="174.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0" />
       <Separator layoutY="196.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
     </children>
 </AnchorPane>

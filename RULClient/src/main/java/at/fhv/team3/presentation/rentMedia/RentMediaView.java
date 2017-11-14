@@ -1,4 +1,6 @@
 package at.fhv.team3.presentation.rentMedia;
 
-public class RentMediaView {
+import com.airhacks.afterburner.views.FXMLView;
+
+public class RentMediaView extends FXMLView {
 }

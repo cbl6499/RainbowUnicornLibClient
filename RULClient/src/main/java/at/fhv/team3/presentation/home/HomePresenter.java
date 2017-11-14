@@ -135,7 +135,6 @@ public class HomePresenter implements Initializable {
             }
         });
         stage.show();
-
     }
 
     @FXML

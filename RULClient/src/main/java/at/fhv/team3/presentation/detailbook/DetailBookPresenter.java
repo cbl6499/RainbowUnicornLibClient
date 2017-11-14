@@ -6,11 +6,13 @@ import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
+import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -73,6 +75,9 @@ public class DetailBookPresenter implements Initializable {
     private ImageView pictureUrl;
 
     @FXML
+    private Button CustomerManagementButton;
+
+    @FXML
     private void handleDetailBookBackButton() {
         HomeView hv = new HomeView();
         Scene scene = new Scene(hv.getView());
@@ -82,6 +87,33 @@ public class DetailBookPresenter implements Initializable {
         stage.setScene(scene);
         HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
         homePresenter.reload(_books,_dvds,_magazines);
+        stage.show();
+    }
+
+    @FXML
+    private void handleButtonActionCustomerManagement(ActionEvent event) {
+        CustomerManagementView cm = new CustomerManagementView();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(new Scene(cm.getView()));
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                alert.setTitle("Attention");
+                alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    stage.close();
+                } else {
+                    event.consume();
+                }
+            }
+        });
         stage.show();
     }
 
@@ -171,7 +203,6 @@ public class DetailBookPresenter implements Initializable {
                     stage.show();
                     BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
                     borrowMediaPresenter.setInfo(selectedItem);
-                    //detailBookPresenter.setLastSearch(_books,_dvds,_magazines);
                 }
             }
         });
