@@ -16,6 +16,7 @@ public class BookDTO extends DTO {
     private String _edition;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
 
     public BookDTO(int id, String title, String publisher, String author, String isbn, String edition, String pictureURL, String shelfPos){
         _bookId = id;
@@ -92,6 +93,12 @@ public class BookDTO extends DTO {
         return _shelfPos;
     }
 
+    public void setAvailable(boolean available){
+        _available = available;
+    }
+
+    public boolean isAvailable(){ return _available;}
+
     public void setId(int id) {
         setBookId(id);
     }
@@ -110,13 +117,19 @@ public class BookDTO extends DTO {
         allData.put("edition", _edition);
         allData.put("pictureURL", _pictureURL);
         allData.put("shelfPos", _shelfPos);
-
+        String available;
+        if(_available){
+            available = "true";
+        } else {
+            available = "false";
+        }
+        allData.put("available", available);
         return allData;
     }
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition)){
+        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
             return true;
         }
         return false;

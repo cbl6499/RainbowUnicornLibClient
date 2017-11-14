@@ -13,6 +13,7 @@ public class MagazineDTO extends DTO{
     private String _publisher;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
 
     public MagazineDTO(int id, String title, String edition, String publisher, String pictureURL, String shelfPos){
         _magazineId = id;
@@ -71,6 +72,12 @@ public class MagazineDTO extends DTO{
         return _shelfPos;
     }
 
+    public void setAvailable(boolean available){
+        _available = available;
+    }
+
+    public boolean isAvailable(){ return _available;}
+
     public void setId(int id) {
         setMagazineId(id);
     }
@@ -92,7 +99,7 @@ public class MagazineDTO extends DTO{
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("edition").equals(_edition) && data.get("publisher").equals(_publisher)){
+        if(data.get("title").equals(_title) && data.get("edition").equals(_edition) && data.get("publisher").equals(_publisher) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
             return true;
         }
         return false;

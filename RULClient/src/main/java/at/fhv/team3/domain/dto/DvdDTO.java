@@ -12,6 +12,7 @@ public class DvdDTO extends DTO{
     private String _regisseur;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
 
     public DvdDTO(int id, String title, String regisseur, String pictureURL, String shelfPos){
         _dvdId = id;
@@ -49,7 +50,7 @@ public class DvdDTO extends DTO{
         _pictureURL = pictureURL;
     }
 
-    public String getPictureURL(){return _pictureURL;}
+    public String getPictureURL(){ return _pictureURL;}
 
     public void setShelfPos(String shelfPos){
         _shelfPos = shelfPos;
@@ -58,6 +59,12 @@ public class DvdDTO extends DTO{
     public String getShelfPos(){
         return _shelfPos;
     }
+
+    public void setAvailable(boolean available){
+        _available = available;
+    }
+
+    public boolean isAvailable(){ return _available;}
 
     public void setId(int id) {
         setDvdId(id);
@@ -79,7 +86,7 @@ public class DvdDTO extends DTO{
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("regisseur").equals(_regisseur)){
+        if(data.get("title").equals(_title) && data.get("regisseur").equals(_regisseur) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 package at.fhv.team3.domain.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -25,5 +26,15 @@ public abstract class DTO implements Serializable{
 
     public boolean isAvailable(){
         return _available;
+    }
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        Collection<String> stringList = map.values();
+        for (String s : stringList) {
+            sb.append(s + " ");
+        }
+        return sb.toString();
     }
 }
