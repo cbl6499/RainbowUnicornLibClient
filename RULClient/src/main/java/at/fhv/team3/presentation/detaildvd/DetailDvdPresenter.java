@@ -187,7 +187,7 @@ public class DetailDvdPresenter implements Initializable {
                     });
                     stage.show();
                     BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                    borrowMediaPresenter.setInfo(selectedItem);
+                    borrowMediaPresenter.setDvdDTO(selectedItem);
                 }
             }
         });
