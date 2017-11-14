@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.borrowMedia;
 
 import at.fhv.team3.domain.dto.*;
+import at.fhv.team3.rmi.interfaces.RMIBorrow;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +28,9 @@ public class BorrowMediaPresenter implements Initializable {
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
     private int _id;
+    private BookDTO bookDTO;
+    private DvdDTO dvdDTO;
+    private MagazineDTO magazineDTO;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -34,7 +38,7 @@ public class BorrowMediaPresenter implements Initializable {
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
-            setInfo(null);
+            setInfo();
         });
     }
 
@@ -72,9 +76,15 @@ public class BorrowMediaPresenter implements Initializable {
     void borrowMediaAction(ActionEvent event) {
         try {
             Registry registry = LocateRegistry.getRegistry(1099);
-            RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Borrow");
+            RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
-           // BorrowedItemDTO borrowedItemDTO = new BorrowedItemDTO(())
+            if(!bookDTO.equals(null)){
+                rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
+            }else if(!dvdDTO.equals(null)){
+                rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
+            }else if(!magazineDTO.equals(null)){
+                rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
+            }
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
             e.printStackTrace();
@@ -186,7 +196,7 @@ public class BorrowMediaPresenter implements Initializable {
         }
     }
 
-    public void setInfo(DTO dto){
+    public void setInfo(){
         if(selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
                 firstNameField.setText(selectedItemfromComboBox.getFirstName());
@@ -208,9 +218,18 @@ public class BorrowMediaPresenter implements Initializable {
             }
         }
 
-        _id = dto.getId();
-
+        System.out.println(_id);
     }
 
+    public void setBookDTO(BookDTO bookDTO){
+        this.bookDTO = bookDTO;
+    }
 
+    public void setDvdDTO(DvdDTO dvdDTO){
+        this.dvdDTO = dvdDTO;
+    }
+
+    public void setMagazineDTO(MagazineDTO magazineDTO){
+        this.magazineDTO = magazineDTO;
+    }
 }
