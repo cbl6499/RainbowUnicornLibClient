@@ -31,6 +31,7 @@ public class BorrowMediaPresenter implements Initializable {
     private BookDTO bookDTO;
     private DvdDTO dvdDTO;
     private MagazineDTO magazineDTO;
+    private Boolean borrowState = false;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -78,22 +79,35 @@ public class BorrowMediaPresenter implements Initializable {
             Registry registry = LocateRegistry.getRegistry(1099);
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
-            if(!bookDTO.equals(null)){
-                rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
-            }else if(!dvdDTO.equals(null)){
-                rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
-            }else if(!magazineDTO.equals(null)){
-                rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
+            if(bookDTO != null){
+                borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
+            }else if(dvdDTO != null){
+                borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
+            }else if(magazineDTO != null){
+                borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
             }
+
+            if(borrowState) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
+                alert.setTitle("Success");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                    stage.close();
+                }
+            }
+
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
             e.printStackTrace();
         }
+        borrowState = false;
     }
 
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
         alert.setTitle("Attention");
         alert.setHeaderText("Wollen Sie wirklich abbrechen?");
         Optional<ButtonType> result = alert.showAndWait();

@@ -13,6 +13,6 @@ import java.rmi.RemoteException;
  */
 public interface RMIBorrow  extends Remote {
 
-    public void handOut(DTO media, CustomerDTO customer) throws RemoteException;
-    public void handIn(DTO media) throws RemoteException;
+    public boolean handOut(DTO media, CustomerDTO customer) throws RemoteException;
+    public boolean handIn(DTO media) throws RemoteException;
 }
