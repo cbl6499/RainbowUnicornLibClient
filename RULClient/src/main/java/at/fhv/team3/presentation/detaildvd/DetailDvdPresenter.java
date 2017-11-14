@@ -161,31 +161,34 @@ public class DetailDvdPresenter implements Initializable {
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 1) {
                     DvdDTO selectedItem = detailDvdTable.getSelectionModel().getSelectedItem();
-                    BorrowMediaView bmp = new BorrowMediaView();
-                    Stage stage = new Stage();
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    stage.setScene(new Scene(bmp.getView()));
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-                            Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
-                            alert.setTitle("Attention");
-                            alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+                    System.out.println(selectedItem.getStatus());
+                    if (selectedItem.getStatus().equals("Vorhanden")) {
+                        BorrowMediaView bmp = new BorrowMediaView();
+                        Stage stage = new Stage();
+                        stage.initModality(Modality.WINDOW_MODAL);
+                        stage.setScene(new Scene(bmp.getView()));
+                        stage.setResizable(false);
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                alert.setTitle("Attention");
+                                alert.setHeaderText("Wollen Sie wirklich abbrechen?");
 
-                            Optional<ButtonType> result = alert.showAndWait();
+                                Optional<ButtonType> result = alert.showAndWait();
 
-                            if (result.get() == ButtonType.OK) {
-                                stage.close();
-                            } else {
-                                event.consume();
+                                if (result.get() == ButtonType.OK) {
+                                    stage.close();
+                                } else {
+                                    event.consume();
+                                }
                             }
-                        }
-                    });
-                    stage.show();
-                    BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                    borrowMediaPresenter.setDvdDTO(selectedItem);
+                        });
+                        stage.show();
+                        BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
+                        borrowMediaPresenter.setDvdDTO(selectedItem);
+                    }
                 }
             }
         });
