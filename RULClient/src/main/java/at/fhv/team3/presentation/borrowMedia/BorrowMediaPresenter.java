@@ -75,32 +75,43 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void borrowMediaAction(ActionEvent event) {
-        try {
-            Registry registry = LocateRegistry.getRegistry(1099);
-            RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
+        if(selectedItemfromComboBox.getSubscription()) {
 
-            if(bookDTO != null){
-                borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
-            }else if(dvdDTO != null){
-                borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
-            }else if(magazineDTO != null){
-                borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
-            }
+            try {
+                Registry registry = LocateRegistry.getRegistry(1099);
+                RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
-            if(borrowState) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
-                alert.setTitle("Success");
-                Optional<ButtonType> result = alert.showAndWait();
-
-                if (result.get() == ButtonType.OK) {
-                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
-                    stage.close();
+                if (bookDTO != null) {
+                    borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
+                } else if (dvdDTO != null) {
+                    borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
+                } else if (magazineDTO != null) {
+                    borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
                 }
-            }
 
-        } catch (Exception e) {
-            System.out.println("HelloClient exception: " + e.getMessage());
-            e.printStackTrace();
+                if (borrowState) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
+                    alert.setTitle("Success");
+                    Optional<ButtonType> result = alert.showAndWait();
+
+                    if (result.get() == ButtonType.OK) {
+                        Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                        stage.close();
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("HelloClient exception: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Kunde hat keine laufende Subscription", ButtonType.OK);
+            alert.setTitle("Subscription Alert");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
         }
         borrowState = false;
     }
