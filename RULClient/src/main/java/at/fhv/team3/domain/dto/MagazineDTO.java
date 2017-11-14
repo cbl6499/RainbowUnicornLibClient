@@ -99,7 +99,7 @@ public class MagazineDTO extends DTO{
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("edition").equals(_edition) && data.get("publisher").equals(_publisher) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
+        if(data.get("title").equals(_title) && data.get("edition").equals(_edition) && data.get("publisher").equals(_publisher)){
             return true;
         }
         return false;

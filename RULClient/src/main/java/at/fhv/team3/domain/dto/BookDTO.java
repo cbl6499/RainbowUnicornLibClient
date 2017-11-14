@@ -129,7 +129,7 @@ public class BookDTO extends DTO {
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) && data.get("pictureURL").equals(_pictureURL) && data.get("shelfPos").equals(_shelfPos)){
+        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) ){
             return true;
         }
         return false;
