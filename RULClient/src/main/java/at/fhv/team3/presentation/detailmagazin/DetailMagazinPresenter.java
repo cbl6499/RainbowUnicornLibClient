@@ -125,8 +125,6 @@ public class DetailMagazinPresenter {
 
                 ArrayList<MagazineDTO> magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
 
-                System.out.println(magazineArrayList);
-
                 ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
                 for (int i = 0; i < magazineArrayList.size(); i++) {
                     HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
