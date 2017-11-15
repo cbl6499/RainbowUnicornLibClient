@@ -194,13 +194,26 @@ public class DetailMagazinPresenter {
     }
 
     @FXML
-    private void handleButtonActionRent(ActionEvent event) {
-        RentMediaView cm = new RentMediaView();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.setScene(new Scene(cm.getView()));
-        stage.setResizable(false);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
+    private void handleButtonActionRent() {
+        Boolean oneItemAvailable = false;
+        for (MagazineDTO magazine: mediaMagazines) {
+            if(magazine.isAvailable() == true){
+                oneItemAvailable = true;
+            }
+        }
+        if(oneItemAvailable == true){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Es gibt noch Exemplare zum Ausleihen", ButtonType.OK);
+            alert.setTitle("Achtung");
+            alert.setHeaderText("Reservieren nicht möglich");
+            alert.showAndWait();
+        } else{
+            RentMediaView cm = new RentMediaView();
+            Stage newstage = new Stage();
+            newstage.initModality(Modality.WINDOW_MODAL);
+            newstage.setScene(new Scene(cm.getView()));
+            newstage.setResizable(false);
+            newstage.initModality(Modality.APPLICATION_MODAL);
+            newstage.show();
+        }
     }
 }

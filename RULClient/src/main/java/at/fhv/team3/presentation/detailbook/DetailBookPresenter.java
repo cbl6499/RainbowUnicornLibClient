@@ -212,20 +212,17 @@ public class DetailBookPresenter implements Initializable {
     }
 
     @FXML
-    private void handleButtonActionRent(ActionEvent event) {
+    private void handleButtonActionRent() {
         Boolean oneItemAvailable = false;
         for (BookDTO book: mediaBooks) {
-            System.out.println(book.isAvailable());
-            System.out.println(book.getTitle());
             if(book.isAvailable() == true){
                 oneItemAvailable = true;
-
             }
         }
         if(oneItemAvailable == true){
-            Alert alert = new Alert(Alert.AlertType.WARNING, "test", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Es gibt noch Exemplare zum Ausleihen", ButtonType.OK);
             alert.setTitle("Achtung");
-            alert.setHeaderText("test?");
+            alert.setHeaderText("Reservieren nicht möglich");
             alert.showAndWait();
         } else{
             RentMediaView cm = new RentMediaView();
