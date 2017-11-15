@@ -1,11 +1,12 @@
 package at.fhv.team3.domain.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by David on 11/15/2017.
  */
-public class ValidationResult {
+public class ValidationResult implements Serializable{
 
     public ArrayList<String> _errorMessages;
 
