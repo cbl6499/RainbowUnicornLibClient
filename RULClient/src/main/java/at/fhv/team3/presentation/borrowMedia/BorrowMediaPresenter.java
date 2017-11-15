@@ -82,11 +82,11 @@ public class BorrowMediaPresenter implements Initializable {
                 RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
                 if (bookDTO != null) {
-                    borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
+                    borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox).hasErrors();
                 } else if (dvdDTO != null) {
-                    borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
+                    borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox).hasErrors();
                 } else if (magazineDTO != null) {
-                    borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
+                    borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox).hasErrors();
                 }
 
                 if (borrowState) {

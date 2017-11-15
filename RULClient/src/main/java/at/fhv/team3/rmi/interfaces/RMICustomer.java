@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by David on 11/9/2017.
  */
+
 public interface RMICustomer extends Remote {
 
         public ArrayList<DTO> findCustomer(String term) throws RemoteException;
