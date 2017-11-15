@@ -276,7 +276,6 @@ public class RentMediaPresenter implements Initializable {
             ArrayList<DTO> bookingslist = null;
             if (bookDTO != null) {
                 bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(bookDTO);
-                System.out.println(bookingslist);
             } else if (dvdDTO != null) {
                 bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(dvdDTO);
             } else if (magazineDTO != null) {
