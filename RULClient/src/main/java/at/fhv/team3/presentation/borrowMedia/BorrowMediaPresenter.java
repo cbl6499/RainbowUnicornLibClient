@@ -118,7 +118,7 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Erfolgreich Medium ausgeliehen", ButtonType.CANCEL, ButtonType.OK);
         alert.setTitle("Attention");
         alert.setHeaderText("Wollen Sie wirklich abbrechen?");
         Optional<ButtonType> result = alert.showAndWait();

@@ -33,7 +33,7 @@ public class RentMediaPresenter implements Initializable {
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
-            setInfo(null);
+            setInfo();
         });
     }
 
@@ -82,15 +82,8 @@ public class RentMediaPresenter implements Initializable {
 
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
-        alert.setTitle("Attention");
-        alert.setHeaderText("Wollen Sie wirklich abbrechen?");
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == ButtonType.OK) {
-            Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
-            stage.close();
-        }
+        Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -185,7 +178,7 @@ public class RentMediaPresenter implements Initializable {
         }
     }
 
-    public void setInfo(DTO dto){
+    public void setInfo(){
         if(selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
                 firstNameField.setText(selectedItemfromComboBox.getFirstName());
@@ -206,9 +199,6 @@ public class RentMediaPresenter implements Initializable {
                 contractStatusField.setText("InAktiv");
             }
         }
-
-        _id = dto.getId();
-
     }
 
 

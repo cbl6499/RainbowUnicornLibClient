@@ -1,7 +1,6 @@
 package at.fhv.team3.presentation.detailmagazin;
 
 import at.fhv.team3.domain.dto.BookDTO;
-import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
@@ -33,9 +32,10 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class DetailMagazinPresenter {
-        ObservableList<BookDTO> _books;
-        ObservableList<DvdDTO> _dvds;
-        ObservableList<MagazineDTO> _magazines;
+        ObservableList<BookDTO> _homebook;
+        ObservableList<DvdDTO> _homedvds;
+        ObservableList<MagazineDTO> _homemagazines;
+        ObservableList<MagazineDTO> mediaMagazines;
 
         @FXML
         private TextField titel;
@@ -76,7 +76,7 @@ public class DetailMagazinPresenter {
             stage.setWidth(DetailMagazineBackButton.getScene().getWindow().getWidth());
             stage.setScene(scene);
             HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
-            homePresenter.reload(_books,_dvds,_magazines);
+            homePresenter.reload(_homebook, _homedvds, _homemagazines);
             stage.show();
         }
 
@@ -130,14 +130,14 @@ public class DetailMagazinPresenter {
 
                 ArrayList<MagazineDTO> magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
 
-                ObservableList<MagazineDTO> magazines = FXCollections.observableArrayList();
+                mediaMagazines = FXCollections.observableArrayList();
                 for (int i = 0; i < magazineArrayList.size(); i++) {
                     HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
-                    magazines.add(new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
+                    mediaMagazines.add(new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
                             magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos"), magazineResult.get("available")));
 
                 }
-                detailMagazineTable.setItems(magazines);
+                detailMagazineTable.setItems(mediaMagazines);
 
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
@@ -149,9 +149,9 @@ public class DetailMagazinPresenter {
     }
 
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
-        _books = books;
-        _dvds = dvds;
-        _magazines = magazines;
+        _homebook = books;
+        _homedvds = dvds;
+        _homemagazines = magazines;
     }
 
     @FXML

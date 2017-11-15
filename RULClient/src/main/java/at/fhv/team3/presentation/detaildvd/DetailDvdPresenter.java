@@ -1,7 +1,6 @@
 package at.fhv.team3.presentation.detaildvd;
 
 import at.fhv.team3.domain.dto.BookDTO;
-import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
@@ -36,9 +35,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DetailDvdPresenter implements Initializable {
-    ObservableList<BookDTO> _books;
-    ObservableList<DvdDTO> _dvds;
-    ObservableList<MagazineDTO> _magazines;
+    ObservableList<BookDTO> _homebooks;
+    ObservableList<DvdDTO> _homedvds;
+    ObservableList<MagazineDTO> _homemagazines;
+    ObservableList<DvdDTO> mediaDvds;
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,7 +84,7 @@ public class DetailDvdPresenter implements Initializable {
         stage.setWidth(DetailDvdBackButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
         HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
-        homePresenter.reload(_books,_dvds,_magazines);
+        homePresenter.reload(_homebooks, _homedvds, _homemagazines);
         stage.show();
     }
 
@@ -135,13 +135,13 @@ public class DetailDvdPresenter implements Initializable {
                 ArrayList<DvdDTO> dvdArrayList = searchMedia.getDvdByTitle(titel.getText());
 
                 // buch hashmap iterieren und daten holen
-                ObservableList<DvdDTO> dvds = FXCollections.observableArrayList();
+                mediaDvds = FXCollections.observableArrayList();
                 for (int i = 0; i < dvdArrayList.size(); i++) {
                     HashMap<String, String> dvdResult = dvdArrayList.get(i).getAllData();
-                    dvds.add(new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
+                    mediaDvds.add(new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
                             dvdResult.get("pictureURL"), dvdResult.get("shelfPos"), dvdResult.get("available")));
                 }
-                detailDvdTable.setItems(dvds);
+                detailDvdTable.setItems(mediaDvds);
 
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
@@ -153,9 +153,9 @@ public class DetailDvdPresenter implements Initializable {
     }
 
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
-        _books = books;
-        _dvds = dvds;
-        _magazines = magazines;
+        _homebooks = books;
+        _homedvds = dvds;
+        _homemagazines = magazines;
     }
 
     @FXML
