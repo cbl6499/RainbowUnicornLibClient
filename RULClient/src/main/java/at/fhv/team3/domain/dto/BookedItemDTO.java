@@ -16,6 +16,8 @@ public class BookedItemDTO extends DTO {
     private BookDTO _book;
     private DvdDTO _dvd;
     private MagazineDTO _magazine;
+    private String name;
+    private String start;
 
     public BookedItemDTO(int id, CustomerDTO customer, Date date, DTO dto) {
         _bookingId = id;
@@ -70,6 +72,21 @@ public class BookedItemDTO extends DTO {
         return _book;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return _customer.getFirstName() + " " + _customer.getLastName();
+    }
+
+    public void setStart(Date date){
+        start = date.toString();
+    }
+
+    public String getStart(){
+        return _date.toString();
+    }
 
     public void setDvd(DvdDTO dvd){
         _dvd = dvd;

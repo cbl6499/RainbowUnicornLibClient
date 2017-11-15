@@ -148,11 +148,11 @@ public class BorrowMediaPresenter implements Initializable {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
-                ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(customerSearchField.getText());
+                ArrayList<DTO> customersFound = rmiCustomer.findCustomer(customerSearchField.getText());
 
                 _customer = FXCollections.observableArrayList();
-                for (int i = 0; i < CustomersFound.size(); i++) {
-                    HashMap<String, String> customerResult = CustomersFound.get(i).getAllData();
+                for (int i = 0; i < customersFound.size(); i++) {
+                    HashMap<String, String> customerResult = customersFound.get(i).getAllData();
                     CustomerDTO tempCustomer = new CustomerDTO(Integer.parseInt(customerResult.get("id")), customerResult.get("firstname"), customerResult.get("lastname"),
                             Boolean.parseBoolean(customerResult.get("subscription")), customerResult.get("email"), customerResult.get("phonenumber"));
 

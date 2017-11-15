@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -35,10 +36,16 @@ public class RentMediaPresenter implements Initializable {
     private BookDTO bookDTO;
     private DvdDTO dvdDTO;
     private MagazineDTO magazineDTO;
+    ObservableList<BookedItemDTO> _bookings;
 
     public void initialize(URL location, ResourceBundle resources) {
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        date.setCellValueFactory(new PropertyValueFactory<>("start"));
+
         placeholder = new Label("Bitte suchen!");
         customerDropdown.setPlaceholder(placeholder);
+
+        //setBookingTable();
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
@@ -269,21 +276,17 @@ public class RentMediaPresenter implements Initializable {
             ArrayList<DTO> bookingslist = null;
             if (bookDTO != null) {
                 bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(bookDTO);
-                System.out.println("test");
+                System.out.println(bookingslist);
             } else if (dvdDTO != null) {
                 bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(dvdDTO);
             } else if (magazineDTO != null) {
                 bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(magazineDTO);
             }
             if(bookingslist != null) {
-                ObservableList<BookedItemDTO> _bookings = FXCollections.observableArrayList();
+                _bookings = FXCollections.observableArrayList();
                 for (int i = 0; i < bookingslist.size(); i++) {
-                    BookedItemDTO tempBooking = (BookedItemDTO) bookingslist.get(i);
-                    System.out.println(tempBooking.getCustomer().getFirstName());
-                    // BookedItem tempBooking = new BookedItemDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                    //         bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
-                    // Boolean bookfound = false;
-                    _bookings.add(tempBooking);
+                    BookedItemDTO tempBookings = (BookedItemDTO) bookingslist.get(i);
+                    _bookings.add(tempBookings);
                 }
                 bookingTable.setItems(_bookings);
             } else {
