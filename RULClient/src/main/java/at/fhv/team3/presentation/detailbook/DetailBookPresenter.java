@@ -1,7 +1,6 @@
 package at.fhv.team3.presentation.detailbook;
 
 import at.fhv.team3.domain.dto.BookDTO;
-import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
@@ -9,6 +8,7 @@ import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
+import at.fhv.team3.presentation.rentMedia.RentMediaView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,9 +35,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DetailBookPresenter implements Initializable {
-    ObservableList<BookDTO> _books;
-    ObservableList<DvdDTO> _dvds;
-    ObservableList<MagazineDTO> _magazines;
+    ObservableList<BookDTO> _homebooks;
+    ObservableList<DvdDTO> _homedvds;
+    ObservableList<MagazineDTO> _homemagazines;
+    ObservableList<BookDTO> mediaBooks;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
@@ -78,6 +79,9 @@ public class DetailBookPresenter implements Initializable {
     private Button CustomerManagementButton;
 
     @FXML
+    private Button RentButton;
+
+    @FXML
     private void handleDetailBookBackButton() {
         HomeView hv = new HomeView();
         Scene scene = new Scene(hv.getView());
@@ -86,7 +90,7 @@ public class DetailBookPresenter implements Initializable {
         stage.setWidth(DetailBookBackButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
         HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
-        homePresenter.reload(_books,_dvds,_magazines);
+        homePresenter.reload(_homebooks, _homedvds, _homemagazines);
         stage.show();
     }
 
@@ -143,15 +147,15 @@ public class DetailBookPresenter implements Initializable {
 
                 ArrayList<BookDTO> bookArrayList = searchMedia.getBooksByISBN(isbn.getText());
 
-                ObservableList<BookDTO> books = FXCollections.observableArrayList();
+                mediaBooks = FXCollections.observableArrayList();
 
                 // buch hashmap iterieren und daten holen
                 for (int i = 0; i < bookArrayList.size(); i++) {
                     HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
-                    books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
+                    mediaBooks.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
                             bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"), bookResult.get("available")));
                 }
-                detailBookTable.setItems(books);
+                detailBookTable.setItems(mediaBooks);
 
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
@@ -163,9 +167,9 @@ public class DetailBookPresenter implements Initializable {
     }
 
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
-        _books = books;
-        _dvds = dvds;
-        _magazines = magazines;
+        _homebooks = books;
+        _homedvds = dvds;
+        _homemagazines = magazines;
     }
 
     @FXML
@@ -205,6 +209,29 @@ public class DetailBookPresenter implements Initializable {
                 }
             }
         });
+    }
 
+    @FXML
+    private void handleButtonActionRent() {
+        Boolean oneItemAvailable = false;
+        for (BookDTO book: mediaBooks) {
+            if(book.isAvailable() == true){
+                oneItemAvailable = true;
+            }
+        }
+        if(oneItemAvailable == true){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Es gibt noch Exemplare zum Ausleihen", ButtonType.OK);
+            alert.setTitle("Achtung");
+            alert.setHeaderText("Reservieren nicht möglich");
+            alert.showAndWait();
+        } else{
+            RentMediaView cm = new RentMediaView();
+            Stage newstage = new Stage();
+            newstage.initModality(Modality.WINDOW_MODAL);
+            newstage.setScene(new Scene(cm.getView()));
+            newstage.setResizable(false);
+            newstage.initModality(Modality.APPLICATION_MODAL);
+            newstage.show();
+        }
     }
 }
