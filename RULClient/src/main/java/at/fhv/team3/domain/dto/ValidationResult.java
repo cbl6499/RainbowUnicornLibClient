@@ -8,13 +8,17 @@ import java.util.ArrayList;
  */
 public class ValidationResult implements Serializable{
 
-    public ArrayList<String> _errorMessages;
+    private ArrayList<String> _errorMessages;
 
     public ValidationResult(){
         _errorMessages = new ArrayList<String>();
     }
 
     public ArrayList<String> getErrorMessages(){ return _errorMessages;}
+
+    public void add(String s){
+        _errorMessages.add(s);
+    }
 
     public boolean hasErrors(){
         if(_errorMessages.isEmpty()){

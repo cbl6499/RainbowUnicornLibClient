@@ -40,6 +40,11 @@ public class BookDTO extends DTO {
         _pictureURL = pictureURL;
         _shelfPos = shelfPos;
         _status = status;
+        if(_status.equals("Vorhanden")){
+            _available = true;
+        } else {
+            _available = false;
+        }
     }
 
     public void setBookId(int id){
@@ -106,8 +111,8 @@ public class BookDTO extends DTO {
         return _shelfPos;
     }
 
-    public void setAvailable(boolean _available){
-        this._available = _available;
+    public void setAvailable(boolean available){
+        this._available = available;
         if(_available){
             _status = "Vorhanden";
         } else {
