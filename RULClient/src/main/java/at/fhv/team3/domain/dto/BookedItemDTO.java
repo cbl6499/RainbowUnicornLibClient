@@ -11,13 +11,13 @@ import java.util.HashMap;
 public class BookedItemDTO extends DTO {
 
     private int _bookingId;
-    private Customer _customer;
+    private CustomerDTO _customer;
     private Date _date;
     private BookDTO _book;
     private DvdDTO _dvd;
     private MagazineDTO _magazine;
 
-    public BookedItemDTO(int id, Customer customer, Date date, DTO dto) {
+    public BookedItemDTO(int id, CustomerDTO customer, Date date, DTO dto) {
         _bookingId = id;
         _customer = customer;
         _date = date;
@@ -38,11 +38,11 @@ public class BookedItemDTO extends DTO {
         return _bookingId;
     }
 
-    public void setCustomer(Customer customer){
+    public void setCustomer(CustomerDTO customer){
         _customer = customer;
     }
 
-    public Customer getCustomer(){
+    public CustomerDTO getCustomer(){
         return _customer;
     }
 
@@ -60,6 +60,29 @@ public class BookedItemDTO extends DTO {
 
     public int getId() {
         return getBookingId();
+    }
+
+    public void setBook(BookDTO book){
+        _book = book;
+    }
+
+    public BookDTO getBook(){
+        return _book;
+    }
+
+
+    public void setDvd(DvdDTO dvd){
+        _dvd = dvd;
+    }
+
+    public DvdDTO getDvD(){ return _dvd;}
+
+    public void setMagazine(MagazineDTO magazine){
+        _magazine = magazine;
+    }
+
+    public MagazineDTO getMagazine(){
+        return _magazine;
     }
 
     public HashMap<String, String> getAllData() {

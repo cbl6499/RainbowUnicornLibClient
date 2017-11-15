@@ -1,7 +1,10 @@
 package at.fhv.team3.presentation.rentMedia;
 
+import at.fhv.team3.domain.BookedItem;
 import at.fhv.team3.domain.dto.*;
+import at.fhv.team3.rmi.interfaces.RMIBooking;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
+import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +19,9 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -26,6 +32,9 @@ public class RentMediaPresenter implements Initializable {
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
     private int _id;
+    private BookDTO bookDTO;
+    private DvdDTO dvdDTO;
+    private MagazineDTO magazineDTO;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -65,20 +74,71 @@ public class RentMediaPresenter implements Initializable {
     private Button borrowMediaCancelButton;
 
     @FXML
-    private Button borrowButton;
+    private Button rentButton;
 
     @FXML
-    void borrowMediaAction(ActionEvent event) {
-        try {
-            Registry registry = LocateRegistry.getRegistry(1099);
-            RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Borrow");
+    private TableView<BookedItemDTO> bookingTable;
 
-            // BorrowedItemDTO borrowedItemDTO = new BorrowedItemDTO(())
-        } catch (Exception e) {
-            System.out.println("HelloClient exception: " + e.getMessage());
-            e.printStackTrace();
+    @FXML
+    private TableColumn<BookedItemDTO, String> name;
+
+    @FXML
+    private TableColumn<BookedItemDTO, String> date;
+
+    @FXML
+    void bookingMediaAction() {
+        if (selectedItemfromComboBox.getSubscription()) {
+            try {
+                Registry registry = LocateRegistry.getRegistry(1099);
+                RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
+
+                if (bookDTO != null) {
+                    rmiBooking.bookItem(bookDTO, selectedItemfromComboBox);
+                } else if (dvdDTO != null) {
+                    rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox);
+                } else if (magazineDTO != null) {
+                    rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox);
+                }
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium reserviert", ButtonType.OK);
+                alert.setTitle("Success");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                    stage.close();
+                }
+
+            } catch (Exception e) {
+                System.out.println("HelloClient exception: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Kunde hat keine laufende Subscription", ButtonType.OK);
+            alert.setTitle("Subscription Alert");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
         }
     }
+
+    public void setBookDTO(BookDTO bookDTO) {
+        this.bookDTO = bookDTO;
+        setBookingTable();
+    }
+
+    public void setDvdDTO(DvdDTO dvdDTO) {
+        this.dvdDTO = dvdDTO;
+        setBookingTable();
+    }
+
+    public void setMagazineDTO(MagazineDTO magazineDTO) {
+        this.magazineDTO = magazineDTO;
+        setBookingTable();
+    }
+
 
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
@@ -91,7 +151,7 @@ public class RentMediaPresenter implements Initializable {
         customerSearchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode().equals(KeyCode.ENTER)) {
+                if (event.getCode().equals(KeyCode.ENTER)) {
                     customerSearch();
                 }
             }
@@ -100,7 +160,7 @@ public class RentMediaPresenter implements Initializable {
 
     @FXML
     void customerSearch() {
-        if((!(customerSearchField.getText().trim().equals("")))) {
+        if ((!(customerSearchField.getText().trim().equals("")))) {
             try {
                 Registry registry = LocateRegistry.getRegistry(1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
@@ -122,7 +182,7 @@ public class RentMediaPresenter implements Initializable {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
             }
-        }else{
+        } else {
             customerDropdown.setItems(null);
             placeholder = new Label("Falsche Eingabe!");
             customerDropdown.setPlaceholder(placeholder);
@@ -135,9 +195,9 @@ public class RentMediaPresenter implements Initializable {
 
     }
 
-    public void renderCustomer(){
+    public void renderCustomer() {
         // placeholder
-        if(customerDropdown.getItems().isEmpty()){
+        if (customerDropdown.getItems().isEmpty()) {
             customerDropdown.setItems(null);
             placeholder = new Label("Keine Ergebnisse!");
             customerDropdown.setPlaceholder(placeholder);
@@ -178,8 +238,8 @@ public class RentMediaPresenter implements Initializable {
         }
     }
 
-    public void setInfo(){
-        if(selectedItemfromComboBox != null) {
+    public void setInfo() {
+        if (selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
                 firstNameField.setText(selectedItemfromComboBox.getFirstName());
             }
@@ -201,5 +261,42 @@ public class RentMediaPresenter implements Initializable {
         }
     }
 
+    public void setBookingTable() {
+        try {
+            Registry registry = LocateRegistry.getRegistry(1099);
+            RMIBooking rmiBookings = (RMIBooking) registry.lookup("Booking");
+
+            ArrayList<DTO> bookingslist = null;
+            if (bookDTO != null) {
+                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(bookDTO);
+                System.out.println("test");
+            } else if (dvdDTO != null) {
+                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(dvdDTO);
+            } else if (magazineDTO != null) {
+                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(magazineDTO);
+            }
+            if(bookingslist != null) {
+                ObservableList<BookedItemDTO> _bookings = FXCollections.observableArrayList();
+                for (int i = 0; i < bookingslist.size(); i++) {
+                    BookedItemDTO tempBooking = (BookedItemDTO) bookingslist.get(i);
+                    System.out.println(tempBooking.getCustomer().getFirstName());
+                    // BookedItem tempBooking = new BookedItemDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
+                    //         bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
+                    // Boolean bookfound = false;
+                    _bookings.add(tempBooking);
+                }
+                bookingTable.setItems(_bookings);
+            } else {
+               bookingTable.setItems(null);
+            }
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

@@ -102,7 +102,7 @@
                           </rowConstraints>
                           <children>
                               <Button fx:id="borrowMediaCancelButton" mnemonicParsing="false" onAction="#borrowMediaCancelAction" prefHeight="26.0" prefWidth="144.0" text="Abbrechen" />
-                              <Button fx:id="borrowButton" mnemonicParsing="false" onAction="#borrowMediaAction" prefHeight="26.0" prefWidth="144.0" text="Reservieren" GridPane.columnIndex="1" />
+                              <Button fx:id="rentButton" mnemonicParsing="false" onAction="#bookingMediaAction" prefHeight="26.0" prefWidth="144.0" text="Reservieren" GridPane.columnIndex="1" />
                           </children>
                       </GridPane>
                       <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
@@ -128,10 +128,10 @@
                 <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TableView fx:id="bookingTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn prefWidth="217.5999214053154" text="Name" />
-                      <TableColumn prefWidth="202.4000244140625" text="Startdatum" />
+                      <TableColumn fx:id="name" prefWidth="217.5999214053154" text="Name" />
+                      <TableColumn fx:id="date" prefWidth="202.4000244140625" text="Startdatum" />
                     </columns>
                   </TableView>
                </children>

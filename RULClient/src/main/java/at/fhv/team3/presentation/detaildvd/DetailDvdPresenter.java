@@ -8,6 +8,7 @@ import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
+import at.fhv.team3.presentation.rentMedia.RentMediaPresenter;
 import at.fhv.team3.presentation.rentMedia.RentMediaView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
@@ -212,12 +213,14 @@ public class DetailDvdPresenter implements Initializable {
             alert.setHeaderText("Reservieren nicht möglich");
             alert.showAndWait();
         } else{
-            RentMediaView cm = new RentMediaView();
+            RentMediaView rm = new RentMediaView();
             Stage newstage = new Stage();
             newstage.initModality(Modality.WINDOW_MODAL);
-            newstage.setScene(new Scene(cm.getView()));
+            newstage.setScene(new Scene(rm.getView()));
             newstage.setResizable(false);
             newstage.initModality(Modality.APPLICATION_MODAL);
+            RentMediaPresenter rentMediaPresenter = (RentMediaPresenter) rm.getPresenter();
+            rentMediaPresenter.setDvdDTO(mediaDvds.get(0));
             newstage.show();
         }
     }
