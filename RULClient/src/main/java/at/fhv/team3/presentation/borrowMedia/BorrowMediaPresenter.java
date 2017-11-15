@@ -242,7 +242,6 @@ public class BorrowMediaPresenter implements Initializable {
                 contractStatusField.setText("InAktiv");
             }
         }
-
         System.out.println(_id);
     }
 

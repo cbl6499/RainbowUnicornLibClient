@@ -9,6 +9,7 @@ import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
+import at.fhv.team3.presentation.rentMedia.RentMediaView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,6 +77,9 @@ public class DetailBookPresenter implements Initializable {
 
     @FXML
     private Button CustomerManagementButton;
+
+    @FXML
+    private Button RentButton;
 
     @FXML
     private void handleDetailBookBackButton() {
@@ -205,6 +209,16 @@ public class DetailBookPresenter implements Initializable {
                 }
             }
         });
+    }
 
+    @FXML
+    private void handleButtonActionRent(ActionEvent event) {
+        RentMediaView cm = new RentMediaView();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(new Scene(cm.getView()));
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

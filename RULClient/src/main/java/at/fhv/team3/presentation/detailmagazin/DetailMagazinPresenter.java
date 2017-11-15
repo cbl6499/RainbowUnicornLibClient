@@ -9,6 +9,7 @@ import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
+import at.fhv.team3.presentation.rentMedia.RentMediaView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,6 +65,9 @@ public class DetailMagazinPresenter {
         private Button CustomerManagementButton;
 
         @FXML
+        private Button RentButton;
+
+        @FXML
         void handleDetailMagazineBackButton(ActionEvent event) {
             HomeView hv = new HomeView();
             Scene scene = new Scene(hv.getView());
@@ -75,6 +79,7 @@ public class DetailMagazinPresenter {
             homePresenter.reload(_books,_dvds,_magazines);
             stage.show();
         }
+
 
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
@@ -186,6 +191,16 @@ public class DetailMagazinPresenter {
                 }
             }
         });
+    }
 
+    @FXML
+    private void handleButtonActionRent(ActionEvent event) {
+        RentMediaView cm = new RentMediaView();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(new Scene(cm.getView()));
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }
