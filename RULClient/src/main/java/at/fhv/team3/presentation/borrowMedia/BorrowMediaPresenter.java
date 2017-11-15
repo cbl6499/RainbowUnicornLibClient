@@ -89,7 +89,7 @@ public class BorrowMediaPresenter implements Initializable {
                     borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox).hasErrors();
                 }
 
-                if (borrowState) {
+                if (!borrowState) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
                     alert.setTitle("Success");
                     Optional<ButtonType> result = alert.showAndWait();
