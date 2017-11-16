@@ -129,8 +129,8 @@
             </children>
         </GridPane>
         <Button fx:id="DetailMagazineBackButton" layoutX="17.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDetailMagazineBackButton" prefHeight="30.0" prefWidth="90.0" text="Zurück" />
-      <Button fx:id="RentButton" layoutX="625.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleButtonActionRent" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #cd5c5c;" text="Reservieren" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="155.0" />
-      <Button layoutX="705.0" layoutY="153.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="155.0" />
+      <Button fx:id="BookingButton" layoutX="625.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleButtonActionBooking" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #cd5c5c;" text="Reservieren" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="155.0" />
+      <Button fx:id="LogoutButton" layoutX="705.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleButtonActionLogout" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="155.0" />
       <Button fx:id="CustomerManagementButton" layoutX="546.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleButtonActionCustomerManagement" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #cd5c5c;" text="Kundenverwaltung" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="155.0" />
     </children>
 </AnchorPane>

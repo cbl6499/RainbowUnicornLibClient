@@ -104,7 +104,7 @@
         <TextField fx:id="searchField" layoutX="15.0" layoutY="211.0" prefHeight="26.0" prefWidth="682.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="210.0" />
         <Button fx:id="BibInfoButton" layoutX="10.0" layoutY="175.0" minWidth="200.0" mnemonicParsing="false" onAction="#handleButtonActionBibInfo" prefHeight="30.0" prefWidth="200.0" text="Bibliotheks Informationen" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="155.0" />
         <Button fx:id="CustomerManagementButton" layoutX="581.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleButtonActionCustomerManagement" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #cd5c5c;" text="Kundenverwaltung" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="155.0" />
-        <Button layoutX="717.8" layoutY="174.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0" />
+        <Button fx:id="LogoutButton" layoutX="717.8" layoutY="174.0" mnemonicParsing="false" onAction="#handleButtonActionLogout" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0" />
       <Separator layoutY="196.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
     </children>
 </AnchorPane>

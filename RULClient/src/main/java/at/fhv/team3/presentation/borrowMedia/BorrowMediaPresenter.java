@@ -1,6 +1,9 @@
 package at.fhv.team3.presentation.borrowMedia;
 
 import at.fhv.team3.domain.dto.*;
+import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
+import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
+import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
 import at.fhv.team3.rmi.interfaces.RMIBorrow;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
 import javafx.collections.FXCollections;
@@ -9,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -32,6 +36,9 @@ public class BorrowMediaPresenter implements Initializable {
     private DvdDTO dvdDTO;
     private MagazineDTO magazineDTO;
     private Boolean borrowState = false;
+    private DetailMagazinPresenter dmp = null;
+    private DetailDvdPresenter ddp = null;
+    private DetailBookPresenter dbp = null;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -98,6 +105,13 @@ public class BorrowMediaPresenter implements Initializable {
                         Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
                         stage.close();
                     }
+                    if(dbp != null){
+                        dbp.reload();
+                    }else if(ddp != null){
+                        ddp.reload();
+                    }else if(dmp != null){
+                        dmp.reload();
+                    }
                 }
 
             } catch (Exception e) {
@@ -118,7 +132,7 @@ public class BorrowMediaPresenter implements Initializable {
 
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Erfolgreich Medium ausgeliehen", ButtonType.CANCEL, ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
         alert.setTitle("Attention");
         alert.setHeaderText("Wollen Sie wirklich abbrechen?");
         Optional<ButtonType> result = alert.showAndWait();
@@ -242,7 +256,6 @@ public class BorrowMediaPresenter implements Initializable {
                 contractStatusField.setText("InAktiv");
             }
         }
-        System.out.println(_id);
     }
 
     public void setBookDTO(BookDTO bookDTO){
@@ -256,4 +269,12 @@ public class BorrowMediaPresenter implements Initializable {
     public void setMagazineDTO(MagazineDTO magazineDTO){
         this.magazineDTO = magazineDTO;
     }
+
+    public void setBookPresenter(DetailBookPresenter p){ dbp = p;}
+
+    public void setDvdPresenter(DetailDvdPresenter p){ ddp = p;}
+
+    public void setMagazinPresnter(DetailMagazinPresenter p){ dmp = p;}
+
 }
+

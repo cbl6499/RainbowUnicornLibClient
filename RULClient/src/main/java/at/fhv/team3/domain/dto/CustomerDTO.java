@@ -14,10 +14,6 @@ public class CustomerDTO extends DTO{
     private String _email;
     private String _phoneNumber;
 
-    public CustomerDTO(){
-
-    }
-
     public CustomerDTO(int id, String firstName, String lastname, Boolean subscription, String email, String phoneNumber){
         _customerId = id;
         _firstName = firstName;
@@ -97,6 +93,13 @@ public class CustomerDTO extends DTO{
         allData.put("subscription", subscription);
         allData.put("email", _email);
         allData.put("phonenumber", _phoneNumber);
+        String available;
+        if(_available){
+            available = "true";
+        } else {
+            available = "false";
+        }
+        allData.put("available", available);
         return allData;
     }
 
