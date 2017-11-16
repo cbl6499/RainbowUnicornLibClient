@@ -1,10 +1,8 @@
-package at.fhv.team3.presentation.rentMedia;
+package at.fhv.team3.presentation.bookingMedia;
 
-import at.fhv.team3.domain.BookedItem;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.rmi.interfaces.RMIBooking;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
-import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,8 +25,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-public class RentMediaPresenter implements Initializable {
-
+public class BookingMediaPresenter implements Initializable {
     private ObservableList<CustomerDTO> _customer;
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
@@ -37,6 +34,7 @@ public class RentMediaPresenter implements Initializable {
     private DvdDTO dvdDTO;
     private MagazineDTO magazineDTO;
     ObservableList<BookedItemDTO> _bookings;
+    private Boolean bookingState = false;
 
     public void initialize(URL location, ResourceBundle resources) {
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -81,7 +79,7 @@ public class RentMediaPresenter implements Initializable {
     private Button borrowMediaCancelButton;
 
     @FXML
-    private Button rentButton;
+    private Button bookingButton;
 
     @FXML
     private TableView<BookedItemDTO> bookingTable;
@@ -100,22 +98,23 @@ public class RentMediaPresenter implements Initializable {
                 RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
 
                 if (bookDTO != null) {
-                    rmiBooking.bookItem(bookDTO, selectedItemfromComboBox);
+                    bookingState = rmiBooking.bookItem(bookDTO, selectedItemfromComboBox).hasErrors();
                 } else if (dvdDTO != null) {
-                    rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox);
+                    bookingState = rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox).hasErrors();
                 } else if (magazineDTO != null) {
-                    rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox);
+                    bookingState = rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox).hasErrors();
                 }
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium reserviert", ButtonType.OK);
-                alert.setTitle("Success");
-                Optional<ButtonType> result = alert.showAndWait();
+                if (!bookingState) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium reserviert", ButtonType.OK);
+                    alert.setTitle("Success");
+                    Optional<ButtonType> result = alert.showAndWait();
 
-                if (result.get() == ButtonType.OK) {
-                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
-                    stage.close();
+                    if (result.get() == ButtonType.OK) {
+                        Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                        stage.close();
+                    }
                 }
-
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
@@ -129,6 +128,7 @@ public class RentMediaPresenter implements Initializable {
                 alert.close();
             }
         }
+        bookingState = false;
     }
 
     public void setBookDTO(BookDTO bookDTO) {

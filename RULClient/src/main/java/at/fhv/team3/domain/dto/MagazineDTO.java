@@ -33,6 +33,11 @@ public class MagazineDTO extends DTO{
         _pictureURL = pictureURL;
         _shelfPos = shelfPos;
         _status = status;
+        if(_status.equals("Vorhanden")){
+            _available = true;
+        } else {
+            _available = false;
+        }
     }
 
     public void setMagazineId(int id){
