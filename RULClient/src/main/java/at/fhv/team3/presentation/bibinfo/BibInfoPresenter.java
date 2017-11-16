@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.bibinfo;
 
 import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.EmployeeDTO;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMIBooking;
@@ -68,34 +69,46 @@ public class BibInfoPresenter implements Initializable {
     @FXML
     private void handleButtonActionLogin(){
         Registry registry = null;
-        try {
-            registry = LocateRegistry.getRegistry(1099);
-            RMILdap rmiBooking = (RMILdap) registry.lookup("Ldap");
-
-            EmployeeDTO empoyeeToLoggin = (EmployeeDTO) rmiBooking.authenticateUser(username.getText(),password.getText());
-
-
-            if(empoyeeToLoggin.isLoggedIn()){
-                _loggedInUser.setUser(empoyeeToLoggin);
-
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Login Erfolgreich", ButtonType.OK);
-                alert.setTitle("Login Warnung");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    alert.close();
+        if(false == _loggedInUser.isLoggedIn()) {
+            try {
+                registry = LocateRegistry.getRegistry(1099);
+                RMILdap rmiEmployee = (RMILdap) registry.lookup("Ldap");
+                EmployeeDTO empoyeeToLoggin = null;
+                if(!(username.getText().isEmpty()) || !(password.getText().isEmpty())){
+                   empoyeeToLoggin =  (EmployeeDTO) rmiEmployee.authenticateUser(username.getText(), password.getText());
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Username oder Passwort is Flasch", ButtonType.OK);
-                alert.setTitle("Loigin Warnung");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    alert.close();
+                if (empoyeeToLoggin != null && empoyeeToLoggin.isLoggedIn()) {
+                    _loggedInUser.setUser((EmployeeDTO)empoyeeToLoggin);
+
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Login Erfolgreich", ButtonType.OK);
+                    alert.setTitle("Login Warnung");
+                    alert.setHeaderText("Login Erfolgreich");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        alert.close();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Username oder Passwort ist Falsch", ButtonType.OK);
+                    alert.setTitle("Login Warnung");
+                    alert.setHeaderText("Username oder Passwort ist Falsch");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        alert.close();
+                    }
                 }
+                reload();
+            } catch (Exception e) {
+                System.out.println("HelloClient exception: " + e.getMessage());
+                e.printStackTrace();
             }
-            reload();
-        } catch (Exception e) {
-            System.out.println("HelloClient exception: " + e.getMessage());
-            e.printStackTrace();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Bereits angemeldet", ButtonType.OK);
+            alert.setTitle("Login Warnung");
+            alert.setHeaderText("Bereits angemeldet");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
         }
     }
 
@@ -108,7 +121,5 @@ public class BibInfoPresenter implements Initializable {
             stage.setScene(scene);
             stage.show();
     }
-
-
 
 }
