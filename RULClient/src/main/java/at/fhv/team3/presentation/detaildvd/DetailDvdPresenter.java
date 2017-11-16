@@ -1,11 +1,14 @@
 package at.fhv.team3.presentation.detaildvd;
 
+import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
+import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
+import at.fhv.team3.presentation.detailbook.DetailBookView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.presentation.bookingMedia.BookingMediaPresenter;
@@ -36,6 +39,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DetailDvdPresenter implements Initializable {
+    private LoggedInUser _loggedInUser = null;
+    private DetailDvdPresenter ddp = this;
     ObservableList<BookDTO> _homebooks;
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
@@ -45,6 +50,13 @@ public class DetailDvdPresenter implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         detailDvdTable.getColumns().clear();
         detailDvdTable.getColumns().addAll(dvdShelfPos,dvdStatus);
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            BookingButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
+        }
     }
 
     @FXML
@@ -74,7 +86,10 @@ public class DetailDvdPresenter implements Initializable {
     private Button CustomerManagementButton;
 
     @FXML
-    private Button RentButton;
+    private Button LogoutButton;
+
+    @FXML
+    private Button BookingButton;
 
     @FXML
     private void handleDetailDvdBackButton() {
@@ -87,6 +102,12 @@ public class DetailDvdPresenter implements Initializable {
         HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
         homePresenter.reload(_homebooks, _homedvds, _homemagazines);
         stage.show();
+    }
+
+    @FXML
+    public void handleButtonActionLogout(){
+        _loggedInUser.setUser(null);
+        reload();
     }
 
     @FXML
@@ -161,46 +182,49 @@ public class DetailDvdPresenter implements Initializable {
 
     @FXML
     void clickBorrowDvd(MouseEvent event) {
-        detailDvdTable.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 1) {
-                    DvdDTO selectedItem = detailDvdTable.getSelectionModel().getSelectedItem();
-                    System.out.println(selectedItem.getStatus());
-                    if (selectedItem.getStatus().equals("Vorhanden")) {
-                        BorrowMediaView bmp = new BorrowMediaView();
-                        Stage stage = new Stage();
-                        stage.initModality(Modality.WINDOW_MODAL);
-                        stage.setScene(new Scene(bmp.getView()));
-                        stage.setResizable(false);
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                            @Override
-                            public void handle(WindowEvent event) {
-                                Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
-                                alert.setTitle("Attention");
-                                alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+        if(_loggedInUser.isLoggedIn() == true) {
+            detailDvdTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 1) {
+                        DvdDTO selectedItem = detailDvdTable.getSelectionModel().getSelectedItem();
+                        System.out.println(selectedItem.getStatus());
+                        if (selectedItem.getStatus().equals("Vorhanden")) {
+                            BorrowMediaView bmp = new BorrowMediaView();
+                            Stage stage = new Stage();
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.setScene(new Scene(bmp.getView()));
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                    alert.setTitle("Attention");
+                                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
 
-                                Optional<ButtonType> result = alert.showAndWait();
+                                    Optional<ButtonType> result = alert.showAndWait();
 
-                                if (result.get() == ButtonType.OK) {
-                                    stage.close();
-                                } else {
-                                    event.consume();
+                                    if (result.get() == ButtonType.OK) {
+                                        stage.close();
+                                    } else {
+                                        event.consume();
+                                    }
                                 }
-                            }
-                        });
-                        stage.show();
-                        BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                        borrowMediaPresenter.setDvdDTO(selectedItem);
+                            });
+                            stage.show();
+                            BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
+                            borrowMediaPresenter.setDvdDTO(selectedItem);
+                            borrowMediaPresenter.setDvdPresenter(ddp);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @FXML
-    private void handleButtonActionRent() {
+    private void handleButtonActionBooking() {
         Boolean oneItemAvailable = false;
         for (DvdDTO dvd: mediaDvds) {
             if(dvd.isAvailable() == true){
@@ -223,5 +247,18 @@ public class DetailDvdPresenter implements Initializable {
             BookingMediaPresenter.setDvdDTO(mediaDvds.get(0));
             newstage.show();
         }
+    }
+
+    public void reload(){
+        DetailDvdView ddv = new DetailDvdView();
+        Scene scene = new Scene(ddv.getView());
+        DetailDvdPresenter ddp = (DetailDvdPresenter) ddv.getPresenter();
+        ddp.setInfo(mediaDvds.get(0));
+        ddp.setLastSearch(_homebooks,_homedvds,_homemagazines);
+        Stage stage = (Stage) LogoutButton.getScene().getWindow();
+        stage.setHeight(LogoutButton.getScene().getWindow().getHeight());
+        stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 }

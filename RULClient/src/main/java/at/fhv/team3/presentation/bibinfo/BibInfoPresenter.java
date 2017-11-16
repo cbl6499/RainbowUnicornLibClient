@@ -27,6 +27,7 @@ public class BibInfoPresenter implements Initializable {
 
 
     public void initialize(URL location, ResourceBundle resources) {
+        //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
             LogoutButton.setVisible(false);

@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.home;
 
+        import at.fhv.team3.application.LoggedInUser;
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
@@ -38,6 +39,7 @@ package at.fhv.team3.presentation.home;
         import java.util.ResourceBundle;
 
 public class HomePresenter implements Initializable {
+    private LoggedInUser _loggedInUser = null;
     private ObservableList<BookDTO> _books;
     private ObservableList<DvdDTO> _dvds;
     private ObservableList<MagazineDTO> _magazines;
@@ -49,6 +51,12 @@ public class HomePresenter implements Initializable {
         dvdTable.setPlaceholder(new Label("Bitte suchen!"));
         magazineTable.getColumns();
         magazineTable.setPlaceholder(new Label("Bitte suchen!"));
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
+        }
     }
 
     @FXML
@@ -96,7 +104,8 @@ public class HomePresenter implements Initializable {
     @FXML
     private Button CustomerManagementButton;
 
-
+    @FXML
+    private Button LogoutButton;
 
     @FXML
     private void handleButtonActionBibInfo(ActionEvent event) {
@@ -109,6 +118,11 @@ public class HomePresenter implements Initializable {
         stage.show();
     }
 
+    @FXML
+    public void handleButtonActionLogout(){
+        _loggedInUser.setUser(null);
+        reload();
+    }
 
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
@@ -363,6 +377,18 @@ public class HomePresenter implements Initializable {
         bookTable.setItems(_books);
         dvdTable.setItems(_dvds);
         magazineTable.setItems(_magazines);
+    }
+
+    public void reload(){
+        HomeView hv = new HomeView();
+        Scene scene = new Scene(hv.getView());
+        HomePresenter hp = (HomePresenter) hv.getPresenter();
+        hp.reload(_books,_dvds,_magazines);
+        Stage stage = (Stage) LogoutButton.getScene().getWindow();
+        stage.setHeight(LogoutButton.getScene().getWindow().getHeight());
+        stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 }
 

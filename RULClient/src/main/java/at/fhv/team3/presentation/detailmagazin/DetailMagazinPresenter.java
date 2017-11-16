@@ -1,11 +1,14 @@
 package at.fhv.team3.presentation.detailmagazin;
 
+import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
 import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
+import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
+import at.fhv.team3.presentation.detaildvd.DetailDvdView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.presentation.bookingMedia.BookingMediaPresenter;
@@ -16,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,60 +30,85 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.net.URL;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class DetailMagazinPresenter {
-        ObservableList<BookDTO> _homebook;
-        ObservableList<DvdDTO> _homedvds;
-        ObservableList<MagazineDTO> _homemagazines;
-        ObservableList<MagazineDTO> mediaMagazines;
+public class DetailMagazinPresenter implements Initializable {
+    private LoggedInUser _loggedInUser = null;
+    private DetailMagazinPresenter dmp = this;
+    ObservableList<BookDTO> _homebook;
+    ObservableList<DvdDTO> _homedvds;
+    ObservableList<MagazineDTO> _homemagazines;
+    ObservableList<MagazineDTO> mediaMagazines;
 
-        @FXML
-        private TextField titel;
-
-        @FXML
-        private TextField verlag;
-
-        @FXML
-        private TextField edition;
-
-        @FXML
-        private ImageView pictureUrl;
-
-        @FXML
-        private TableView<MagazineDTO> detailMagazineTable;
-
-        @FXML
-        private TableColumn<MagazineDTO, String> magazineShelfPos;
-
-        @FXML
-        private TableColumn<MagazineDTO, String> magazineStatus;
-
-        @FXML
-        private Button DetailMagazineBackButton;
-
-        @FXML
-        private Button CustomerManagementButton;
-
-        @FXML
-        private Button RentButton;
-
-        @FXML
-        void handleDetailMagazineBackButton(ActionEvent event) {
-            HomeView hv = new HomeView();
-            Scene scene = new Scene(hv.getView());
-            Stage stage = (Stage) DetailMagazineBackButton.getScene().getWindow();
-            stage.setHeight(DetailMagazineBackButton.getScene().getWindow().getHeight());
-            stage.setWidth(DetailMagazineBackButton.getScene().getWindow().getWidth());
-            stage.setScene(scene);
-            HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
-            homePresenter.reload(_homebook, _homedvds, _homemagazines);
-            stage.show();
+    public void initialize(URL location, ResourceBundle resources) {
+        detailMagazineTable.getColumns().clear();
+        detailMagazineTable.getColumns().addAll(magazineShelfPos,magazineStatus);
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            BookingButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
         }
+    }
+
+    @FXML
+    private TextField titel;
+
+    @FXML
+    private TextField verlag;
+
+    @FXML
+    private TextField edition;
+
+    @FXML
+    private ImageView pictureUrl;
+
+    @FXML
+    private TableView<MagazineDTO> detailMagazineTable;
+
+    @FXML
+    private TableColumn<MagazineDTO, String> magazineShelfPos;
+
+    @FXML
+    private TableColumn<MagazineDTO, String> magazineStatus;
+
+    @FXML
+    private Button DetailMagazineBackButton;
+
+    @FXML
+    private Button CustomerManagementButton;
+
+    @FXML
+    private Button LogoutButton;
+
+    @FXML
+    private Button BookingButton;
+
+    @FXML
+    void handleDetailMagazineBackButton(ActionEvent event) {
+        HomeView hv = new HomeView();
+        Scene scene = new Scene(hv.getView());
+        Stage stage = (Stage) DetailMagazineBackButton.getScene().getWindow();
+        stage.setHeight(DetailMagazineBackButton.getScene().getWindow().getHeight());
+        stage.setWidth(DetailMagazineBackButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
+        homePresenter.reload(_homebook, _homedvds, _homemagazines);
+        stage.show();
+    }
+
+    @FXML
+    public void handleButtonActionLogout(){
+        _loggedInUser.setUser(null);
+        reload();
+    }
 
 
     @FXML
@@ -157,45 +186,49 @@ public class DetailMagazinPresenter {
 
     @FXML
     void clickBorrowMagazine(MouseEvent event) {
-        detailMagazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 1) {
-                    MagazineDTO selectedItem = detailMagazineTable.getSelectionModel().getSelectedItem();
-                    if (selectedItem.getStatus().equals("Vorhanden")) {
-                        BorrowMediaView bmp = new BorrowMediaView();
-                        Stage stage = new Stage();
-                        stage.initModality(Modality.WINDOW_MODAL);
-                        stage.setScene(new Scene(bmp.getView()));
-                        stage.setResizable(false);
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                            @Override
-                            public void handle(WindowEvent event) {
-                                Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
-                                alert.setTitle("Attention");
-                                alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+        if(_loggedInUser.isLoggedIn() == true) {
+            detailMagazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 1) {
+                        MagazineDTO selectedItem = detailMagazineTable.getSelectionModel().getSelectedItem();
+                        if (selectedItem.getStatus().equals("Vorhanden")) {
+                            BorrowMediaView bmp = new BorrowMediaView();
+                            Stage stage = new Stage();
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.setScene(new Scene(bmp.getView()));
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                    alert.setTitle("Attention");
+                                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
 
-                                Optional<ButtonType> result = alert.showAndWait();
+                                    Optional<ButtonType> result = alert.showAndWait();
 
-                                if (result.get() == ButtonType.OK) {
-                                    stage.close();
-                                } else {
-                                    event.consume();
+                                    if (result.get() == ButtonType.OK) {
+                                        stage.close();
+                                    } else {
+                                        event.consume();
+                                    }
                                 }
-                            }
-                        });
-                        stage.show();
-                        BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
-                        borrowMediaPresenter.setMagazineDTO(selectedItem);
+                            });
+                            stage.show();
+                            BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
+                            borrowMediaPresenter.setMagazineDTO(selectedItem);
+                            borrowMediaPresenter.setMagazinPresnter(dmp);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        //do nothing
     }
 
     @FXML
-    private void handleButtonActionRent() {
+    private void handleButtonActionBooking() {
         Boolean oneItemAvailable = false;
         for (MagazineDTO magazine: mediaMagazines) {
             if(magazine.isAvailable() == true){
@@ -218,5 +251,18 @@ public class DetailMagazinPresenter {
             BookingMediaPresenter.setMagazineDTO(mediaMagazines.get(0));
             newstage.show();
         }
+    }
+
+    public void reload(){
+        DetailMagazinView dmv = new DetailMagazinView();
+        Scene scene = new Scene(dmv.getView());
+        DetailMagazinPresenter ddp = (DetailMagazinPresenter) dmv.getPresenter();
+        ddp.setInfo(mediaMagazines.get(0));
+        ddp.setLastSearch(_homebook,_homedvds,_homemagazines);
+        Stage stage = (Stage) LogoutButton.getScene().getWindow();
+        stage.setHeight(LogoutButton.getScene().getWindow().getHeight());
+        stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 }
