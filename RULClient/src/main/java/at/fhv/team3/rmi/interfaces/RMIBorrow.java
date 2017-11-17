@@ -15,4 +15,5 @@ public interface RMIBorrow  extends Remote {
     public ValidationResult handOut(DTO media, CustomerDTO customer) throws RemoteException;
     public ValidationResult handIn(DTO media) throws RemoteException;
     public ValidationResult extend(DTO media) throws RemoteException;
+    public DTO getCustomerByMedia(DTO media) throws RemoteException;
 }

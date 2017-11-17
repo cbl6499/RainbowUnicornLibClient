@@ -11,6 +11,8 @@ import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.presentation.bookingMedia.BookingMediaPresenter;
 import at.fhv.team3.presentation.bookingMedia.BookingMediaView;
+import at.fhv.team3.presentation.returnOrExtend.ReturnOrExtendPresenter;
+import at.fhv.team3.presentation.returnOrExtend.ReturnOrExtendView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -229,6 +231,34 @@ public class DetailBookPresenter implements Initializable {
                             BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
                             borrowMediaPresenter.setBookDTO(selectedItem);
                             borrowMediaPresenter.setBookPresenter(dbp);
+                        }else{
+                            ReturnOrExtendView rev = new ReturnOrExtendView();
+                            Stage stage = new Stage();
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.setScene(new Scene(rev.getView()));
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            ReturnOrExtendPresenter returnOrExtendPresenter = (ReturnOrExtendPresenter) rev.getPresenter();
+                            returnOrExtendPresenter.setBookDTO(selectedItem);
+                            returnOrExtendPresenter.setBookPresenter(dbp);
+                            returnOrExtendPresenter.setInfo();
+                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                    alert.setTitle("Attention");
+                                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                                    Optional<ButtonType> result = alert.showAndWait();
+
+                                    if (result.get() == ButtonType.OK) {
+                                        stage.close();
+                                    } else {
+                                        event.consume();
+                                    }
+                                }
+                            });
+                            stage.show();
                         }
                     }
                 }
