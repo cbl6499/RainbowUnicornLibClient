@@ -90,7 +90,6 @@ public class EasyCrypt {
         if(verfahren.isEmpty()){
             throw new NullPointerException("Kein Verfahren angegeben!");
         }
-
         return true;
     }
 
