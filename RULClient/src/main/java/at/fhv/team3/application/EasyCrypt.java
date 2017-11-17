@@ -87,7 +87,7 @@ public class EasyCrypt {
             throw new NullPointerException("Keinen Key angegeben!");
         }
 
-        if(verfahren.isEmpty()){
+        if(verfahren.trim() == ""){
             throw new NullPointerException("Kein Verfahren angegeben!");
         }
         return true;
