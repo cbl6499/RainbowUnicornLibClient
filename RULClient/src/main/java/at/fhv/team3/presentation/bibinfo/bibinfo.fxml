@@ -137,7 +137,7 @@
         <Button fx:id="LogoutButton" layoutX="705.0" layoutY="157.0" mnemonicParsing="false" onAction="#handleButtonActionLogout" prefHeight="26.0" prefWidth="95.0" style="-fx-background-color: #cd5c5c;" text="Logout" AnchorPane.rightAnchor="15.799999999999955" AnchorPane.topAnchor="157.0" />
         <Separator layoutY="196.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <Pane layoutX="15.0" layoutY="463.0" maxHeight="150.0" minHeight="150.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #d5d5d5; -fx-border-style: solid; -fx-border-color: #a2a2a2;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-      <GridPane layoutX="110.0" layoutY="125.0" maxWidth="150.0" minHeight="150.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+      <GridPane fx:id="loginpane" layoutX="110.0" layoutY="125.0" maxWidth="150.0" minHeight="150.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="60.0" prefWidth="100.0" />

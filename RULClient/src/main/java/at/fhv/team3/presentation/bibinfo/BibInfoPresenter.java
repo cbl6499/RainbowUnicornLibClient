@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 
 public class BibInfoPresenter implements Initializable {
     private LoggedInUser _loggedInUser = null;
+    private Boolean _firstVisit = false;
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -30,6 +32,9 @@ public class BibInfoPresenter implements Initializable {
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
             LogoutButton.setVisible(false);
+            loginpane.setVisible(true);
+        } else {
+            loginpane.setVisible(false);
         }
     }
 
@@ -47,6 +52,9 @@ public class BibInfoPresenter implements Initializable {
 
     @FXML
     private Button LogoutButton;
+
+    @FXML
+    private GridPane loginpane;
 
 
     @FXML
