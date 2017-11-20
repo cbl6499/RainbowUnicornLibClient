@@ -46,7 +46,7 @@ public class ServerIP {
             }
         }
         if(server.equals(null)){
-            server = "1099";
+            server = "10.0.51.93";
         }
         return server;
     }
