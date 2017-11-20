@@ -39,6 +39,7 @@ public class BorrowMediaPresenter implements Initializable {
     private DetailMagazinPresenter dmp = null;
     private DetailDvdPresenter ddp = null;
     private DetailBookPresenter dbp = null;
+    private ValidationResult validationResult;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
@@ -89,14 +90,14 @@ public class BorrowMediaPresenter implements Initializable {
                 RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
                 if (bookDTO != null) {
-                    borrowState = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
                 } else if (dvdDTO != null) {
-                    borrowState = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
                 } else if (magazineDTO != null) {
-                    borrowState = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
                 }
 
-                if (!borrowState) {
+                if (!validationResult.hasErrors()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
                     alert.setTitle("Success");
                     Optional<ButtonType> result = alert.showAndWait();
@@ -111,6 +112,16 @@ public class BorrowMediaPresenter implements Initializable {
                         ddp.reload();
                     }else if(dmp != null){
                         dmp.reload();
+                    }
+                }else{
+                    String errorString = setErrorMessage();
+                    Alert alert = new Alert(Alert.AlertType.WARNING, errorString, ButtonType.OK);
+                    alert.setTitle("Warning");
+                    Optional<ButtonType> result = alert.showAndWait();
+
+                    if (result.get() == ButtonType.OK) {
+                        Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                        stage.close();
                     }
                 }
 
@@ -276,5 +287,13 @@ public class BorrowMediaPresenter implements Initializable {
 
     public void setMagazinPresnter(DetailMagazinPresenter p){ dmp = p;}
 
+    public String setErrorMessage(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < validationResult.getErrorMessages().size(); i++){
+            sb.append(validationResult.getErrorMessages().get(i).toString());
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
 }
 

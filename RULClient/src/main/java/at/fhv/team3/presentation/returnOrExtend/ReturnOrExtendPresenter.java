@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -32,6 +33,7 @@ public class ReturnOrExtendPresenter implements Initializable {
     private DetailMagazinPresenter dmp = null;
     private DetailDvdPresenter ddp = null;
     private DetailBookPresenter dbp = null;
+    private ValidationResult validationResult;
 
     public void initialize(URL location, ResourceBundle resources) {
     }
@@ -142,16 +144,26 @@ public class ReturnOrExtendPresenter implements Initializable {
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
             if (bookDTO != null) {
-                borrowState = rmiBorrow.extend(bookDTO).hasErrors();
+                validationResult = rmiBorrow.extend(bookDTO);
             } else if (dvdDTO != null) {
-                borrowState = rmiBorrow.extend(dvdDTO).hasErrors();
+                validationResult = rmiBorrow.extend(dvdDTO);
             } else if (magazineDTO != null) {
-                borrowState = rmiBorrow.extend(magazineDTO).hasErrors();
+                validationResult = rmiBorrow.extend(magazineDTO);
             }
 
-            if (!borrowState) {
+            if (!validationResult.hasErrors()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium verlängert", ButtonType.OK);
                 alert.setTitle("Success");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                    stage.close();
+                }
+            }else{
+                String errorString = setErrorMessage();
+                Alert alert = new Alert(Alert.AlertType.WARNING, errorString, ButtonType.OK);
+                alert.setTitle("Warning");
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == ButtonType.OK) {
@@ -173,14 +185,14 @@ public class ReturnOrExtendPresenter implements Initializable {
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
             if (bookDTO != null) {
-                borrowState = rmiBorrow.handIn(bookDTO).hasErrors();
+                validationResult = rmiBorrow.handIn(bookDTO);
             } else if (dvdDTO != null) {
-                borrowState = rmiBorrow.handIn(dvdDTO).hasErrors();
+                validationResult = rmiBorrow.handIn(dvdDTO);
             } else if (magazineDTO != null) {
-                borrowState = rmiBorrow.handIn(magazineDTO).hasErrors();
+                validationResult = rmiBorrow.handIn(magazineDTO);
             }
 
-            if (!borrowState) {
+            if (!validationResult.hasErrors()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium zurückgegeben", ButtonType.OK);
                 alert.setTitle("Success");
                 Optional<ButtonType> result = alert.showAndWait();
@@ -196,11 +208,30 @@ public class ReturnOrExtendPresenter implements Initializable {
                 }else if(dmp != null){
                     dmp.reload();
                 }
+            }else{
+                String errorString = setErrorMessage();
+                Alert alert = new Alert(Alert.AlertType.WARNING, errorString, ButtonType.OK);
+                alert.setTitle("Warning");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+                    stage.close();
+                }
             }
 
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public String setErrorMessage(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < validationResult.getErrorMessages().size(); i++){
+            sb.append(validationResult.getErrorMessages().get(i).toString());
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 }
