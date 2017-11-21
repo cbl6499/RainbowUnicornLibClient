@@ -116,6 +116,7 @@ public class HomePresenter implements Initializable {
     @FXML
     private Button LogoutButton;
 
+    // Bibinfo und Login Seite wird geöffnet
     @FXML
     private void handleButtonActionBibInfo(ActionEvent event) {
         BibInfoView bi = new BibInfoView();
@@ -127,12 +128,14 @@ public class HomePresenter implements Initializable {
         stage.show();
     }
 
+    // Benutzer wird ausgelogged
     @FXML
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
     }
 
+    // Kundenverwaltung wird geöffnet
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
         CustomerManagementView cm = new CustomerManagementView();
@@ -160,6 +163,7 @@ public class HomePresenter implements Initializable {
         stage.show();
     }
 
+    // Die Detailansicht eines ausgeqählten Buchs wird geöffnet
     @FXML
     public void clickdetailbook(){
         bookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -182,6 +186,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    // Die Detailansicht einer ausgeqählten DVD wird geöffnet
     @FXML
     public void clickdetaildvd(){
         dvdTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -204,6 +209,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    // Die Detailansicht eines ausgeqählten Magazins wird geöffnet
     @FXML
     void clickdetailmagazine(MouseEvent event) {
         magazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -225,6 +231,8 @@ public class HomePresenter implements Initializable {
             }
         });
     }
+
+    // Durch das betätigen der Enter Taste wird die Suche gestartet
     @FXML
     public void searchTroughEnter() {
         searchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -237,6 +245,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    // Es wird nach einem Medium gesucht und es werden die Resultate in Tabelle angegeben
     @FXML
     public void search() {
 
@@ -364,6 +373,7 @@ public class HomePresenter implements Initializable {
         }
     }
 
+    // Die Resultate der zuvor durchgeführten Suche werden angezeigt
     public void reload(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
         bookTable.getColumns();
         dvdTable.getColumns();

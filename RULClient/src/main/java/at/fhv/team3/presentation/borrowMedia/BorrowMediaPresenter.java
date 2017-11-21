@@ -87,6 +87,7 @@ public class BorrowMediaPresenter implements Initializable {
     @FXML
     private Button borrowButton;
 
+    // Das zuvor ausgeqählte Medium wird ausgeliehen
     @FXML
     void borrowMediaAction(ActionEvent event) {
         if(selectedItemfromComboBox.getSubscription()) {
@@ -147,6 +148,7 @@ public class BorrowMediaPresenter implements Initializable {
         borrowState = false;
     }
 
+    // Der Ausleihvorgang wird abgebrochen
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
@@ -160,6 +162,7 @@ public class BorrowMediaPresenter implements Initializable {
         }
     }
 
+    // Es wird durch das betätigen der Enter Taste, die Kundensuche gestartet.
     @FXML
     public void searchTroughEnter() {
         customerSearchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -172,6 +175,7 @@ public class BorrowMediaPresenter implements Initializable {
         });
     }
 
+    // Es wird nach einem Kunden gesucht.
     @FXML
     void customerSearch() {
         if((!(customerSearchField.getText().trim().equals("")))) {
@@ -209,15 +213,14 @@ public class BorrowMediaPresenter implements Initializable {
 
     }
 
+    // Alle gefundenen Kunden werden im Dropdown angezeigt
     public void renderCustomer(){
-        // placeholder
         if(customerDropdown.getItems().isEmpty()){
             customerDropdown.setItems(null);
             placeholder = new Label("Keine Ergebnisse!");
             customerDropdown.setPlaceholder(placeholder);
             customerDropdown.show();
         } else {
-            // Define rendering of the list of values in ComboBox drop down.
             customerDropdown.setCellFactory((ComboBox) -> {
                 return new ListCell<CustomerDTO>() {
                     @Override
@@ -232,7 +235,6 @@ public class BorrowMediaPresenter implements Initializable {
                     }
                 };
             });
-            // Define rendering of selected value shown in ComboBox.
             customerDropdown.setConverter(new StringConverter<CustomerDTO>() {
                 @Override
                 public String toString(CustomerDTO person) {
@@ -245,13 +247,14 @@ public class BorrowMediaPresenter implements Initializable {
 
                 @Override
                 public CustomerDTO fromString(String personString) {
-                    return null; // No conversion fromString needed.
+                    return null;
                 }
             });
             customerDropdown.show();
         }
     }
 
+    // Die Informationen des Kunden werden in den dazugehörigen Feldern angezeigt
     public void setInfo(){
         if(selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
@@ -293,6 +296,7 @@ public class BorrowMediaPresenter implements Initializable {
 
     public void setMagazinPresnter(DetailMagazinPresenter p){ dmp = p;}
 
+    // Fehlermeldungen werden umgewandelt und weitergegeben.
     public String setErrorMessage(){
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < validationResult.getErrorMessages().size(); i++){

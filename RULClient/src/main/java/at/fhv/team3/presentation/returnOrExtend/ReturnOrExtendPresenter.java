@@ -67,9 +67,9 @@ public class ReturnOrExtendPresenter implements Initializable {
     @FXML
     private Button borrowMediaReturnButton;
 
-
+    // Rückgabe oder Verlängerung wird abgebrochen
     @FXML
-    void borrowMediaCancelAction(ActionEvent event) {
+    void returnOrExtendCancelAction(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Medium verlänger oder zurückbringen abbrechen", ButtonType.CANCEL, ButtonType.OK);
         alert.setTitle("Attention");
         alert.setHeaderText("Wollen Sie wirklich abbrechen?");
@@ -81,7 +81,7 @@ public class ReturnOrExtendPresenter implements Initializable {
         }
     }
 
-
+    // Die Daten der Person die derzeit das Medium ausgeliehen hat werden angegeben
     public void setInfo(){
         setCustomerDTO();
         if(customerDTO != null) {
@@ -124,6 +124,7 @@ public class ReturnOrExtendPresenter implements Initializable {
 
     public void setMagazinPresnter(DetailMagazinPresenter p){ dmp = p;}
 
+    // Der Kunde der derzeit das Medium ausgeliehen hat wird gesetzt
     public void setCustomerDTO(){
         try {
             Registry registry = LocateRegistry.getRegistry(host, 1099);
@@ -142,6 +143,7 @@ public class ReturnOrExtendPresenter implements Initializable {
         }
     }
 
+    // Der Ausleihzeitrum wird verlängert
     @FXML
     void borrowMediaExtendAction(ActionEvent event) {
         try {
@@ -183,6 +185,7 @@ public class ReturnOrExtendPresenter implements Initializable {
         }
     }
 
+    // Ausgeliehens Medium wird zurückgegeben
     @FXML
     void borrowMediaReturnAction(ActionEvent event) {
         try {

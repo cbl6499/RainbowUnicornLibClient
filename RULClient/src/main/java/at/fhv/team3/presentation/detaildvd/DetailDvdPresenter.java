@@ -100,6 +100,7 @@ public class DetailDvdPresenter implements Initializable {
     @FXML
     private Button BookingButton;
 
+    // Es wird von der Detailansicht auf den Home View gewechselt
     @FXML
     private void handleDetailDvdBackButton() {
         HomeView hv = new HomeView();
@@ -113,12 +114,14 @@ public class DetailDvdPresenter implements Initializable {
         stage.show();
     }
 
+    // Der Benutzer wird ausgelogged
     @FXML
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
     }
 
+    // Kundenverwaltung wird gestartet
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
         CustomerManagementView cm = new CustomerManagementView();
@@ -146,6 +149,7 @@ public class DetailDvdPresenter implements Initializable {
         stage.show();
     }
 
+    // Alle Informationen zu einer bestimmten, zuvor ausgewählten DVD werden in einer Tabelle angezeit
     public void setInfo(DvdDTO dvd){
         if (dvd.getTitle() != null) {
             titel.setText(dvd.getTitle());
@@ -183,12 +187,14 @@ public class DetailDvdPresenter implements Initializable {
         }
     }
 
+    // Die letzten Ergebnisse bei der Suche auf dem Home View werden angegeben.
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
         _homebooks = books;
         _homedvds = dvds;
         _homemagazines = magazines;
     }
 
+    // Es wird der Ausleihvorgang für eine ausgewählte DVD gestartet
     @FXML
     void clickBorrowDvd(MouseEvent event) {
         if(_loggedInUser.isLoggedIn() == true) {
@@ -260,6 +266,7 @@ public class DetailDvdPresenter implements Initializable {
         }
     }
 
+    // Der Reservierungsvorgang wird gestartet
     @FXML
     private void handleButtonActionBooking() {
         Boolean oneItemAvailable = false;

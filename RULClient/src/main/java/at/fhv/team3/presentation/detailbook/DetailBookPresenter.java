@@ -104,6 +104,7 @@ public class DetailBookPresenter implements Initializable {
     @FXML
     private Button LogoutButton;
 
+    // Es wird von der Detailansicht auf den Home View gewechselt
     @FXML
     private void handleDetailBookBackButton() {
         HomeView hv = new HomeView();
@@ -118,12 +119,14 @@ public class DetailBookPresenter implements Initializable {
     }
 
 
+    // Der Benutzer wird ausgelogged
     @FXML
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
     }
 
+    // Kundenverwaltung wird gestartet
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
         CustomerManagementView cm = new CustomerManagementView();
@@ -151,6 +154,7 @@ public class DetailBookPresenter implements Initializable {
         stage.show();
     }
 
+    // Alle Informationen zu einem bestimmten, zuvor ausgewählten Buch werden in einer Tabelle angezeit
     public void setInfo(BookDTO book){
         if (book.getTitle() != null) {
             titel.setText(book.getTitle());
@@ -196,13 +200,14 @@ public class DetailBookPresenter implements Initializable {
         }
     }
 
+    // Die letzten Ergebnisse bei der Suche auf dem Home View werden angegeben.
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
         _homebooks = books;
         _homedvds = dvds;
         _homemagazines = magazines;
     }
 
-
+    // Es wird der Ausleihvorgang für ein ausgewähltes Buch gestartet
     @FXML
     void clickBorrowBook(MouseEvent event) {
         if(_loggedInUser.isLoggedIn() == true) {
@@ -274,6 +279,7 @@ public class DetailBookPresenter implements Initializable {
         //do nothing
     }
 
+    // Der Reservierungsvorgang wird gestartet
     @FXML
     private void handleButtonActionBooking() {
         Boolean oneItemAvailable = false;

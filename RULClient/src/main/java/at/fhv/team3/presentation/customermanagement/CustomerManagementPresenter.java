@@ -77,6 +77,7 @@ public class CustomerManagementPresenter implements Initializable {
     @FXML
     private ComboBox<CustomerDTO> resultCustomer;
 
+    // Kundenverwaltung wird abgebrochen
     @FXML
     private void handleButtonActionCostumerManagementCancel(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
@@ -103,6 +104,7 @@ public class CustomerManagementPresenter implements Initializable {
         });
     }
 
+    // Es wird durch das betätigen der Enter Taste, die Kundensuche gestartet.
     @FXML
     public void findCustomer(){
         if((!(searchCostumerField.getText().trim().equals("")))) {
@@ -135,15 +137,14 @@ public class CustomerManagementPresenter implements Initializable {
         }
     }
 
+    // Alle gefundenen Kunden werden im Dropdown angezeigt
     public void renderCustomer(){
-        // placeholder
         if(resultCustomer.getItems().isEmpty()){
             resultCustomer.setItems(null);
             placeholder = new Label("Keine Ergebnisse!");
             resultCustomer.setPlaceholder(placeholder);
             resultCustomer.show();
         } else {
-            // Define rendering of the list of values in ComboBox drop down.
             resultCustomer.setCellFactory((ComboBox) -> {
                 return new ListCell<CustomerDTO>() {
                     @Override
@@ -158,7 +159,6 @@ public class CustomerManagementPresenter implements Initializable {
                     }
                 };
             });
-            // Define rendering of selected value shown in ComboBox.
             resultCustomer.setConverter(new StringConverter<CustomerDTO>() {
                 @Override
                 public String toString(CustomerDTO person) {
@@ -171,13 +171,14 @@ public class CustomerManagementPresenter implements Initializable {
 
                 @Override
                 public CustomerDTO fromString(String personString) {
-                    return null; // No conversion fromString needed.
+                    return null;
                 }
             });
             resultCustomer.show();
         }
     }
 
+    // Die Informationen des Kunden werden in den dazugehörigen Feldern angezeigt
     public void setInfo(){
         if(selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {

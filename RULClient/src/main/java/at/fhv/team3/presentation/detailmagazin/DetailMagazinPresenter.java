@@ -100,6 +100,7 @@ public class DetailMagazinPresenter implements Initializable {
     @FXML
     private Button BookingButton;
 
+    // Es wird von der Detailansicht auf den Home View gewechselt
     @FXML
     void handleDetailMagazineBackButton(ActionEvent event) {
         HomeView hv = new HomeView();
@@ -113,13 +114,14 @@ public class DetailMagazinPresenter implements Initializable {
         stage.show();
     }
 
+    // Der Benutzer wird ausgelogged
     @FXML
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
     }
 
-
+    // Kundenverwaltung wird gestartet
     @FXML
     private void handleButtonActionCustomerManagement(ActionEvent event) {
         CustomerManagementView cm = new CustomerManagementView();
@@ -147,6 +149,7 @@ public class DetailMagazinPresenter implements Initializable {
         stage.show();
     }
 
+    // Alle Informationen zu einem bestimmten, zuvor ausgewählten Magazin werden in einer Tabelle angezeit
     public void setInfo(MagazineDTO magazine){
         if (magazine.getTitle() != null) {
             titel.setText(magazine.getTitle());
@@ -187,12 +190,14 @@ public class DetailMagazinPresenter implements Initializable {
         }
     }
 
+    // Die letzten Ergebnisse bei der Suche auf dem Home View werden angegeben.
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
         _homebook = books;
         _homedvds = dvds;
         _homemagazines = magazines;
     }
 
+    // Es wird der Ausleihvorgang für einem ausgewählten Magazin gestartet
     @FXML
     void clickBorrowMagazine(MouseEvent event) {
         if(_loggedInUser.isLoggedIn() == true) {
@@ -264,6 +269,7 @@ public class DetailMagazinPresenter implements Initializable {
         //do nothing
     }
 
+    // Der Reservierungsvorgang wird gestartet
     @FXML
     private void handleButtonActionBooking() {
         Boolean oneItemAvailable = false;

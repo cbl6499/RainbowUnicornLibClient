@@ -61,7 +61,7 @@ public class BibInfoPresenter implements Initializable {
     @FXML
     private GridPane loginpane;
 
-
+    // Leitet den Benutzer zurück auf die Home Ansicht
     @FXML
     private void handleButtonActionBibInfoBackButton() {
         HomeView hv = new HomeView();
@@ -73,12 +73,14 @@ public class BibInfoPresenter implements Initializable {
         stage.show();
     }
 
+    // Der User wird ausgelogged
     @FXML
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
     }
 
+    // Es wird durch das betätigen der Enter Taste, der Login Vorgang gestartet
     @FXML
     public void loginTroughEnter() {
         LoginButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -91,6 +93,7 @@ public class BibInfoPresenter implements Initializable {
         });
     }
 
+    // Der Login wird durchgeführt. Username und Passwort werden verschlüsselt.
     @FXML
     private void handleButtonActionLogin(){
         Registry registry = null;

@@ -96,6 +96,7 @@ public class BookingMediaPresenter implements Initializable {
     @FXML
     private TableColumn<BookedItemDTO, String> date;
 
+    // Es wird ein Buch reserviert.
     @FXML
     void bookingMediaAction() {
         if (selectedItemfromComboBox.getSubscription()) {
@@ -152,13 +153,14 @@ public class BookingMediaPresenter implements Initializable {
         setBookingTable();
     }
 
-
+    // Reservieren abbrechen
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
         Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
         stage.close();
     }
 
+    // Es wird durch das betätigen der Enter Taste, die Kundensuche gestartet.
     @FXML
     public void searchTroughEnter() {
         customerSearchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -171,6 +173,7 @@ public class BookingMediaPresenter implements Initializable {
         });
     }
 
+    // Es wird nach einem Kunden gesucht.
     @FXML
     void customerSearch() {
         if ((!(customerSearchField.getText().trim().equals("")))) {
@@ -208,15 +211,14 @@ public class BookingMediaPresenter implements Initializable {
 
     }
 
+    // Alle gefundenen Kunden werden im Dropdown angezeigt
     public void renderCustomer() {
-        // placeholder
         if (customerDropdown.getItems().isEmpty()) {
             customerDropdown.setItems(null);
             placeholder = new Label("Keine Ergebnisse!");
             customerDropdown.setPlaceholder(placeholder);
             customerDropdown.show();
         } else {
-            // Define rendering of the list of values in ComboBox drop down.
             customerDropdown.setCellFactory((ComboBox) -> {
                 return new ListCell<CustomerDTO>() {
                     @Override
@@ -231,7 +233,6 @@ public class BookingMediaPresenter implements Initializable {
                     }
                 };
             });
-            // Define rendering of selected value shown in ComboBox.
             customerDropdown.setConverter(new StringConverter<CustomerDTO>() {
                 @Override
                 public String toString(CustomerDTO person) {
@@ -244,13 +245,13 @@ public class BookingMediaPresenter implements Initializable {
 
                 @Override
                 public CustomerDTO fromString(String personString) {
-                    return null; // No conversion fromString needed.
+                    return null;
                 }
             });
             customerDropdown.show();
         }
     }
-
+    // Die Informationen des Kunden werden in den dazugehörigen Feldern angezeigt
     public void setInfo() {
         if (selectedItemfromComboBox != null) {
             if (selectedItemfromComboBox.getFirstName() != null) {
@@ -274,6 +275,7 @@ public class BookingMediaPresenter implements Initializable {
         }
     }
 
+    // Alle laufenden Reservierungen auf dieses Medium werden aufgelistet
     public void setBookingTable() {
         try {
             Registry registry = LocateRegistry.getRegistry(host, 1099);
