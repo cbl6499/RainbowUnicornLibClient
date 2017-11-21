@@ -55,14 +55,17 @@ public class HomePresenter implements Initializable {
         dvdTable.setPlaceholder(new Label("Bitte suchen!"));
         magazineTable.getColumns();
         magazineTable.setPlaceholder(new Label("Bitte suchen!"));
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
         //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
             LogoutButton.setVisible(false);
             CustomerManagementButton.setVisible(false);
         }
-        serverIP = ServerIP.getInstance();
-        host = serverIP.getServer();
+
     }
 
     @FXML
@@ -250,7 +253,7 @@ public class HomePresenter implements Initializable {
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
             try {
-                Registry registry = LocateRegistry.getRegistry("rmi://"+ host + ":" + 1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                     ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());

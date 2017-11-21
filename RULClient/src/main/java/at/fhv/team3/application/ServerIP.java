@@ -11,6 +11,7 @@ import java.util.Properties;
 public class ServerIP {
     private static ServerIP serverIP;
     private String server;
+    private String config = "config.properties";
 
     private ServerIP() {
     }
@@ -28,7 +29,7 @@ public class ServerIP {
 
         try {
 
-            input = new FileInputStream("config.properties");
+            input = getClass().getClassLoader().getResourceAsStream(config);
 
             prop.load(input);
 
@@ -45,7 +46,7 @@ public class ServerIP {
                 }
             }
         }
-        if(server.equals(null)){
+        if(server == null){
             server = "10.0.51.93";
         }
         return server;

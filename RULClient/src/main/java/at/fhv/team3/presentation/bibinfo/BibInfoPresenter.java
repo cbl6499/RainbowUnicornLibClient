@@ -2,6 +2,7 @@ package at.fhv.team3.presentation.bibinfo;
 
 import at.fhv.team3.application.EasyCrypt;
 import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.EmployeeDTO;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMILdap;
@@ -25,6 +26,8 @@ import java.util.ResourceBundle;
 public class BibInfoPresenter implements Initializable {
     private LoggedInUser _loggedInUser = null;
     private Boolean _firstVisit = false;
+    private ServerIP serverIP;
+    private String host;
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -36,6 +39,8 @@ public class BibInfoPresenter implements Initializable {
         } else {
             loginpane.setVisible(false);
         }
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
     }
 
     @FXML
@@ -91,7 +96,7 @@ public class BibInfoPresenter implements Initializable {
         Registry registry = null;
         if(false == _loggedInUser.isLoggedIn()) {
             try {
-                registry = LocateRegistry.getRegistry(1099);
+                registry = LocateRegistry.getRegistry(host, 1099);
                 RMILdap rmiEmployee = (RMILdap) registry.lookup("Ldap");
                 EmployeeDTO empoyeeToLoggin = null;
                 PublicKey pk = rmiEmployee.getPublicKey().getPublicKey();

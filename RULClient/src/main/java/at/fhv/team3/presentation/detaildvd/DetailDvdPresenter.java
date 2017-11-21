@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.detaildvd;
 
 import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -47,11 +48,17 @@ public class DetailDvdPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<DvdDTO> mediaDvds;
+    private ServerIP serverIP;
+    private String host;
 
 
     public void initialize(URL location, ResourceBundle resources) {
         detailDvdTable.getColumns().clear();
         detailDvdTable.getColumns().addAll(dvdShelfPos,dvdStatus);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
         //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
@@ -153,7 +160,7 @@ public class DetailDvdPresenter implements Initializable {
         dvdStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!titel.getText().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                 ArrayList<DvdDTO> dvdArrayList = searchMedia.getDvdByTitle(titel.getText());

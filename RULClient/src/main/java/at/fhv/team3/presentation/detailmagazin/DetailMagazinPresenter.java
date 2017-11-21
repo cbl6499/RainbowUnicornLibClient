@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.detailmagazin;
 
 import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -47,10 +48,16 @@ public class DetailMagazinPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<MagazineDTO> mediaMagazines;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailMagazineTable.getColumns().clear();
         detailMagazineTable.getColumns().addAll(magazineShelfPos,magazineStatus);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
         //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
@@ -157,7 +164,7 @@ public class DetailMagazinPresenter implements Initializable {
         magazineStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!magazine.getTitle().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                 ArrayList<MagazineDTO> magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());

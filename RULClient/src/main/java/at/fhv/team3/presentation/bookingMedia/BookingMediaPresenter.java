@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.bookingMedia;
 
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.rmi.interfaces.RMIBooking;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
@@ -35,10 +36,15 @@ public class BookingMediaPresenter implements Initializable {
     private MagazineDTO magazineDTO;
     ObservableList<BookedItemDTO> _bookings;
     private Boolean bookingState = false;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         date.setCellValueFactory(new PropertyValueFactory<>("start"));
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
 
         placeholder = new Label("Bitte suchen!");
         customerDropdown.setPlaceholder(placeholder);
@@ -94,7 +100,7 @@ public class BookingMediaPresenter implements Initializable {
     void bookingMediaAction() {
         if (selectedItemfromComboBox.getSubscription()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
 
                 if (bookDTO != null) {
@@ -169,7 +175,7 @@ public class BookingMediaPresenter implements Initializable {
     void customerSearch() {
         if ((!(customerSearchField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
                 ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(customerSearchField.getText());
@@ -270,7 +276,7 @@ public class BookingMediaPresenter implements Initializable {
 
     public void setBookingTable() {
         try {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(host, 1099);
             RMIBooking rmiBookings = (RMIBooking) registry.lookup("Booking");
 
             ArrayList<DTO> bookingslist = null;
