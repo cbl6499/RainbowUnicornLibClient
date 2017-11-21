@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.home;
 
         import at.fhv.team3.application.LoggedInUser;
+        import at.fhv.team3.application.ServerIP;
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
@@ -31,6 +32,7 @@ package at.fhv.team3.presentation.home;
         import javafx.stage.WindowEvent;
 
         import java.net.URL;
+        import java.rmi.Naming;
         import java.rmi.registry.LocateRegistry;
         import java.rmi.registry.Registry;
         import java.util.ArrayList;
@@ -43,6 +45,8 @@ public class HomePresenter implements Initializable {
     private ObservableList<BookDTO> _books;
     private ObservableList<DvdDTO> _dvds;
     private ObservableList<MagazineDTO> _magazines;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         bookTable.getColumns();
@@ -57,6 +61,8 @@ public class HomePresenter implements Initializable {
             LogoutButton.setVisible(false);
             CustomerManagementButton.setVisible(false);
         }
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
     }
 
     @FXML
@@ -244,7 +250,7 @@ public class HomePresenter implements Initializable {
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry("rmi://"+ host + ":" + 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                     ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());

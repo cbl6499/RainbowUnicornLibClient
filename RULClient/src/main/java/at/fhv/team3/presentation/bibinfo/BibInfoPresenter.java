@@ -1,28 +1,30 @@
 package at.fhv.team3.presentation.bibinfo;
 
+import at.fhv.team3.application.EasyCrypt;
 import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.domain.dto.EmployeeDTO;
 import at.fhv.team3.presentation.home.HomeView;
-import at.fhv.team3.rmi.interfaces.RMIBooking;
 import at.fhv.team3.rmi.interfaces.RMILdap;
-import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import javax.naming.NamingException;
 import java.net.URL;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.PublicKey;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class BibInfoPresenter implements Initializable {
     private LoggedInUser _loggedInUser = null;
+    private Boolean _firstVisit = false;
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -30,6 +32,9 @@ public class BibInfoPresenter implements Initializable {
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
             LogoutButton.setVisible(false);
+            loginpane.setVisible(true);
+        } else {
+            loginpane.setVisible(false);
         }
     }
 
@@ -47,6 +52,9 @@ public class BibInfoPresenter implements Initializable {
 
     @FXML
     private Button LogoutButton;
+
+    @FXML
+    private GridPane loginpane;
 
 
     @FXML
@@ -67,36 +75,62 @@ public class BibInfoPresenter implements Initializable {
     }
 
     @FXML
-    private void handleButtonActionLogin(){
-        Registry registry = null;
-        try {
-            registry = LocateRegistry.getRegistry(1099);
-            RMILdap rmiLdap = (RMILdap) registry.lookup("Ldap");
-
-            EmployeeDTO empoyeeToLoggin = (EmployeeDTO) rmiLdap.authenticateUser(username.getText(),password.getText());
-
-
-            if(empoyeeToLoggin.isLoggedIn()){
-                _loggedInUser.setUser(empoyeeToLoggin);
-
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Login Erfolgreich", ButtonType.OK);
-                alert.setTitle("Login Warnung");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    alert.close();
-                }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Username oder Passwort is Flasch", ButtonType.OK);
-                alert.setTitle("Loigin Warnung");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    alert.close();
+    public void loginTroughEnter() {
+        LoginButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)) {
+                    handleButtonActionLogin();
                 }
             }
-            reload();
-        } catch (Exception e) {
-            System.out.println("HelloClient exception: " + e.getMessage());
-            e.printStackTrace();
+        });
+    }
+
+    @FXML
+    private void handleButtonActionLogin(){
+        Registry registry = null;
+        if(false == _loggedInUser.isLoggedIn()) {
+            try {
+                registry = LocateRegistry.getRegistry(1099);
+                RMILdap rmiEmployee = (RMILdap) registry.lookup("Ldap");
+                EmployeeDTO empoyeeToLoggin = null;
+                PublicKey pk = rmiEmployee.getPublicKey().getPublicKey();
+                EasyCrypt ecPub = new EasyCrypt(pk, "RSA");
+                if(!(username.getText().isEmpty()) || !(password.getText().isEmpty())){
+                   empoyeeToLoggin =  (EmployeeDTO) rmiEmployee.authenticateUser(ecPub.encrypt(username.getText()),ecPub.encrypt(password.getText()));
+                }
+                if (empoyeeToLoggin != null && empoyeeToLoggin.isLoggedIn()) {
+                    _loggedInUser.setUser((EmployeeDTO)empoyeeToLoggin);
+
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Login Erfolgreich", ButtonType.OK);
+                    alert.setTitle("Login Warnung");
+                    alert.setHeaderText("Login Erfolgreich");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        alert.close();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Username oder Passwort ist Falsch", ButtonType.OK);
+                    alert.setTitle("Login Warnung");
+                    alert.setHeaderText("Username oder Passwort ist Falsch");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        alert.close();
+                    }
+                }
+                reload();
+            } catch (Exception e) {
+                System.out.println("HelloClient exception: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Bereits angemeldet", ButtonType.OK);
+            alert.setTitle("Login Warnung");
+            alert.setHeaderText("Bereits angemeldet");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
         }
     }
 
@@ -109,7 +143,5 @@ public class BibInfoPresenter implements Initializable {
             stage.setScene(scene);
             stage.show();
     }
-
-
 
 }
