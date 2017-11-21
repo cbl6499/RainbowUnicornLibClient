@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.customermanagement;
 
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.CustomerDTO;
 import at.fhv.team3.domain.dto.DTO;
@@ -33,10 +34,15 @@ public class CustomerManagementPresenter implements Initializable {
     private ObservableList<CustomerDTO> _customers;
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
         resultCustomer.setPlaceholder(placeholder);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
 
         resultCustomer.setOnAction((event) -> {
             selectedItemfromComboBox = resultCustomer.getSelectionModel().getSelectedItem();
@@ -101,7 +107,7 @@ public class CustomerManagementPresenter implements Initializable {
     public void findCustomer(){
         if((!(searchCostumerField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
                 ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(searchCostumerField.getText());

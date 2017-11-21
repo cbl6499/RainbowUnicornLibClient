@@ -1,6 +1,7 @@
 package at.fhv.team3.presentation.detailbook;
 
 import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -45,10 +46,16 @@ public class DetailBookPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<BookDTO> mediaBooks;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
         detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
         //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
@@ -165,7 +172,7 @@ public class DetailBookPresenter implements Initializable {
         bookStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!isbn.getText().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                 ArrayList<BookDTO> bookArrayList = searchMedia.getBooksByISBN(isbn.getText());

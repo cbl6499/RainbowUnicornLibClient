@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.borrowMedia;
 
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
 import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
@@ -40,10 +41,15 @@ public class BorrowMediaPresenter implements Initializable {
     private DetailDvdPresenter ddp = null;
     private DetailBookPresenter dbp = null;
     private ValidationResult validationResult;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         placeholder = new Label("Bitte suchen!");
         customerDropdown.setPlaceholder(placeholder);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
@@ -86,7 +92,7 @@ public class BorrowMediaPresenter implements Initializable {
         if(selectedItemfromComboBox.getSubscription()) {
 
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
                 if (bookDTO != null) {
@@ -170,7 +176,7 @@ public class BorrowMediaPresenter implements Initializable {
     void customerSearch() {
         if((!(customerSearchField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
 
                 ArrayList<DTO> customersFound = rmiCustomer.findCustomer(customerSearchField.getText());

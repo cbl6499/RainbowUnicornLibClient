@@ -10,14 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
 
-/**
- * @author Alexander Gr
- * @see "http://blog.axxg.de"
- *
- * EasyCrypt wurd nicht von uns selber implementiert
- * "https://blog.axxg.de/java-verschluesselung-beispiel-quickstart/"
- *
- */
 public class EasyCrypt {
 
     private Key key = null;
@@ -74,9 +66,6 @@ public class EasyCrypt {
         return new String(cipherData);
     }
 
-    //++++++++++++++++++++++++++++++
-    // Validierung
-    //++++++++++++++++++++++++++++++
 
     private boolean valid() throws Exception{
         if(verfahren == null){
@@ -92,10 +81,6 @@ public class EasyCrypt {
         }
         return true;
     }
-
-    //++++++++++++++++++++++++++++++
-    // Getter und Setter
-    //++++++++++++++++++++++++++++++
 
     public Key getKey() {
         return key;

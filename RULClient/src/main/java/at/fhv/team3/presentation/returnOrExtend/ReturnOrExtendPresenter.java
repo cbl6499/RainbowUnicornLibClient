@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.returnOrExtend;
 
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
 import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
@@ -34,8 +35,12 @@ public class ReturnOrExtendPresenter implements Initializable {
     private DetailDvdPresenter ddp = null;
     private DetailBookPresenter dbp = null;
     private ValidationResult validationResult;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
     }
 
     @FXML
@@ -121,7 +126,7 @@ public class ReturnOrExtendPresenter implements Initializable {
 
     public void setCustomerDTO(){
         try {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(host, 1099);
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
             if (bookDTO != null) {
@@ -140,7 +145,7 @@ public class ReturnOrExtendPresenter implements Initializable {
     @FXML
     void borrowMediaExtendAction(ActionEvent event) {
         try {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(host, 1099);
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
             if (bookDTO != null) {
@@ -181,7 +186,7 @@ public class ReturnOrExtendPresenter implements Initializable {
     @FXML
     void borrowMediaReturnAction(ActionEvent event) {
         try {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(host, 1099);
             RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
 
             if (bookDTO != null) {
