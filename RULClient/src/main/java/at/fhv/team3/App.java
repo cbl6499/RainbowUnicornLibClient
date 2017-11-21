@@ -9,11 +9,6 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     public static void main(String[] args) {
-        //load RosterManager
-        //load PersonManager
-        //load WorkManager
-        //load InstrumentationManager
-
         launch(args);
     }
 
@@ -21,10 +16,6 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
 
         HomeView appView = new HomeView();
-        //DetailBookView appView = new DetailBookView();
-        //DetailDvdView appView = new DetailDvdView();
-        //DetailMagazinView appView = new DetailMagazinView();
-
         Scene scene = new Scene(appView.getView());
         stage.setTitle("RUL");
         stage.setMinWidth(820);
@@ -36,8 +27,7 @@ public class App extends Application {
 
     @Override
     public void stop() throws Exception {
-        //Injector.forgetAll();
-        //ShutDown.closeSessionFactory();
+
     }
 
 }

@@ -3,6 +3,7 @@ package at.fhv.team3.application;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -30,8 +31,9 @@ public class ServerIP {
         try {
 
             input = getClass().getClassLoader().getResourceAsStream(config);
-
-            prop.load(input);
+            URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
+            URL urlproperties = new URL(url, config);
+            prop.load(urlproperties.openStream());
 
             server = prop.getProperty("serverIP");
 
