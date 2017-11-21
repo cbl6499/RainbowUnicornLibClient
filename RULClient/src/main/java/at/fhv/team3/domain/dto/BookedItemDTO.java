@@ -1,7 +1,5 @@
 package at.fhv.team3.domain.dto;
 
-import at.fhv.team3.domain.Customer;
-
 import java.util.Date;
 import java.util.HashMap;
 

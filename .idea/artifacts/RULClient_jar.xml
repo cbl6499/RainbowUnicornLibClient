@@ -4,6 +4,7 @@
     <root id="archive" name="RULClient.jar">
       <element id="module-output" name="RULClient" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/airhacks/afterburner.fx/1.7.0/afterburner.fx-1.7.0.jar" path-in-jar="/" />
+      <element id="javaee-facet-resources" facet="RULClient/javaeeApplication/javaEEApplication" />
     </root>
   </artifact>
 </component>
