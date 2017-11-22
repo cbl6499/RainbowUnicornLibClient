@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RULClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RULClient_jar</output-path>
+    <root id="archive" name="RULClient.jar">
+      <element id="module-output" name="RULClient" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/airhacks/afterburner.fx/1.7.0/afterburner.fx-1.7.0.jar" path-in-jar="/" />
+      <element id="javaee-facet-resources" facet="RULClient/javaeeApplication/javaEEApplication" />
+    </root>
+  </artifact>
+</component>

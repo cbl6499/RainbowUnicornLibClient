@@ -13,6 +13,8 @@ public class MagazineDTO extends DTO{
     private String _publisher;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
+    private String _status;
 
     public MagazineDTO(int id, String title, String edition, String publisher, String pictureURL, String shelfPos){
         _magazineId = id;
@@ -21,6 +23,21 @@ public class MagazineDTO extends DTO{
         _publisher = publisher;
         _pictureURL = pictureURL;
         _shelfPos = shelfPos;
+    }
+
+    public MagazineDTO(int id, String title, String edition, String publisher, String pictureURL, String shelfPos, String status){
+        _magazineId = id;
+        _title = title;
+        _edition = edition;
+        _publisher = publisher;
+        _pictureURL = pictureURL;
+        _shelfPos = shelfPos;
+        _status = status;
+        if(_status.equals("Vorhanden")){
+            _available = true;
+        } else {
+            _available = false;
+        }
     }
 
     public void setMagazineId(int id){
@@ -71,6 +88,21 @@ public class MagazineDTO extends DTO{
         return _shelfPos;
     }
 
+    public void setAvailable(boolean _available){
+        this._available = _available;
+        if(_available){
+            _status = "Vorhanden";
+        } else {
+            _status = "Nicht vorhanden";
+        }
+    }
+
+    public boolean isAvailable(){ return _available;}
+
+    public void setStatus(String available){_status= _status;}
+
+    public String getStatus(){ return _status;}
+
     public void setId(int id) {
         setMagazineId(id);
     }
@@ -87,6 +119,7 @@ public class MagazineDTO extends DTO{
         allData.put("publisher", _publisher);
         allData.put("pictureURL", _pictureURL);
         allData.put("shelfPos", _shelfPos);
+        allData.put("available", _status);
         return allData;
     }
 

@@ -1,8 +1,5 @@
 package at.fhv.team3.domain.dto;
 
-import at.fhv.team3.domain.Customer;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -12,13 +9,25 @@ import java.util.HashMap;
 public class BookedItemDTO extends DTO {
 
     private int _bookingId;
-    private Customer _customer;
+    private CustomerDTO _customer;
     private Date _date;
+    private BookDTO _book;
+    private DvdDTO _dvd;
+    private MagazineDTO _magazine;
+    private String name;
+    private String start;
 
-    public BookedItemDTO(int id, Customer customer, Date date) {
+    public BookedItemDTO(int id, CustomerDTO customer, Date date, DTO dto) {
         _bookingId = id;
         _customer = customer;
         _date = date;
+        if (dto instanceof BookDTO) {
+            _book = (BookDTO) dto;
+        } else if (dto instanceof DvdDTO) {
+            _dvd = (DvdDTO) dto;
+        } else {
+            _magazine = (MagazineDTO) dto;
+        }
     }
 
     public void setBookingId(int id){
@@ -29,11 +38,11 @@ public class BookedItemDTO extends DTO {
         return _bookingId;
     }
 
-    public void setCustomer(Customer customer){
+    public void setCustomer(CustomerDTO customer){
         _customer = customer;
     }
 
-    public Customer getCustomer(){
+    public CustomerDTO getCustomer(){
         return _customer;
     }
 
@@ -53,11 +62,58 @@ public class BookedItemDTO extends DTO {
         return getBookingId();
     }
 
+    public void setBook(BookDTO book){
+        _book = book;
+    }
+
+    public BookDTO getBook(){
+        return _book;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return _customer.getFirstName() + " " + _customer.getLastName();
+    }
+
+    public void setStart(Date date){
+        start = date.toString();
+    }
+
+    public String getStart(){
+        return _date.toString();
+    }
+
+    public void setDvd(DvdDTO dvd){
+        _dvd = dvd;
+    }
+
+    public DvdDTO getDvD(){ return _dvd;}
+
+    public void setMagazine(MagazineDTO magazine){
+        _magazine = magazine;
+    }
+
+    public MagazineDTO getMagazine(){
+        return _magazine;
+    }
+
     public HashMap<String, String> getAllData() {
         HashMap<String, String> allData = new HashMap<String, String>();
         allData.put("id", ""+_bookingId);
         allData.put("customer", _customer.getFirstName() + " " + _customer.getLastName());
         allData.put("date", _date.toString());
+        if (_book != null) {
+            allData.put("book", _book.toString());
+        } else if (_dvd != null) {
+            allData.put("dvd", _dvd.toString());
+        } else if (_magazine != null) {
+            allData.put("magazine", _magazine.toString());
+        } else {
+            return null;
+        }
         return allData;
     }
 

@@ -1,16 +1,24 @@
 package at.fhv.team3.presentation.detailbook;
 
+import at.fhv.team3.application.LoggedInUser;
+import at.fhv.team3.application.ServerIP;
 import at.fhv.team3.domain.dto.BookDTO;
-import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
+import at.fhv.team3.presentation.borrowMedia.BorrowMediaPresenter;
+import at.fhv.team3.presentation.borrowMedia.BorrowMediaView;
+import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
 import at.fhv.team3.presentation.home.HomePresenter;
 import at.fhv.team3.presentation.home.HomeView;
+import at.fhv.team3.presentation.bookingMedia.BookingMediaPresenter;
+import at.fhv.team3.presentation.bookingMedia.BookingMediaView;
+import at.fhv.team3.presentation.returnOrExtend.ReturnOrExtendPresenter;
+import at.fhv.team3.presentation.returnOrExtend.ReturnOrExtendView;
 import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -18,23 +26,43 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DetailBookPresenter implements Initializable {
-    ObservableList<BookDTO> _books;
-    ObservableList<DvdDTO> _dvds;
-    ObservableList<MagazineDTO> _magazines;
+    private LoggedInUser _loggedInUser = null;
+    private DetailBookPresenter dbp = this;
+    ObservableList<BookDTO> _homebooks;
+    ObservableList<DvdDTO> _homedvds;
+    ObservableList<MagazineDTO> _homemagazines;
+    ObservableList<BookDTO> mediaBooks;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
-        detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus,bookAktion);
+        detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus);
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            BookingButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
+        }
     }
 
     @FXML
@@ -65,11 +93,18 @@ public class DetailBookPresenter implements Initializable {
     private TableColumn<BookDTO, String> bookStatus;
 
     @FXML
-    private TableColumn<BookDTO, String> bookAktion;
-
-    @FXML
     private ImageView pictureUrl;
 
+    @FXML
+    private Button CustomerManagementButton;
+
+    @FXML
+    private Button BookingButton;
+
+    @FXML
+    private Button LogoutButton;
+
+    // Es wird von der Detailansicht auf den Home View gewechselt
     @FXML
     private void handleDetailBookBackButton() {
         HomeView hv = new HomeView();
@@ -79,10 +114,47 @@ public class DetailBookPresenter implements Initializable {
         stage.setWidth(DetailBookBackButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
         HomePresenter homePresenter = (HomePresenter) hv.getPresenter();
-        homePresenter.reload(_books,_dvds,_magazines);
+        homePresenter.reload(_homebooks, _homedvds, _homemagazines);
         stage.show();
     }
 
+
+    // Der Benutzer wird ausgelogged
+    @FXML
+    public void handleButtonActionLogout(){
+        _loggedInUser.setUser(null);
+        reload();
+    }
+
+    // Kundenverwaltung wird gestartet
+    @FXML
+    private void handleButtonActionCustomerManagement(ActionEvent event) {
+        CustomerManagementView cm = new CustomerManagementView();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(new Scene(cm.getView()));
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                alert.setTitle("Attention");
+                alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    stage.close();
+                } else {
+                    event.consume();
+                }
+            }
+        });
+        stage.show();
+    }
+
+    // Alle Informationen zu einem bestimmten, zuvor ausgewählten Buch werden in einer Tabelle angezeit
     public void setInfo(BookDTO book){
         if (book.getTitle() != null) {
             titel.setText(book.getTitle());
@@ -102,26 +174,22 @@ public class DetailBookPresenter implements Initializable {
         bookEdition.setCellValueFactory(new PropertyValueFactory<>("edition"));
         bookShelfPos.setCellValueFactory(new PropertyValueFactory<>("shelfPos"));
         bookStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        bookAktion.setCellValueFactory(new PropertyValueFactory<>("aktion"));
         if(!isbn.getText().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
-                ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(isbn.getText());
+                ArrayList<BookDTO> bookArrayList = searchMedia.getBooksByISBN(isbn.getText());
 
-                ArrayList<DTO> bookArrayList= allMedias.get(0);
-
-
-                ObservableList<BookDTO> books = FXCollections.observableArrayList();
+                mediaBooks = FXCollections.observableArrayList();
 
                 // buch hashmap iterieren und daten holen
                 for (int i = 0; i < bookArrayList.size(); i++) {
                     HashMap<String, String> bookResult = bookArrayList.get(i).getAllData();
-                    books.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
-                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos")));
+                    mediaBooks.add(new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
+                            bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"), bookResult.get("available")));
                 }
-                detailBookTable.setItems(books);
+                detailBookTable.setItems(mediaBooks);
 
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
@@ -132,9 +200,122 @@ public class DetailBookPresenter implements Initializable {
         }
     }
 
+    // Die letzten Ergebnisse bei der Suche auf dem Home View werden angegeben.
     public void setLastSearch(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
-        _books = books;
-        _dvds = dvds;
-        _magazines = magazines;
+        _homebooks = books;
+        _homedvds = dvds;
+        _homemagazines = magazines;
+    }
+
+    // Es wird der Ausleihvorgang für ein ausgewähltes Buch gestartet
+    @FXML
+    void clickBorrowBook(MouseEvent event) {
+        if(_loggedInUser.isLoggedIn() == true) {
+            detailBookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 1) {
+                        BookDTO selectedItem = detailBookTable.getSelectionModel().getSelectedItem();
+                        if (selectedItem.getStatus().equals("Vorhanden")) {
+                            BorrowMediaView bmp = new BorrowMediaView();
+                            Stage stage = new Stage();
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.setScene(new Scene(bmp.getView()));
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                    alert.setTitle("Attention");
+                                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                                    Optional<ButtonType> result = alert.showAndWait();
+
+                                    if (result.get() == ButtonType.OK) {
+                                        stage.close();
+                                    } else {
+                                        event.consume();
+                                    }
+                                }
+                            });
+                            stage.show();
+                            BorrowMediaPresenter borrowMediaPresenter = (BorrowMediaPresenter) bmp.getPresenter();
+                            borrowMediaPresenter.setBookDTO(selectedItem);
+                            borrowMediaPresenter.setBookPresenter(dbp);
+                        }else{
+                            ReturnOrExtendView rev = new ReturnOrExtendView();
+                            Stage stage = new Stage();
+                            stage.initModality(Modality.WINDOW_MODAL);
+                            stage.setScene(new Scene(rev.getView()));
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            ReturnOrExtendPresenter returnOrExtendPresenter = (ReturnOrExtendPresenter) rev.getPresenter();
+                            returnOrExtendPresenter.setBookDTO(selectedItem);
+                            returnOrExtendPresenter.setBookPresenter(dbp);
+                            returnOrExtendPresenter.setInfo();
+                            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, "Ihre Eingaben gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                                    alert.setTitle("Attention");
+                                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                                    Optional<ButtonType> result = alert.showAndWait();
+
+                                    if (result.get() == ButtonType.OK) {
+                                        stage.close();
+                                    } else {
+                                        event.consume();
+                                    }
+                                }
+                            });
+                            stage.show();
+                        }
+                    }
+                }
+            });
+        }
+        //do nothing
+    }
+
+    // Der Reservierungsvorgang wird gestartet
+    @FXML
+    private void handleButtonActionBooking() {
+        Boolean oneItemAvailable = false;
+        for (BookDTO book: mediaBooks) {
+            if(book.isAvailable() == true){
+                oneItemAvailable = true;
+            }
+        }
+        if(oneItemAvailable == true){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Es gibt noch Exemplare zum Ausleihen", ButtonType.OK);
+            alert.setTitle("Achtung");
+            alert.setHeaderText("Reservieren nicht möglich");
+            alert.showAndWait();
+        } else{
+            BookingMediaView rm = new BookingMediaView();
+            Stage newstage = new Stage();
+            newstage.initModality(Modality.WINDOW_MODAL);
+            newstage.setScene(new Scene(rm.getView()));
+            newstage.setResizable(false);
+            newstage.initModality(Modality.APPLICATION_MODAL);
+            BookingMediaPresenter BookingMediaPresenter = (BookingMediaPresenter) rm.getPresenter();
+            BookingMediaPresenter.setBookDTO(mediaBooks.get(0));
+            newstage.show();
+        }
+    }
+
+    public void reload(){
+        DetailBookView dbv = new DetailBookView();
+        Scene scene = new Scene(dbv.getView());
+        DetailBookPresenter dbp = (DetailBookPresenter) dbv.getPresenter();
+        dbp.setInfo(mediaBooks.get(0));
+        dbp.setLastSearch(_homebooks,_homedvds,_homemagazines);
+        Stage stage = (Stage) LogoutButton.getScene().getWindow();
+        stage.setHeight(LogoutButton.getScene().getWindow().getHeight());
+        stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 }

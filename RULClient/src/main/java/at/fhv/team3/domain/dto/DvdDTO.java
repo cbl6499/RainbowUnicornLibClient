@@ -12,6 +12,8 @@ public class DvdDTO extends DTO{
     private String _regisseur;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
+    private String _status;
 
     public DvdDTO(int id, String title, String regisseur, String pictureURL, String shelfPos){
         _dvdId = id;
@@ -19,6 +21,20 @@ public class DvdDTO extends DTO{
         _regisseur = regisseur;
         _pictureURL = pictureURL;
         _shelfPos = shelfPos;
+    }
+
+    public DvdDTO(int id, String title, String regisseur, String pictureURL, String shelfPos, String status){
+        _dvdId = id;
+        _title = title;
+        _regisseur = regisseur;
+        _pictureURL = pictureURL;
+        _shelfPos = shelfPos;
+        _status = status;
+        if(_status.equals("Vorhanden")){
+            _available = true;
+        } else {
+            _available = false;
+        }
     }
 
     public void setDvdId(int dvdId){
@@ -49,7 +65,7 @@ public class DvdDTO extends DTO{
         _pictureURL = pictureURL;
     }
 
-    public String getPictureURL(){return _pictureURL;}
+    public String getPictureURL(){ return _pictureURL;}
 
     public void setShelfPos(String shelfPos){
         _shelfPos = shelfPos;
@@ -58,6 +74,21 @@ public class DvdDTO extends DTO{
     public String getShelfPos(){
         return _shelfPos;
     }
+
+    public void setAvailable(boolean _available){
+        this._available = _available;
+        if(_available){
+            _status = "Vorhanden";
+        } else {
+            _status = "Nicht vorhanden";
+        }
+    }
+
+    public boolean isAvailable(){ return _available;}
+
+    public void setStatus(String available){_status= _status;}
+
+    public String getStatus(){ return _status;}
 
     public void setId(int id) {
         setDvdId(id);
@@ -74,6 +105,7 @@ public class DvdDTO extends DTO{
         allData.put("regisseur", _regisseur);
         allData.put("pictureURL", _pictureURL);
         allData.put("shelfPos", _shelfPos);
+        allData.put("available", _status);
         return allData;
     }
 

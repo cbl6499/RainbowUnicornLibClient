@@ -1,5 +1,7 @@
 package at.fhv.team3.presentation.home;
 
+        import at.fhv.team3.application.LoggedInUser;
+        import at.fhv.team3.application.ServerIP;
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
@@ -12,8 +14,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.domain.dto.DvdDTO;
         import at.fhv.team3.domain.dto.MagazineDTO;
         import at.fhv.team3.presentation.bibinfo.BibInfoView;
-        import at.fhv.team3.presentation.costumermanagement.CostumerManagementView;
-        import javafx.beans.property.SimpleStringProperty;
+        import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.event.ActionEvent;
@@ -31,6 +32,7 @@ package at.fhv.team3.presentation.home;
         import javafx.stage.WindowEvent;
 
         import java.net.URL;
+        import java.rmi.Naming;
         import java.rmi.registry.LocateRegistry;
         import java.rmi.registry.Registry;
         import java.util.ArrayList;
@@ -39,9 +41,12 @@ package at.fhv.team3.presentation.home;
         import java.util.ResourceBundle;
 
 public class HomePresenter implements Initializable {
+    private LoggedInUser _loggedInUser = null;
     private ObservableList<BookDTO> _books;
     private ObservableList<DvdDTO> _dvds;
     private ObservableList<MagazineDTO> _magazines;
+    private ServerIP serverIP;
+    private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         bookTable.getColumns();
@@ -50,6 +55,17 @@ public class HomePresenter implements Initializable {
         dvdTable.setPlaceholder(new Label("Bitte suchen!"));
         magazineTable.getColumns();
         magazineTable.setPlaceholder(new Label("Bitte suchen!"));
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
+        }
+
     }
 
     @FXML
@@ -95,10 +111,12 @@ public class HomePresenter implements Initializable {
     private Button BibInfoButton;
 
     @FXML
-    private Button CostumerManagementButton;
+    private Button CustomerManagementButton;
 
+    @FXML
+    private Button LogoutButton;
 
-
+    // Bibinfo und Login Seite wird geöffnet
     @FXML
     private void handleButtonActionBibInfo(ActionEvent event) {
         BibInfoView bi = new BibInfoView();
@@ -110,14 +128,22 @@ public class HomePresenter implements Initializable {
         stage.show();
     }
 
-
+    // Benutzer wird ausgelogged
     @FXML
-    private void handleButtonActionCostumerManagement(ActionEvent event) {
-        CostumerManagementView cm = new CostumerManagementView();
+    public void handleButtonActionLogout(){
+        _loggedInUser.setUser(null);
+        reload();
+    }
+
+    // Kundenverwaltung wird geöffnet
+    @FXML
+    private void handleButtonActionCustomerManagement(ActionEvent event) {
+        CustomerManagementView cm = new CustomerManagementView();
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(new Scene(cm.getView()));
         stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -135,9 +161,9 @@ public class HomePresenter implements Initializable {
             }
         });
         stage.show();
-
     }
 
+    // Die Detailansicht eines ausgeqählten Buchs wird geöffnet
     @FXML
     public void clickdetailbook(){
         bookTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -160,6 +186,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    // Die Detailansicht einer ausgeqählten DVD wird geöffnet
     @FXML
     public void clickdetaildvd(){
         dvdTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -182,6 +209,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
+    // Die Detailansicht eines ausgeqählten Magazins wird geöffnet
     @FXML
     void clickdetailmagazine(MouseEvent event) {
         magazineTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -203,6 +231,8 @@ public class HomePresenter implements Initializable {
             }
         });
     }
+
+    // Durch das betätigen der Enter Taste wird die Suche gestartet
     @FXML
     public void searchTroughEnter() {
         searchButton.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -215,7 +245,7 @@ public class HomePresenter implements Initializable {
         });
     }
 
-
+    // Es wird nach einem Medium gesucht und es werden die Resultate in Tabelle angegeben
     @FXML
     public void search() {
 
@@ -232,7 +262,7 @@ public class HomePresenter implements Initializable {
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
             try {
-                Registry registry = LocateRegistry.getRegistry(1099);
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                     ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());
@@ -319,7 +349,7 @@ public class HomePresenter implements Initializable {
                         dvdTable.getColumns().setAll(dvdTitle, dvdRegisseur);
                         magazineTable.getColumns().setAll(magazineTitle, magazineEdition);
                     }
-
+              
                     bookTable.setItems(_books);
 
                     dvdTable.setItems(_dvds);
@@ -342,6 +372,7 @@ public class HomePresenter implements Initializable {
         }
     }
 
+    // Die Resultate der zuvor durchgeführten Suche werden angezeigt
     public void reload(ObservableList<BookDTO> books, ObservableList<DvdDTO> dvds,ObservableList<MagazineDTO> magazines){
         bookTable.getColumns();
         dvdTable.getColumns();
@@ -364,6 +395,18 @@ public class HomePresenter implements Initializable {
         bookTable.setItems(_books);
         dvdTable.setItems(_dvds);
         magazineTable.setItems(_magazines);
+    }
+
+    public void reload(){
+        HomeView hv = new HomeView();
+        Scene scene = new Scene(hv.getView());
+        HomePresenter hp = (HomePresenter) hv.getPresenter();
+        hp.reload(_books,_dvds,_magazines);
+        Stage stage = (Stage) LogoutButton.getScene().getWindow();
+        stage.setHeight(LogoutButton.getScene().getWindow().getHeight());
+        stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 }
 

@@ -16,6 +16,8 @@ public class BookDTO extends DTO {
     private String _edition;
     private String _pictureURL;
     private String _shelfPos;
+    private boolean _available;
+    private String _status;
 
     public BookDTO(int id, String title, String publisher, String author, String isbn, String edition, String pictureURL, String shelfPos){
         _bookId = id;
@@ -26,6 +28,23 @@ public class BookDTO extends DTO {
         _edition = edition;
         _pictureURL = pictureURL;
         _shelfPos = shelfPos;
+    }
+
+    public BookDTO(int id, String title, String publisher, String author, String isbn, String edition, String pictureURL, String shelfPos, String status){
+        _bookId = id;
+        _title = title;
+        _publisher = publisher;
+        _author = author;
+        _isbn = isbn;
+        _edition = edition;
+        _pictureURL = pictureURL;
+        _shelfPos = shelfPos;
+        _status = status;
+        if(_status.equals("Vorhanden")){
+            _available = true;
+        } else {
+            _available = false;
+        }
     }
 
     public void setBookId(int id){
@@ -92,6 +111,21 @@ public class BookDTO extends DTO {
         return _shelfPos;
     }
 
+    public void setAvailable(boolean available){
+        this._available = available;
+        if(_available){
+            _status = "Vorhanden";
+        } else {
+            _status = "Nicht vorhanden";
+        }
+    }
+
+    public boolean isAvailable(){ return _available;}
+
+    public void setStatus(String available){_status= _status;}
+
+    public String getStatus(){ return _status;}
+
     public void setId(int id) {
         setBookId(id);
     }
@@ -110,13 +144,13 @@ public class BookDTO extends DTO {
         allData.put("edition", _edition);
         allData.put("pictureURL", _pictureURL);
         allData.put("shelfPos", _shelfPos);
-
+        allData.put("available", _status);
         return allData;
     }
 
     public boolean equals(DTO dto) {
         HashMap<String, String> data = dto.getAllData();
-        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition)){
+        if(data.get("title").equals(_title) && data.get("publisher").equals(_publisher) && data.get("author").equals(_author) && data.get("isbn").equals(_isbn) && data.get("edition").equals(_edition) ){
             return true;
         }
         return false;

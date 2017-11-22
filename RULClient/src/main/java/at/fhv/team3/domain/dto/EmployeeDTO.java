@@ -12,10 +12,9 @@ public class EmployeeDTO extends DTO{
     private String _lastName;
     private String _role;
     private String _userName;
+    private boolean _loggedIn;
 
-    public EmployeeDTO(){
-
-    }
+    public EmployeeDTO(){}
 
     public void setEmployeeId(int id){
         _employeeId = id;
@@ -63,6 +62,14 @@ public class EmployeeDTO extends DTO{
 
     public int getId() {
         return getEmployeeId();
+    }
+
+    public void setLoggedIn(boolean b){
+        _loggedIn = b;
+    }
+
+    public boolean isLoggedIn(){
+        return _loggedIn;
     }
 
     public HashMap<String, String> getAllData() {
