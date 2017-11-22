@@ -349,8 +349,7 @@ public class HomePresenter implements Initializable {
                         dvdTable.getColumns().setAll(dvdTitle, dvdRegisseur);
                         magazineTable.getColumns().setAll(magazineTitle, magazineEdition);
                     }
-
-
+              
                     bookTable.setItems(_books);
 
                     dvdTable.setItems(_dvds);
