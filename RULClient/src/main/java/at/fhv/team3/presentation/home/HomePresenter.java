@@ -8,6 +8,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinView;
         import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
         import at.fhv.team3.presentation.detaildvd.DetailDvdView;
+        import at.fhv.team3.presentation.message.MessageView;
         import at.fhv.team3.rmi.interfaces.RMIMediaSearch;
         import at.fhv.team3.domain.dto.BookDTO;
         import at.fhv.team3.domain.dto.DTO;
@@ -27,6 +28,8 @@ package at.fhv.team3.presentation.home;
         import javafx.scene.input.KeyCode;
         import javafx.scene.input.KeyEvent;
         import javafx.scene.input.MouseEvent;
+        import javafx.scene.layout.GridPane;
+        import javafx.scene.layout.Pane;
         import javafx.stage.Modality;
         import javafx.stage.Stage;
         import javafx.stage.WindowEvent;
@@ -64,6 +67,8 @@ public class HomePresenter implements Initializable {
         if(_loggedInUser.isLoggedIn() == false){
             LogoutButton.setVisible(false);
             CustomerManagementButton.setVisible(false);
+            MessagePane1.setVisible(false);
+            MessagePane2.setVisible(false);
         }
 
     }
@@ -105,6 +110,12 @@ public class HomePresenter implements Initializable {
     private Button searchButton;
 
     @FXML
+    private Button messageButton;
+
+    @FXML
+    private Label messageCounter;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -115,6 +126,12 @@ public class HomePresenter implements Initializable {
 
     @FXML
     private Button LogoutButton;
+
+    @FXML
+    private GridPane MessagePane1;
+
+    @FXML
+    private Pane MessagePane2;
 
     // Bibinfo und Login Seite wird geöffnet
     @FXML
@@ -133,6 +150,18 @@ public class HomePresenter implements Initializable {
     public void handleButtonActionLogout(){
         _loggedInUser.setUser(null);
         reload();
+    }
+
+    // Leitet den Benutzer zurück Nachrichten weiter
+    @FXML
+    private void handleButtonActionToMessage() {
+        MessageView mv = new MessageView();
+        Scene scene = new Scene(mv.getView());
+        Stage stage = (Stage) messageButton.getScene().getWindow();
+        stage.setHeight(messageButton.getScene().getWindow().getHeight());
+        stage.setWidth(messageButton.getScene().getWindow().getWidth());
+        stage.setScene(scene);
+        stage.show();
     }
 
     // Kundenverwaltung wird geöffnet
@@ -162,6 +191,8 @@ public class HomePresenter implements Initializable {
         });
         stage.show();
     }
+
+
 
     // Die Detailansicht eines ausgeqählten Buchs wird geöffnet
     @FXML
