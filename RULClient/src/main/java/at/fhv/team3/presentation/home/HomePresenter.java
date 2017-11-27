@@ -16,6 +16,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.domain.dto.MagazineDTO;
         import at.fhv.team3.presentation.bibinfo.BibInfoView;
         import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
+        import at.fhv.team3.rmi.interfaces.RMIMessageConsumer;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.event.ActionEvent;
@@ -36,6 +37,8 @@ package at.fhv.team3.presentation.home;
 
         import java.net.URL;
         import java.rmi.Naming;
+        import java.rmi.NotBoundException;
+        import java.rmi.RemoteException;
         import java.rmi.registry.LocateRegistry;
         import java.rmi.registry.Registry;
         import java.util.ArrayList;
@@ -69,8 +72,8 @@ public class HomePresenter implements Initializable {
             CustomerManagementButton.setVisible(false);
             MessagePane1.setVisible(false);
             MessagePane2.setVisible(false);
+            reloadMessagesCount();
         }
-
     }
 
     @FXML
@@ -438,6 +441,25 @@ public class HomePresenter implements Initializable {
         stage.setWidth(LogoutButton.getScene().getWindow().getWidth());
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void reloadMessagesCount(){
+        try {
+            Registry registry = LocateRegistry.getRegistry(host, 1099);
+            RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
+            int i = rmc.getMessageCount();
+            String MessageCount = "";
+            if(i > 99){
+                MessageCount = "99+";
+            } else {
+                MessageCount = "" + i;
+            }
+            System.out.println(MessageCount);
+            messageCounter.setText(MessageCount);
+        } catch (Exception e) {
+            System.out.println("HelloClient exception: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
 
