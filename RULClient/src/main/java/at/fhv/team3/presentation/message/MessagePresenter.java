@@ -47,14 +47,11 @@ public class MessagePresenter implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         serverIP = ServerIP.getInstance();
         host = serverIP.getServer();
+        TextAreaMessage.setWrapText(true);
         //Login
         _loggedInUser = LoggedInUser.getInstance();
-        //Message
+        //Message + MessageLoad Funktion
         reloadMessagesCount();
-        if(MessagesAvailable == false){
-            MessageLoadButton.setDisable(false);
-        }
-
         if(_loggedInUser.isLoggedIn() == false){
             HomeView hv = new HomeView();
             Scene scene = new Scene(hv.getView());
@@ -140,6 +137,7 @@ public class MessagePresenter implements Initializable {
         }
     }
 
+    //Anzahl der Nachrichten neuladen
     public void reloadMessagesCount(){
         try {
             Registry registry = LocateRegistry.getRegistry(host, 1099);
@@ -153,6 +151,7 @@ public class MessagePresenter implements Initializable {
                 if(MessageCount.equals("0")){
                     MessagesAvailable = false;
                 }
+                changeMessageLoadButton();
             }
             messageCounter.setText(MessageCount);
         } catch (Exception e) {
@@ -161,6 +160,7 @@ public class MessagePresenter implements Initializable {
         }
     }
 
+    // Nachricht laden und anzeigen
     public void loadMessage(){
         try {
             Registry registry = LocateRegistry.getRegistry(host, 1099);
@@ -186,6 +186,7 @@ public class MessagePresenter implements Initializable {
 
     }
 
+    // Kunden Informationen anzeigen
     public void setLibCustomerInfo(MessageDTO message){
         if(message.getCustomer() != null){
             CustomerDTO customer = message.getCustomer();
@@ -250,6 +251,24 @@ public class MessagePresenter implements Initializable {
         }
     }
 
+    public void changeMessageLoadButton(){
+        if(MessagesAvailable == false){
+            MessageLoadButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override public void handle(ActionEvent e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Keine Nachricht vorhanden", ButtonType.CANCEL, ButtonType.OK);
+                    alert.setTitle("Attention");
+                    alert.setHeaderText("Keine Nachricht vorhanden");
+                    Optional<ButtonType> result = alert.showAndWait();
+                }
+            });
+        } else {
+            MessageLoadButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override public void handle(ActionEvent e) {
+                    loadMessage();
+                }
+            });
+        }
+    }
 
 
 }
