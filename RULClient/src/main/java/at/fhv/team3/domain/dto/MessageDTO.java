@@ -43,12 +43,20 @@ public class MessageDTO extends DTO {
     }
 
     public void setMedia(DTO media){
-        if(media.getClass() == _book.getClass()){
-            _book = (BookDTO) media;
-        } else if(media.getClass() == _dvd.getClass()){
-            _dvd = (DvdDTO) media;
-        } else if(media.getClass() == _magazine.getClass()){
-            _magazine = (MagazineDTO) media;
+        if(media != null) {
+            if(_book != null){
+                if (media.getClass() == _book.getClass()) {
+                    _book = (BookDTO) media;
+                }
+            } else if(_dvd != null){
+                if (media.getClass() == _dvd.getClass()) {
+                    _dvd = (DvdDTO) media;
+                }
+            } else if(_magazine != null){
+                if (media.getClass() == _magazine.getClass()) {
+                    _magazine = (MagazineDTO) media;
+                }
+            }
         }
     }
 

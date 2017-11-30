@@ -54,28 +54,6 @@ public class HomePresenter implements Initializable {
     private ServerIP serverIP;
     private String host;
 
-    public void initialize(URL location, ResourceBundle resources) {
-        bookTable.getColumns();
-        bookTable.setPlaceholder(new Label("Bitte suchen!"));
-        dvdTable.getColumns();
-        dvdTable.setPlaceholder(new Label("Bitte suchen!"));
-        magazineTable.getColumns();
-        magazineTable.setPlaceholder(new Label("Bitte suchen!"));
-
-        serverIP = ServerIP.getInstance();
-        host = serverIP.getServer();
-
-        //Login
-        _loggedInUser = LoggedInUser.getInstance();
-        if(_loggedInUser.isLoggedIn() == false){
-            LogoutButton.setVisible(false);
-            CustomerManagementButton.setVisible(false);
-            MessagePane1.setVisible(false);
-            MessagePane2.setVisible(false);
-            reloadMessagesCount();
-        }
-    }
-
     @FXML
     private TabPane tabPane;
 
@@ -135,6 +113,29 @@ public class HomePresenter implements Initializable {
 
     @FXML
     private Pane MessagePane2;
+
+    public void initialize(URL location, ResourceBundle resources) {
+        bookTable.getColumns();
+        bookTable.setPlaceholder(new Label("Bitte suchen!"));
+        dvdTable.getColumns();
+        dvdTable.setPlaceholder(new Label("Bitte suchen!"));
+        magazineTable.getColumns();
+        magazineTable.setPlaceholder(new Label("Bitte suchen!"));
+
+        serverIP = ServerIP.getInstance();
+        host = serverIP.getServer();
+
+        reloadMessagesCount();
+
+        //Login
+        _loggedInUser = LoggedInUser.getInstance();
+        if(_loggedInUser.isLoggedIn() == false){
+            LogoutButton.setVisible(false);
+            CustomerManagementButton.setVisible(false);
+            MessagePane1.setVisible(false);
+            MessagePane2.setVisible(false);
+        }
+    }
 
     // Bibinfo und Login Seite wird geöffnet
     @FXML
@@ -454,7 +455,6 @@ public class HomePresenter implements Initializable {
             } else {
                 MessageCount = "" + i;
             }
-            System.out.println(MessageCount);
             messageCounter.setText(MessageCount);
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
