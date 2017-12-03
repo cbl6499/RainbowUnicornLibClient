@@ -35,9 +35,9 @@ public class BookingMediaPresenter implements Initializable {
     private DvdDTO dvdDTO;
     private MagazineDTO magazineDTO;
     ObservableList<BookedItemDTO> _bookings;
-    private Boolean bookingState = false;
     private ServerIP serverIP;
     private String host;
+    private ValidationResult validationResult;
 
     public void initialize(URL location, ResourceBundle resources) {
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -105,14 +105,14 @@ public class BookingMediaPresenter implements Initializable {
                 RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
 
                 if (bookDTO != null) {
-                    bookingState = rmiBooking.bookItem(bookDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBooking.bookItem(bookDTO, selectedItemfromComboBox);
                 } else if (dvdDTO != null) {
-                    bookingState = rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox);
                 } else if (magazineDTO != null) {
-                    bookingState = rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox).hasErrors();
+                    validationResult = rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox);
                 }
 
-                if (!bookingState) {
+                if (!validationResult.hasErrors()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium reserviert", ButtonType.OK);
                     alert.setTitle("Success");
                     Optional<ButtonType> result = alert.showAndWait();
@@ -121,6 +121,11 @@ public class BookingMediaPresenter implements Initializable {
                         Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
                         stage.close();
                     }
+                }else{
+                    String errorString = setErrorMessage();
+                    Alert alert = new Alert(Alert.AlertType.WARNING, errorString, ButtonType.OK);
+                    alert.setTitle("Warning");
+                    Optional<ButtonType> result = alert.showAndWait();
                 }
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
@@ -135,7 +140,6 @@ public class BookingMediaPresenter implements Initializable {
                 alert.close();
             }
         }
-        bookingState = false;
     }
 
     public void setBookDTO(BookDTO bookDTO) {
@@ -156,8 +160,15 @@ public class BookingMediaPresenter implements Initializable {
     // Reservieren abbrechen
     @FXML
     void borrowMediaCancelAction(ActionEvent event) {
-        Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
-        stage.close();
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Der Reservierungsvorgang wird abgebrochen, alle eigegebenen Daten gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+        alert.setTitle("Attention");
+        alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            Stage stage = (Stage) borrowMediaCancelButton.getScene().getWindow();
+            stage.close();
+        }
     }
 
     // Es wird durch das betätigen der Enter Taste, die Kundensuche gestartet.
@@ -309,4 +320,13 @@ public class BookingMediaPresenter implements Initializable {
 
     }
 
+    // Fehlermeldungen werden umgewandelt und weitergegeben.
+    public String setErrorMessage(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < validationResult.getErrorMessages().size(); i++){
+            sb.append(validationResult.getErrorMessages().get(i).toString());
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
 }

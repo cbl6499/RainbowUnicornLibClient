@@ -302,6 +302,22 @@ public class DetailBookPresenter implements Initializable {
             newstage.initModality(Modality.APPLICATION_MODAL);
             BookingMediaPresenter BookingMediaPresenter = (BookingMediaPresenter) rm.getPresenter();
             BookingMediaPresenter.setBookDTO(mediaBooks.get(0));
+            newstage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Der Reservierungsvorgang wird abgebrochen, alle eigegebenen Daten gehen verloren", ButtonType.CANCEL, ButtonType.OK);
+                    alert.setTitle("Attention");
+                    alert.setHeaderText("Wollen Sie wirklich abbrechen?");
+
+                    Optional<ButtonType> result = alert.showAndWait();
+
+                    if (result.get() == ButtonType.OK) {
+                        newstage.close();
+                    } else {
+                        event.consume();
+                    }
+                }
+            });
             newstage.show();
         }
     }
