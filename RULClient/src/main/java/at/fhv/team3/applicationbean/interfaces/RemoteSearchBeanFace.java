@@ -4,7 +4,6 @@ import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
-import at.fhv.team3.domain.interfaces.Borrowable;
 import at.fhv.team3.domain.interfaces.Searchable;
 
 import javax.ejb.Remote;
