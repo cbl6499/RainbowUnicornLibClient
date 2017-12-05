@@ -17,6 +17,13 @@
             <artifactId>afterburner.fx</artifactId>
             <version>1.7.0</version>
         </dependency>
+<!--        <dependency>
+            <groupId>org.glassfish.main.appclient.client</groupId>
+            <artifactId>gf-client</artifactId>
+            <version>5.0</version>
+            <scope>system</scope>
+
+        </dependency> -->
     </dependencies>
 
     <build>
