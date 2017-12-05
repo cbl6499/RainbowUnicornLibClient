@@ -34,7 +34,7 @@ public class App extends Application {
         stage.getIcons().add(new Image("logo.png"));
         stage.show();
 
-      //  connect();
+        //connect();
     }
 
     @Override

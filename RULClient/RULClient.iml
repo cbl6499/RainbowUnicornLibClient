@@ -21,7 +21,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
-    <orderEntry type="library" name="Maven: com.airhacks:afterburner.fx:1.7.0" level="project" />
     <orderEntry type="library" name="javax.ejb" level="project" />
+    <orderEntry type="library" name="Maven: com.airhacks:afterburner.fx:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.naming:jndi:1.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.jndi:providerutil:1.2" level="project" />
   </component>
 </module>
