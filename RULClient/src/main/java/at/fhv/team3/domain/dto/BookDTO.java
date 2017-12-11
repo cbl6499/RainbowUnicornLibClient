@@ -1,6 +1,7 @@
 package at.fhv.team3.domain.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -121,6 +122,21 @@ public class BookDTO extends DTO {
     }
 
     public boolean isAvailable(){ return _available;}
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("title") + " ");
+        sb.append(map.get("publisher") + " ");
+        sb.append(map.get("author") + " ");
+        sb.append(map.get("isbn") + " ");
+        sb.append(map.get("edition") + " ");
+        sb.append(map.get("pictureURL") + " ");
+        sb.append(map.get("shelfPos") + " ");
+        sb.append(map.get("available"));
+        return sb.toString();
+    }
 
     public void setStatus(String available){_status= _status;}
 

@@ -124,4 +124,24 @@ public class BookedItemDTO extends DTO {
         }
         return false;
     }
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("customer") + " ");
+        sb.append(map.get("date") + " ");
+
+        if (map.containsKey("book")) {
+            sb.append(map.get("book"));
+        } else if (map.containsKey("dvd")) {
+            sb.append(map.get("dvd"));
+        } else if (map.containsKey("magazine")) {
+            sb.append(map.get("magazine"));
+        } else {
+            sb.append("ITEM CAN`T BE READ PROPPERLY CLASS BOOKEDITEMDTO METHODE: TOSTRING");
+        }
+
+        return sb.toString();
+    }
 }

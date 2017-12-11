@@ -15,13 +15,14 @@ public class BorrowedItemDTO extends DTO {
     private BookDTO _book;
     private DvdDTO _dvd;
     private MagazineDTO _magazine;
+    private int _extendCount;
 
 
     public BorrowedItemDTO(int id, Date borrowedDate, DTO borrower, DTO dto) {
         _borrowedId = id;
         _borrowedDate = borrowedDate;
 
-        if (dto instanceof BookDTO) {
+        if (dto instanceof ExternalLibDTO) {
             _externalLib = (ExternalLibDTO) borrower;
         } else {
             _customer = (CustomerDTO) borrower;
@@ -76,12 +77,23 @@ public class BorrowedItemDTO extends DTO {
         return getBorrowedId();
     }
 
+    public int getExtendCount(){
+        return _extendCount;
+    }
+
+    public void setExtendCount(int count){
+        _extendCount = count;
+    }
+
     public HashMap<String, String> getAllData() {
         HashMap<String, String> allData = new HashMap<String, String>();
         allData.put("id", ""+_borrowedId);
-        allData.put("externalLib", _externalLib.toString());
+        if (_externalLib != null) {
+            allData.put("externalLib", _externalLib.toString());
+        } else if (_customer != null) {
+            allData.put("customer", _customer.toString());
+        }
         allData.put("date", _borrowedDate.toString());
-        allData.put("customer", _customer.toString());
         if (_book != null) {
             allData.put("book", _book.toString());
         } else if (_dvd != null) {
@@ -102,28 +114,28 @@ public class BorrowedItemDTO extends DTO {
         return false;
     }
 
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        if (map.containsKey("externalLib")) {
+            sb.append(map.get("externalLib") + " ");
+        } else if (map.containsKey("externalLib")) {
+            sb.append(map.get("customer") + " ");
+        }
 
-    public BookDTO get_book() {
-        return _book;
+        sb.append(map.get("date") + " ");
+
+        if (map.containsKey("book")) {
+            sb.append(map.get("book"));
+        } else if (map.containsKey("dvd")) {
+            sb.append(map.get("dvd"));
+        } else if (map.containsKey("magazine")) {
+            sb.append(map.get("magazine"));
+        } else {
+            sb.append("ITEM CAN`T BE READ PROPPERLY CLASS BORROWEDITEM, METHODE: TOSTRING");
+        }
+        return sb.toString();
     }
 
-    public void set_book(BookDTO _book) {
-        this._book = _book;
-    }
-
-    public DvdDTO get_dvd() {
-        return _dvd;
-    }
-
-    public void set_dvd(DvdDTO _dvd) {
-        this._dvd = _dvd;
-    }
-
-    public MagazineDTO get_magazine() {
-        return _magazine;
-    }
-
-    public void set_magazine(MagazineDTO _magazine) {
-        this._magazine = _magazine;
-    }
 }

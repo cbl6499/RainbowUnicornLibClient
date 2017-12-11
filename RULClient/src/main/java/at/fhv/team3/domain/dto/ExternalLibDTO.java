@@ -62,4 +62,14 @@ public class ExternalLibDTO extends DTO{
         }
         return false;
     }
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("name") + " ");
+        sb.append(map.get("accountData"));
+
+        return sb.toString();
+    }
 }

@@ -110,4 +110,18 @@ public class CustomerDTO extends DTO{
         }
         return false;
     }
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("firstname") + " ");
+        sb.append(map.get("lastname") + " ");
+        sb.append(map.get("subscription") + " ");
+        sb.append(map.get("email") + " ");
+        sb.append(map.get("phonenumber") + " ");
+        sb.append(map.get("available"));
+
+        return sb.toString();
+    }
 }

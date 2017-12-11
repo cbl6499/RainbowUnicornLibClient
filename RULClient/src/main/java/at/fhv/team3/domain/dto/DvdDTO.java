@@ -86,6 +86,19 @@ public class DvdDTO extends DTO{
 
     public boolean isAvailable(){ return _available;}
 
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("title") + " ");
+        sb.append(map.get("regisseur") + " ");
+        sb.append(map.get("pictureURL") + " ");
+        sb.append(map.get("shelfPos") + " ");
+        sb.append(map.get("available") + " ");
+
+        return sb.toString();
+    }
+
     public void setStatus(String available){_status= _status;}
 
     public String getStatus(){ return _status;}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by David on 11/15/2017.
  */
+
 public class ValidationResult implements Serializable{
 
     private ArrayList<String> _errorMessages;

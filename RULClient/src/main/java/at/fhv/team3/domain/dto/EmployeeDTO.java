@@ -89,4 +89,15 @@ public class EmployeeDTO extends DTO{
         }
         return false;
     }
+
+    public String toString() {
+        HashMap<String, String> map = getAllData();
+        StringBuilder sb = new StringBuilder();
+        sb.append(map.get("id") + " ");
+        sb.append(map.get("firstname") + " ");
+        sb.append(map.get("lastname") + " ");
+        sb.append(map.get("role") + " ");
+        sb.append(map.get("username"));
+        return sb.toString();
+    }
 }

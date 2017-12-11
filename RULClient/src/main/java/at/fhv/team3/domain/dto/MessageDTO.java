@@ -83,4 +83,8 @@ public class MessageDTO extends DTO {
     public boolean equals(DTO dto) {
         return false;
     }
+
+    public String toString() {
+        return null;
+    }
 }
