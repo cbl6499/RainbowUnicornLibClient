@@ -34,7 +34,7 @@ public class App extends Application {
         stage.getIcons().add(new Image("logo.png"));
         stage.show();
 
-        //connect();
+        connect();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class App extends Application {
 
     private void connect() {
         try {
-            //TODO: import glassfish
+            //TODO: import jars
             Properties props = new Properties();
             props.setProperty("java.naming.factory.initial",
                     "com.sun.enterprise.naming.SerialInitContextFactory");
