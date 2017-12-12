@@ -58,12 +58,13 @@ public class App extends Application {
             RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("java:global/RainbowUnicornLib/at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace");
             System.out.println(remoteInterface.getBooksByISBN(""));
             List<DTO> dto = remoteInterface.getAllBookDTOs();
-            for(DTO d : dto){
+            for (DTO d : dto) {
                 System.out.println(d.getId());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+}
 
 
