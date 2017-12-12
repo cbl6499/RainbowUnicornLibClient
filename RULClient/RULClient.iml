@@ -60,15 +60,6 @@
     <orderEntry type="library" name="Maven: com.sun.grizzly:grizzly-portunif:1.9.50" level="project" />
     <orderEntry type="library" name="Maven: com.sun.pkg:pkg-client:1.122-56.2852" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.main.flashlight:flashlight-framework:3.1.2.2" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.sun:tools:1.6.0">
-        <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_91/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: org.glassfish.main.core:logging:3.1.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.main.admin:monitoring-core:3.1.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.main.admin:config-api:3.1.2.2" level="project" />
@@ -183,5 +174,6 @@
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-osgi:2.2.5-2" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.metro:webservices-api-osgi:2.2.0-1" level="project" />
     <orderEntry type="library" name="Maven: javax.naming:jndi:1.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sun:tools:1.7.0.13" level="project" />
   </component>
 </module>
