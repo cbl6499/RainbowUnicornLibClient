@@ -42,20 +42,20 @@ public class App extends Application {
         try {
             //TODO: import jars
             Properties props = new Properties();
-            props.setProperty("java.naming.factory.initial",
+            System.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
+            System.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+            System.setProperty("java.naming.factory.initial",
                     "com.sun.enterprise.naming.SerialInitContextFactory");
-            props.setProperty("java.naming.factory.url.pkgs",
+            System.setProperty("java.naming.factory.url.pkgs",
                     "com.sun.enterprise.naming");
-            props.setProperty("java.naming.factory.state",
+            System.setProperty("java.naming.factory.state",
                     "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-            props.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
-            props.setProperty("org.omg.CORBA.ORBInitialPort", "3700"); //3700 Glassfish default port
+            // props.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+            // props.setProperty("org.omg.CORBA.ORBInitialPort", "3700"); //3700 Glassfish default port
 
-            System.out.println(getClass().getClassLoader().getResource("com/sun/enterprise/naming/SerialIntContextFactory"));
+            InitialContext ctx = new InitialContext();
 
-            InitialContext ctx = new InitialContext(props);
-
-            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("java:global/RainbowUnicornLib/at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace");
+            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("java:/at/fhv/team3/applicationbean/interfaces/MediaSearchControllerBean");
             System.out.println(remoteInterface.getBooksByISBN(""));
             List<DTO> dto = remoteInterface.getAllBookDTOs();
             for (DTO d : dto) {
