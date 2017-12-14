@@ -55,7 +55,7 @@ public class App extends Application {
 
             InitialContext ctx = new InitialContext();
 
-            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("java:/at/fhv/team3/applicationbean/interfaces/MediaSearchControllerBean");
+            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("RainbowEJB/MediaSearchControllerBean!at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace");
             System.out.println(remoteInterface.getBooksByISBN(""));
             List<DTO> dto = remoteInterface.getAllBookDTOs();
             for (DTO d : dto) {
