@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-ejb" name="RULClient:EJB exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/RULClient_EJB_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="RULClient/ejb/EJB" />
+      <element id="module-output" name="RULClient" />
+    </root>
+  </artifact>
+</component>

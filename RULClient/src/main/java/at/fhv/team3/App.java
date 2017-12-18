@@ -20,7 +20,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+/*
         HomeView appView = new HomeView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("RUL");
@@ -29,7 +29,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.getIcons().add(new Image("logo.png"));
         stage.show();
-
+*/
         connect();
     }
 
@@ -41,6 +41,7 @@ public class App extends Application {
     private void connect() {
         try {
             //TODO: import jars
+            System.out.println("Test");
             Properties props = new Properties();
             System.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
             System.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
@@ -54,9 +55,10 @@ public class App extends Application {
             // props.setProperty("org.omg.CORBA.ORBInitialPort", "3700"); //3700 Glassfish default port
 
             InitialContext ctx = new InitialContext();
-
-            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("RainbowEJB/MediaSearchControllerBean!at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace");
-            System.out.println(remoteInterface.getBooksByISBN(""));
+            System.out.println("InitialContext done");
+            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("SearchEJB");
+            System.out.println("Remote access done");
+            System.out.println(remoteInterface.getClass());
             List<DTO> dto = remoteInterface.getAllBookDTOs();
             for (DTO d : dto) {
                 System.out.println(d.getId());

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.glassfish.corba:glassfish-corba-codegen:3.1.0-b032">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/corba/glassfish-corba-codegen/3.1.0-b032/glassfish-corba-codegen-3.1.0-b032.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/corba/glassfish-corba-codegen/3.1.0-b032/glassfish-corba-codegen-3.1.0-b032-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/corba/glassfish-corba-codegen/3.1.0-b032/glassfish-corba-codegen-3.1.0-b032-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

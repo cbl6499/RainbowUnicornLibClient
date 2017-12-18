@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sun.pkg:pkg-client:1.122-56.2852">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/pkg/pkg-client/1.122-56.2852/pkg-client-1.122-56.2852.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/pkg/pkg-client/1.122-56.2852/pkg-client-1.122-56.2852-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/pkg/pkg-client/1.122-56.2852/pkg-client-1.122-56.2852-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
