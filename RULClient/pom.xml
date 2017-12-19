@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>at.fhv.client</groupId>
     <artifactId>RULClient</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -12,19 +11,24 @@
     <url>http://fhv.at</url>
     <dependencies>
         <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+        <dependency>
             <groupId>com.airhacks</groupId>
             <artifactId>afterburner.fx</artifactId>
             <version>1.7.0</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.appclient.client</groupId>
-            <artifactId>gf-client-module</artifactId>
-            <version>3.1.2.2</version>
+            <groupId>org.glassfish.main.appclient</groupId>
+            <artifactId>gf-client</artifactId>
+            <version>4.1</version>
         </dependency>
         <dependency>
-            <groupId>javax.naming</groupId>
-            <artifactId>jndi</artifactId>
-            <version>1.2.1</version>
+            <groupId>simple-jndi</groupId>
+            <artifactId>simple-jndi</artifactId>
+            <version>0.11.4.1</version>
         </dependency>
         <!--<dependency>
             <groupId>com.sun</groupId>
