@@ -14,6 +14,8 @@ import java.util.List;
 @Remote
 public interface RemoteSearchBeanFace extends Serializable {
 
+    static final long serialVersionUID = 1L;
+
     public List<DTO> getAllBookDTOs();
 
     public List<DTO> getAllDvdDTOs();

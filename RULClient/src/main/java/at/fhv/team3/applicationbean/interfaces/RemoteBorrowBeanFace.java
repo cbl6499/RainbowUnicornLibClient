@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Remote
 public interface RemoteBorrowBeanFace extends Serializable {
 
+    static final long serialVersionUID = 3L;
+
     public ValidationResult handOut(DTO media, CustomerDTO customer);
 
     public ValidationResult handIn(DTO media);

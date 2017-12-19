@@ -11,6 +11,8 @@ import java.security.Key;
 @Remote
 public interface RemoteEasyCryptBeanFace extends Serializable {
 
+    static final long serialVersionUID = 5L;
+
     public String encrypt(String text) throws Exception;
 
     public String decrypt(String geheim) throws Exception;

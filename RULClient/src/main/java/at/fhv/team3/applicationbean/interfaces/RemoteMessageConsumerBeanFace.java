@@ -12,6 +12,8 @@ import java.io.Serializable;
 @Remote
 public interface RemoteMessageConsumerBeanFace extends Serializable {
 
+    static final long serialVersionUID = 7L;
+
     public int getMessageCount();
 
     public MessageDTO pull();

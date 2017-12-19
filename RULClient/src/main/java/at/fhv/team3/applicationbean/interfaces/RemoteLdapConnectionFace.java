@@ -10,6 +10,8 @@ import java.io.Serializable;
 @Remote
 public interface RemoteLdapConnectionFace extends Serializable {
 
+    static final long serialVersionUID = 6L;
+
     public EmployeeDTO authenticateUser(String name, String password) throws NamingException;
 
     public KeyDTO getPublicKey();

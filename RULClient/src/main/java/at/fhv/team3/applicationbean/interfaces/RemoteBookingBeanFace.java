@@ -11,6 +11,8 @@ import java.util.List;
 @Remote
 public interface RemoteBookingBeanFace extends Serializable{
 
+    static final long serialVersionUID = 2L;
+
     public List<DTO> getAllBookings();
 
     public List<DTO> getBookingsForMedia(DTO media);

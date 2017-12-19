@@ -13,6 +13,8 @@ import java.util.ArrayList;
 @Remote
 public interface RemoteCustomerBeanFace extends Serializable {
 
+    static final long serialVersionUID = 4L;
+
     public ArrayList<DTO> findCustomer(String term);
 
     public void saveCustomer(CustomerDTO dto);
