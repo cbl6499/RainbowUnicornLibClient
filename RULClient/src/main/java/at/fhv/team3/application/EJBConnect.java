@@ -24,7 +24,7 @@ public class EJBConnect {
 
             InitialContext ctx = new InitialContext(props);
             System.out.println("InitialContext done");
-            RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup(ejbName);
+            Serializable remoteInterface = (Serializable) ctx.lookup(ejbName);
             return remoteInterface;
         } catch (Exception ex) {
             ex.printStackTrace();

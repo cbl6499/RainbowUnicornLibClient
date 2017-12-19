@@ -304,7 +304,7 @@ public class HomePresenter implements Initializable {
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
                 try {
-                    ArrayList<ArrayList<DTO>> allMedias;
+                    ArrayList<ArrayList<DTO>> allMedias = new ArrayList<>();
 
                     if(connection == "RMI") {
                         Registry registry = LocateRegistry.getRegistry(host, 1099);
@@ -313,10 +313,6 @@ public class HomePresenter implements Initializable {
                     } else if (connection == "EJB") {
                         RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
                         allMedias = remoteSearchBeanFace.search(searchField.getText());
-                    } else {
-                        Registry registry = LocateRegistry.getRegistry(host, 1099);
-                        RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
-                        allMedias = searchMedia.search(searchField.getText());
                     }
 
                     ArrayList<DTO> bookArrayList = allMedias.get(0);
