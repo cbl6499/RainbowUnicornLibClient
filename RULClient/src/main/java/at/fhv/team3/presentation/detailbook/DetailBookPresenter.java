@@ -1,7 +1,10 @@
 package at.fhv.team3.presentation.detailbook;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -46,12 +49,17 @@ public class DetailBookPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<BookDTO> mediaBooks;
+    private ConnectionType connectionType;
+    private String connection;
     private ServerIP serverIP;
     private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailBookTable.getColumns().clear();
         detailBookTable.getColumns().addAll(bookEdition,bookShelfPos,bookStatus);
+
+        connectionType = ConnectionType.getInstance();
+        connection = connectionType.getConnection();
 
         serverIP = ServerIP.getInstance();
         host = serverIP.getServer();
@@ -176,10 +184,15 @@ public class DetailBookPresenter implements Initializable {
         bookStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!isbn.getText().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
-
-                ArrayList<BookDTO> bookArrayList = searchMedia.getBooksByISBN(isbn.getText());
+                ArrayList<BookDTO> bookArrayList = new ArrayList<>();
+                if (connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                    bookArrayList = searchMedia.getBooksByISBN(isbn.getText());
+                } else if (connection.equals("EJB")) {
+                    RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
+                    bookArrayList = remoteSearchBeanFace.getBooksByISBN(isbn.getText());
+                }
 
                 mediaBooks = FXCollections.observableArrayList();
 

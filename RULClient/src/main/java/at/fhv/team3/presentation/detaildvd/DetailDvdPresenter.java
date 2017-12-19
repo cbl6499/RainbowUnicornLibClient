@@ -1,7 +1,10 @@
 package at.fhv.team3.presentation.detaildvd;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -48,6 +51,8 @@ public class DetailDvdPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<DvdDTO> mediaDvds;
+    private ConnectionType connectionType;
+    private String connection;
     private ServerIP serverIP;
     private String host;
 
@@ -55,6 +60,9 @@ public class DetailDvdPresenter implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         detailDvdTable.getColumns().clear();
         detailDvdTable.getColumns().addAll(dvdShelfPos,dvdStatus);
+
+        connectionType = ConnectionType.getInstance();
+        connection = connectionType.getConnection();
 
         serverIP = ServerIP.getInstance();
         host = serverIP.getServer();
@@ -164,10 +172,15 @@ public class DetailDvdPresenter implements Initializable {
         dvdStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!titel.getText().isEmpty()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
-
-                ArrayList<DvdDTO> dvdArrayList = searchMedia.getDvdByTitle(titel.getText());
+                ArrayList<DvdDTO> dvdArrayList = new ArrayList<>();
+                if (connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                    dvdArrayList = searchMedia.getDvdByTitle(titel.getText());
+                } else if (connection.equals("EJB")) {
+                    RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
+                    dvdArrayList = remoteSearchBeanFace.getDvdByTitle(titel.getText());
+                }
 
                 // buch hashmap iterieren und daten holen
                 mediaDvds = FXCollections.observableArrayList();

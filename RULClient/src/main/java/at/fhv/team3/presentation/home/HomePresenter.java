@@ -304,13 +304,13 @@ public class HomePresenter implements Initializable {
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
                 try {
-                    ArrayList<ArrayList<DTO>> allMedias = new ArrayList<>();
+                    ArrayList<ArrayList<DTO>> allMedias = new ArrayList<ArrayList<DTO>>();
 
-                    if(connection == "RMI") {
+                    if(connection.equals("RMI")) {
                         Registry registry = LocateRegistry.getRegistry(host, 1099);
                         RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
                         allMedias = searchMedia.search(searchField.getText());
-                    } else if (connection == "EJB") {
+                    } else if (connection.equals("EJB")) {
                         RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
                         allMedias = remoteSearchBeanFace.search(searchField.getText());
                     }

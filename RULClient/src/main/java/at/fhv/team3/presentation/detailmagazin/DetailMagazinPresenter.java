@@ -1,7 +1,10 @@
 package at.fhv.team3.presentation.detailmagazin;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.DvdDTO;
 import at.fhv.team3.domain.dto.MagazineDTO;
@@ -48,12 +51,17 @@ public class DetailMagazinPresenter implements Initializable {
     ObservableList<DvdDTO> _homedvds;
     ObservableList<MagazineDTO> _homemagazines;
     ObservableList<MagazineDTO> mediaMagazines;
+    private ConnectionType connectionType;
+    private String connection;
     private ServerIP serverIP;
     private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         detailMagazineTable.getColumns().clear();
         detailMagazineTable.getColumns().addAll(magazineShelfPos,magazineStatus);
+
+        connectionType = ConnectionType.getInstance();
+        connection = connectionType.getConnection();
 
         serverIP = ServerIP.getInstance();
         host = serverIP.getServer();
@@ -167,10 +175,19 @@ public class DetailMagazinPresenter implements Initializable {
         magazineStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         if(!magazine.getTitle().isEmpty()) {
             try {
+                ArrayList<MagazineDTO> magazineArrayList = new ArrayList<>();
+                if (connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                    magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
+                } else if (connection.equals("EJB")) {
+                    RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
+                    magazineArrayList = remoteSearchBeanFace.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
+                }
+
                 Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
-
-                ArrayList<MagazineDTO> magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
+                magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
 
                 mediaMagazines = FXCollections.observableArrayList();
                 for (int i = 0; i < magazineArrayList.size(); i++) {
