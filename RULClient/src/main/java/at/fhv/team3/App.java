@@ -5,7 +5,9 @@ import at.fhv.team3.domain.dto.DTO;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import javax.ejb.EJB;
 import javax.naming.InitialContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,7 +40,6 @@ public class App extends Application {
     private void connect() {
         try {
             //TODO: import jars
-            System.out.println("Test");
             Properties props = new Properties();
             props.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
             props.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
@@ -56,9 +57,11 @@ public class App extends Application {
             RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("SearchEJB");
             System.out.println("Remote access done");
             System.out.println(remoteInterface.getClass());
-            List<DTO> dto = remoteInterface.getAllBookDTOs();
-            for (DTO d : dto) {
-                System.out.println(d.getId());
+            ArrayList<ArrayList<DTO>> dto = remoteInterface.search("Das");
+            for (ArrayList<DTO> d : dto) {
+                for (DTO c : d) {
+                    System.out.println(c.getId());
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
