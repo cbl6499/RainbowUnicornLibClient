@@ -1,15 +1,13 @@
 package at.fhv.team3.application;
 
 import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
-import at.fhv.team3.domain.dto.DTO;
 
 import javax.naming.InitialContext;
-import java.util.ArrayList;
 import java.util.Properties;
 
 public class EJBConnect {
 
-    static private void connect(String ejbName) {
+    static private RemoteSearchBeanFace connect(String ejbName) {
         try {
             //TODO: import jars
             Properties props = new Properties();
@@ -27,16 +25,10 @@ public class EJBConnect {
             InitialContext ctx = new InitialContext(props);
             System.out.println("InitialContext done");
             RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup(ejbName);
-            System.out.println("Remote access done");
-            System.out.println(remoteInterface.getClass());
-            ArrayList<ArrayList<DTO>> dto = remoteInterface.search("Das");
-            for (ArrayList<DTO> d : dto) {
-                for (DTO c : d) {
-                    System.out.println(c.getId());
-                }
-            }
+            return remoteInterface;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 }
