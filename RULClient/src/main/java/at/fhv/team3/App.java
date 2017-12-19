@@ -43,18 +43,18 @@ public class App extends Application {
             //TODO: import jars
             System.out.println("Test");
             Properties props = new Properties();
-            System.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
-            System.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
-            System.setProperty("java.naming.factory.initial",
+            props.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
+            props.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
+            props.setProperty("java.naming.factory.initial",
                     "com.sun.enterprise.naming.SerialInitContextFactory");
-            System.setProperty("java.naming.factory.url.pkgs",
+            props.setProperty("java.naming.factory.url.pkgs",
                     "com.sun.enterprise.naming");
-            System.setProperty("java.naming.factory.state",
+            props.setProperty("java.naming.factory.state",
                     "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
             // props.setProperty("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
             // props.setProperty("org.omg.CORBA.ORBInitialPort", "3700"); //3700 Glassfish default port
 
-            InitialContext ctx = new InitialContext();
+            InitialContext ctx = new InitialContext(props);
             System.out.println("InitialContext done");
             RemoteSearchBeanFace remoteInterface = (RemoteSearchBeanFace) ctx.lookup("SearchEJB");
             System.out.println("Remote access done");
