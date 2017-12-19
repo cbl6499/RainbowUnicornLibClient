@@ -1,5 +1,6 @@
 package at.fhv.team3.presentation.home;
 
+        import at.fhv.team3.application.ConnectionType;
         import at.fhv.team3.application.LoggedInUser;
         import at.fhv.team3.application.ServerIP;
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
@@ -36,9 +37,6 @@ package at.fhv.team3.presentation.home;
         import javafx.stage.WindowEvent;
 
         import java.net.URL;
-        import java.rmi.Naming;
-        import java.rmi.NotBoundException;
-        import java.rmi.RemoteException;
         import java.rmi.registry.LocateRegistry;
         import java.rmi.registry.Registry;
         import java.util.ArrayList;
@@ -52,6 +50,8 @@ public class HomePresenter implements Initializable {
     private ObservableList<DvdDTO> _dvds;
     private ObservableList<MagazineDTO> _magazines;
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
 
     @FXML
@@ -123,7 +123,10 @@ public class HomePresenter implements Initializable {
         magazineTable.setPlaceholder(new Label("Bitte suchen!"));
 
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
+
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
 
         reloadMessagesCount();
 
@@ -296,13 +299,14 @@ public class HomePresenter implements Initializable {
 
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
-            try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+            if(connection == "RMI") {
+                try {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
 
                     ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());
 
-                    ArrayList<DTO> bookArrayList= allMedias.get(0);
+                    ArrayList<DTO> bookArrayList = allMedias.get(0);
                     ArrayList<DTO> dvdArrayList = allMedias.get(1);
                     ArrayList<DTO> magazineArrayList = allMedias.get(2);
 
@@ -312,12 +316,12 @@ public class HomePresenter implements Initializable {
                         BookDTO tempBook = new BookDTO(Integer.parseInt(bookResult.get("id")), bookResult.get("title"), bookResult.get("publisher"), bookResult.get("author"),
                                 bookResult.get("isbn"), bookResult.get("edition"), bookResult.get("pictureURL"), bookResult.get("shelfPos"));
                         Boolean bookfound = false;
-                        for(int j = 0; j < _books.size(); j++){
-                            if(_books.get(j).equals(tempBook)){
+                        for (int j = 0; j < _books.size(); j++) {
+                            if (_books.get(j).equals(tempBook)) {
                                 bookfound = true;
                             }
                         }
-                        if(!bookfound){
+                        if (!bookfound) {
                             _books.add(tempBook);
                         }
                     }
@@ -328,63 +332,63 @@ public class HomePresenter implements Initializable {
                         DvdDTO tempDvd = new DvdDTO(Integer.parseInt(dvdResult.get("id")), dvdResult.get("title"), dvdResult.get("regisseur"),
                                 dvdResult.get("pictureURL"), dvdResult.get("shelfPos"));
                         Boolean dvdfound = false;
-                        for(int j = 0; j < _dvds.size(); j++){
-                            if(_dvds.get(j).equals(tempDvd)){
+                        for (int j = 0; j < _dvds.size(); j++) {
+                            if (_dvds.get(j).equals(tempDvd)) {
                                 dvdfound = true;
                             }
                         }
-                        if(!dvdfound){
+                        if (!dvdfound) {
                             _dvds.add(tempDvd);
                         }
                     }
 
-                _magazines =  FXCollections.observableArrayList();
+                    _magazines = FXCollections.observableArrayList();
                     for (int i = 0; i < magazineArrayList.size(); i++) {
                         HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();
                         MagazineDTO tempMagazine = new MagazineDTO(Integer.parseInt(magazineResult.get("id")), magazineResult.get("title"), magazineResult.get("edition"),
                                 magazineResult.get("publisher"), magazineResult.get("pictureURL"), magazineResult.get("shelfPos"));
                         Boolean magazinefound = false;
-                        for(int j = 0; j < _magazines.size(); j++){
-                            if(_magazines.get(j).equals(tempMagazine)){
+                        for (int j = 0; j < _magazines.size(); j++) {
+                            if (_magazines.get(j).equals(tempMagazine)) {
                                 magazinefound = true;
                             }
                         }
-                        if(!magazinefound){
+                        if (!magazinefound) {
                             _magazines.add(tempMagazine);
                         }
                     }
 
-                    if(_books.isEmpty()){
+                    if (_books.isEmpty()) {
                         bookTable.setPlaceholder(new Label("Es wurde kein Buch für diesen Suchbegriff gefunden!"));
                     }
 
-                    if(_dvds.isEmpty()){
+                    if (_dvds.isEmpty()) {
                         dvdTable.setPlaceholder(new Label("Es wurde keine DVD für diesen Suchbegriff gefunden!"));
                     }
 
-                    if(_magazines.isEmpty()){
+                    if (_magazines.isEmpty()) {
                         magazineTable.setPlaceholder(new Label("Es wurde kein Magazin für diesen Suchbegriff gefunden!"));
                     }
 
-                    if(_books.isEmpty()){
+                    if (_books.isEmpty()) {
                         tabPane.getSelectionModel().select(1);
-                        if(_dvds.isEmpty()){
+                        if (_dvds.isEmpty()) {
                             tabPane.getSelectionModel().select(2);
-                            if(_magazines.isEmpty()){
+                            if (_magazines.isEmpty()) {
                                 tabPane.getSelectionModel().select(0);
                             }
                         }
-                    }else if(!_books.isEmpty()){
+                    } else if (!_books.isEmpty()) {
                         tabPane.getSelectionModel().select(0);
                     }
 
 
-                    if(bookTable.getColumns().isEmpty() && dvdTable.getColumns().isEmpty() && magazineTable.getColumns().isEmpty()){
+                    if (bookTable.getColumns().isEmpty() && dvdTable.getColumns().isEmpty() && magazineTable.getColumns().isEmpty()) {
                         bookTable.getColumns().setAll(bookTitle, bookAuthor, bookIsbn);
                         dvdTable.getColumns().setAll(dvdTitle, dvdRegisseur);
                         magazineTable.getColumns().setAll(magazineTitle, magazineEdition);
                     }
-              
+
                     bookTable.setItems(_books);
 
                     dvdTable.setItems(_dvds);
@@ -392,9 +396,12 @@ public class HomePresenter implements Initializable {
                     magazineTable.setItems(_magazines);
 
 
-            } catch (Exception e) {
-                System.out.println("HelloClient exception: " + e.getMessage());
-                e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println("HelloClient exception: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else if (connection == "EJB") {
+
             }
 
         }else{
