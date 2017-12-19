@@ -1,8 +1,11 @@
 package at.fhv.team3.presentation.home;
 
         import at.fhv.team3.application.ConnectionType;
+        import at.fhv.team3.application.EJBConnect;
         import at.fhv.team3.application.LoggedInUser;
         import at.fhv.team3.application.ServerIP;
+        import at.fhv.team3.applicationbean.interfaces.RemoteMessageConsumerBeanFace;
+        import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
         import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
         import at.fhv.team3.presentation.detailbook.DetailBookView;
         import at.fhv.team3.presentation.detailmagazin.DetailMagazinPresenter;
@@ -18,6 +21,7 @@ package at.fhv.team3.presentation.home;
         import at.fhv.team3.presentation.bibinfo.BibInfoView;
         import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
         import at.fhv.team3.rmi.interfaces.RMIMessageConsumer;
+        import com.sun.ejb.containers.EJBContextNamingProxy;
         import javafx.collections.FXCollections;
         import javafx.collections.ObservableList;
         import javafx.event.ActionEvent;
@@ -299,12 +303,21 @@ public class HomePresenter implements Initializable {
 
 
         if(!searchField.getText().isEmpty() && !searchField.getText().equals(" ")) {
-            if(connection == "RMI") {
                 try {
-                    Registry registry = LocateRegistry.getRegistry(host, 1099);
-                    RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                    ArrayList<ArrayList<DTO>> allMedias;
 
-                    ArrayList<ArrayList<DTO>> allMedias = searchMedia.search(searchField.getText());
+                    if(connection == "RMI") {
+                        Registry registry = LocateRegistry.getRegistry(host, 1099);
+                        RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                        allMedias = searchMedia.search(searchField.getText());
+                    } else if (connection == "EJB") {
+                        RemoteSearchBeanFace remoteSearchBeanFace = (RemoteSearchBeanFace) EJBConnect.connect("SearchEJB");
+                        allMedias = remoteSearchBeanFace.search(searchField.getText());
+                    } else {
+                        Registry registry = LocateRegistry.getRegistry(host, 1099);
+                        RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
+                        allMedias = searchMedia.search(searchField.getText());
+                    }
 
                     ArrayList<DTO> bookArrayList = allMedias.get(0);
                     ArrayList<DTO> dvdArrayList = allMedias.get(1);
@@ -400,11 +413,8 @@ public class HomePresenter implements Initializable {
                     System.out.println("HelloClient exception: " + e.getMessage());
                     e.printStackTrace();
                 }
-            } else if (connection == "EJB") {
 
-            }
-
-        }else{
+        } else {
             bookTable.getColumns().clear();
             bookTable.setPlaceholder(new Label("Eine leere Suche ergibt kein Ergebnis! Bitte geben sie einen Suchbegriff ein!"));
             dvdTable.getColumns().clear();
@@ -453,9 +463,15 @@ public class HomePresenter implements Initializable {
 
     public void reloadMessagesCount(){
         try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
-            int i = rmc.getMessageCount();
+            int i = 0;
+            if(connection == "RMI") {
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
+                RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
+                i = rmc.getMessageCount();
+            } else if (connection == "EJB") {
+                RemoteMessageConsumerBeanFace remoteMessageConsumerBeanFace = (RemoteMessageConsumerBeanFace) EJBConnect.connect("MessageEJB");
+                i = remoteMessageConsumerBeanFace.getMessageCount();
+            }
             String MessageCount = "";
             if(i > 99){
                 MessageCount = "99+";

@@ -3,11 +3,11 @@ package at.fhv.team3.application;
 import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
 
 import javax.naming.InitialContext;
+import java.io.Serializable;
 import java.util.Properties;
 
 public class EJBConnect {
-
-    static private RemoteSearchBeanFace connect(String ejbName) {
+    static public Serializable connect(String ejbName) {
         try {
             //TODO: import jars
             Properties props = new Properties();
