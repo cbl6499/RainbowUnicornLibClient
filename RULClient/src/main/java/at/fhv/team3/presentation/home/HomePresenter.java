@@ -460,11 +460,11 @@ public class HomePresenter implements Initializable {
     public void reloadMessagesCount(){
         try {
             int i = 0;
-            if(connection == "RMI") {
+            if(connection.equals("RMI")) {
                 Registry registry = LocateRegistry.getRegistry(host, 1099);
                 RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
                 i = rmc.getMessageCount();
-            } else if (connection == "EJB") {
+            } else if (connection.equals("EJB")) {
                 RemoteMessageConsumerBeanFace remoteMessageConsumerBeanFace = (RemoteMessageConsumerBeanFace) EJBConnect.connect("MessageEJB");
                 i = remoteMessageConsumerBeanFace.getMessageCount();
             }

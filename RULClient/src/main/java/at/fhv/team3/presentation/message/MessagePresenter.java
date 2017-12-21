@@ -1,7 +1,11 @@
 package at.fhv.team3.presentation.message;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.LoggedInUser;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteMessageConsumerBeanFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.presentation.bibinfo.BibInfoView;
 import at.fhv.team3.presentation.customermanagement.CustomerManagementView;
@@ -40,13 +44,21 @@ import java.util.ResourceBundle;
 
 public class MessagePresenter implements Initializable {
     private LoggedInUser _loggedInUser = null;
+
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
+
+
     private Boolean MessagesAvailable = true;
 
     public void initialize(URL location, ResourceBundle resources) {
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
+
         TextAreaMessage.setWrapText(true);
         //Login
         _loggedInUser = LoggedInUser.getInstance();
@@ -63,7 +75,6 @@ public class MessagePresenter implements Initializable {
         }
 
     }
-
 
     @FXML
     private Button LogoutButton;
@@ -139,51 +150,61 @@ public class MessagePresenter implements Initializable {
 
     //Anzahl der Nachrichten neuladen
     public void reloadMessagesCount(){
-        try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
-            int i = rmc.getMessageCount();
-            String MessageCount = "";
-            if(i > 99){
-                MessageCount = "99+";
-            } else {
-                MessageCount = "" + i;
-                if(MessageCount.equals("0")){
-                    MessagesAvailable = false;
+            try {
+                int i = 0;
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
+                    i = rmc.getMessageCount();
+                } else if (connection.equals("EJB")) {
+                    RemoteMessageConsumerBeanFace remoteMessageConsumerBeanFace = (RemoteMessageConsumerBeanFace) EJBConnect.connect("MessageEJB");
+                    i = remoteMessageConsumerBeanFace.getMessageCount();
                 }
-                changeMessageLoadButton();
+                String MessageCount = "";
+                if (i > 99) {
+                    MessageCount = "99+";
+                } else {
+                    MessageCount = "" + i;
+                    if (MessageCount.equals("0")) {
+                        MessagesAvailable = false;
+                    }
+                    changeMessageLoadButton();
+                }
+                messageCounter.setText(MessageCount);
+            } catch (Exception e) {
+                System.out.println("HelloClient exception: " + e.getMessage());
+                e.printStackTrace();
             }
-            messageCounter.setText(MessageCount);
-        } catch (Exception e) {
-            System.out.println("HelloClient exception: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     // Nachricht laden und anzeigen
     public void loadMessage(){
-        try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
-            MessageDTO message = (MessageDTO) rmc.pull();
-
-            if(!(message.getMessage().equals("No Messages found."))){
-                //Set Cotumer Lib
-                setLibCustomerInfo(message);
-                //Set Message
-                if(message.getMessage() != null || !(message.getMessage().trim().equals(""))){
-                    TextAreaMessage.setText(message.getMessage());
-                } else{
-                    TextAreaMessage.setText("keine Information vorhanden");
+            try {
+                MessageDTO message = new MessageDTO();
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIMessageConsumer rmc = (RMIMessageConsumer) registry.lookup("MessageConsumer");
+                    message = rmc.pull();
+                } else if (connection.equals("EJB")) {
+                    RemoteMessageConsumerBeanFace remoteMessageConsumerBeanFace = (RemoteMessageConsumerBeanFace ) EJBConnect.connect("MessageEJB");
+                    message = remoteMessageConsumerBeanFace.pull();
                 }
-                //reload
-                reloadMessagesCount();
-            }
+                if(!(message.getMessage().equals("No Messages found."))){
+                    //Set Cotumer Lib
+                    setLibCustomerInfo(message);
+                    //Set Message
+                    if(message.getMessage() != null || !(message.getMessage().trim().equals(""))){
+                        TextAreaMessage.setText(message.getMessage());
+                    } else{
+                        TextAreaMessage.setText("keine Information vorhanden");
+                    }
+                    //reload
+                    reloadMessagesCount();
+                }
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     // Kunden Informationen anzeigen

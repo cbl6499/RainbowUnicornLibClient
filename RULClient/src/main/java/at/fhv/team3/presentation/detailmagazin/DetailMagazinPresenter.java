@@ -185,10 +185,6 @@ public class DetailMagazinPresenter implements Initializable {
                     magazineArrayList = remoteSearchBeanFace.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
                 }
 
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIMediaSearch searchMedia = (RMIMediaSearch) registry.lookup("Search");
-                magazineArrayList = searchMedia.getMagazinesByTitleAndEdition(titel.getText(), edition.getText());
-
                 mediaMagazines = FXCollections.observableArrayList();
                 for (int i = 0; i < magazineArrayList.size(); i++) {
                     HashMap<String, String> magazineResult = magazineArrayList.get(i).getAllData();

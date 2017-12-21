@@ -1,6 +1,10 @@
 package at.fhv.team3.presentation.bookingMedia;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteBookingBeanFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteCustomerBeanFace;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.rmi.interfaces.RMIBooking;
 import at.fhv.team3.rmi.interfaces.RMICustomer;
@@ -36,6 +40,8 @@ public class BookingMediaPresenter implements Initializable {
     private MagazineDTO magazineDTO;
     ObservableList<BookedItemDTO> _bookings;
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
     private ValidationResult validationResult;
 
@@ -44,13 +50,14 @@ public class BookingMediaPresenter implements Initializable {
         date.setCellValueFactory(new PropertyValueFactory<>("start"));
 
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
 
         placeholder = new Label("Bitte suchen!");
         customerDropdown.setPlaceholder(placeholder);
 
         //setBookingTable();
-
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
             setInfo();
@@ -101,17 +108,26 @@ public class BookingMediaPresenter implements Initializable {
     void bookingMediaAction() {
         if (selectedItemfromComboBox.getSubscription()) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
-
-                if (bookDTO != null) {
-                    validationResult = rmiBooking.bookItem(bookDTO, selectedItemfromComboBox);
-                } else if (dvdDTO != null) {
-                    validationResult = rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox);
-                } else if (magazineDTO != null) {
-                    validationResult = rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox);
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIBooking rmiBooking = (RMIBooking) registry.lookup("Booking");
+                    if (bookDTO != null) {
+                        validationResult = rmiBooking.bookItem(bookDTO, selectedItemfromComboBox);
+                    } else if (dvdDTO != null) {
+                        validationResult = rmiBooking.bookItem(dvdDTO, selectedItemfromComboBox);
+                    } else if (magazineDTO != null) {
+                        validationResult = rmiBooking.bookItem(magazineDTO, selectedItemfromComboBox);
+                    }
+                }else if (connection.equals("EJB")) {
+                    RemoteBookingBeanFace remoteBookingBeanFace = (RemoteBookingBeanFace) EJBConnect.connect("BookingEJB");
+                    if (bookDTO != null) {
+                        validationResult = remoteBookingBeanFace.bookItem(bookDTO, selectedItemfromComboBox);
+                    } else if (dvdDTO != null) {
+                        validationResult = remoteBookingBeanFace.bookItem(dvdDTO, selectedItemfromComboBox);
+                    } else if (magazineDTO != null) {
+                        validationResult = remoteBookingBeanFace.bookItem(magazineDTO, selectedItemfromComboBox);
+                    }
                 }
-
                 if (!validationResult.hasErrors()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium reserviert", ButtonType.OK);
                     alert.setTitle("Success");
@@ -189,11 +205,15 @@ public class BookingMediaPresenter implements Initializable {
     void customerSearch() {
         if ((!(customerSearchField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
-
-                ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(customerSearchField.getText());
-
+                ArrayList<DTO> CustomersFound = null;
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
+                    CustomersFound = rmiCustomer.findCustomer(customerSearchField.getText());
+                }else if (connection.equals("EJB")) {
+                    RemoteCustomerBeanFace remoteCustomerBeanFace = (RemoteCustomerBeanFace) EJBConnect.connect("CustomerEJB");
+                    CustomersFound = remoteCustomerBeanFace.findCustomer(customerSearchField.getText());
+                }
                 _customer = FXCollections.observableArrayList();
                 for (int i = 0; i < CustomersFound.size(); i++) {
                     HashMap<String, String> customerResult = CustomersFound.get(i).getAllData();
@@ -289,16 +309,26 @@ public class BookingMediaPresenter implements Initializable {
     // Alle laufenden Reservierungen auf dieses Medium werden aufgelistet
     public void setBookingTable() {
         try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIBooking rmiBookings = (RMIBooking) registry.lookup("Booking");
-
             ArrayList<DTO> bookingslist = null;
-            if (bookDTO != null) {
-                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(bookDTO);
-            } else if (dvdDTO != null) {
-                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(dvdDTO);
-            } else if (magazineDTO != null) {
-                bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(magazineDTO);
+            if(connection.equals("RMI")) {
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
+                RMIBooking rmiBookings = (RMIBooking) registry.lookup("Booking");
+                if (bookDTO != null) {
+                    bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(bookDTO);
+                } else if (dvdDTO != null) {
+                    bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(dvdDTO);
+                } else if (magazineDTO != null) {
+                    bookingslist = (ArrayList<DTO>) rmiBookings.getBookingsForMedia(magazineDTO);
+                }
+            }else if (connection.equals("EJB")) {
+                RemoteBookingBeanFace remoteBookingBeanFace = (RemoteBookingBeanFace) EJBConnect.connect("BookingEJB");
+                if (bookDTO != null) {
+                    bookingslist = (ArrayList<DTO>) remoteBookingBeanFace.getBookingsForMedia(bookDTO);
+                } else if (dvdDTO != null) {
+                    bookingslist = (ArrayList<DTO>) remoteBookingBeanFace.getBookingsForMedia(dvdDTO);
+                } else if (magazineDTO != null) {
+                    bookingslist = (ArrayList<DTO>) remoteBookingBeanFace.getBookingsForMedia(magazineDTO);
+                }
             }
             if(bookingslist != null) {
                 _bookings = FXCollections.observableArrayList();

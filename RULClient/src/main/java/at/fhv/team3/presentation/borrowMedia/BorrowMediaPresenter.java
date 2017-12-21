@@ -1,6 +1,11 @@
 package at.fhv.team3.presentation.borrowMedia;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteBookingBeanFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteBorrowBeanFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteCustomerBeanFace;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
 import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
@@ -42,6 +47,8 @@ public class BorrowMediaPresenter implements Initializable {
     private DetailBookPresenter dbp = null;
     private ValidationResult validationResult;
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,7 +56,9 @@ public class BorrowMediaPresenter implements Initializable {
         customerDropdown.setPlaceholder(placeholder);
 
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
 
         customerDropdown.setOnAction((event) -> {
             selectedItemfromComboBox = customerDropdown.getSelectionModel().getSelectedItem();
@@ -93,17 +102,26 @@ public class BorrowMediaPresenter implements Initializable {
         if(selectedItemfromComboBox.getSubscription()) {
 
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
-
-                if (bookDTO != null) {
-                    validationResult = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
-                } else if (dvdDTO != null) {
-                    validationResult = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
-                } else if (magazineDTO != null) {
-                    validationResult = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
+                    if (bookDTO != null) {
+                        validationResult = rmiBorrow.handOut(bookDTO, selectedItemfromComboBox);
+                    } else if (dvdDTO != null) {
+                        validationResult = rmiBorrow.handOut(dvdDTO, selectedItemfromComboBox);
+                    } else if (magazineDTO != null) {
+                        validationResult = rmiBorrow.handOut(magazineDTO, selectedItemfromComboBox);
+                    }
+                }else if (connection.equals("EJB")) {
+                    RemoteBorrowBeanFace remoteBorrowBeanFace = (RemoteBorrowBeanFace) EJBConnect.connect("BorrowEJB");
+                    if (bookDTO != null) {
+                        validationResult = remoteBorrowBeanFace.handOut(bookDTO, selectedItemfromComboBox);
+                    } else if (dvdDTO != null) {
+                        validationResult = remoteBorrowBeanFace.handOut(dvdDTO, selectedItemfromComboBox);
+                    } else if (magazineDTO != null) {
+                        validationResult = remoteBorrowBeanFace.handOut(magazineDTO, selectedItemfromComboBox);
+                    }
                 }
-
                 if (!validationResult.hasErrors()) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium ausgeliehen", ButtonType.OK);
                     alert.setTitle("Success");
@@ -131,7 +149,6 @@ public class BorrowMediaPresenter implements Initializable {
                         stage.close();
                     }
                 }
-
             } catch (Exception e) {
                 System.out.println("HelloClient exception: " + e.getMessage());
                 e.printStackTrace();
@@ -180,11 +197,15 @@ public class BorrowMediaPresenter implements Initializable {
     void customerSearch() {
         if((!(customerSearchField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
-
-                ArrayList<DTO> customersFound = rmiCustomer.findCustomer(customerSearchField.getText());
-
+                ArrayList<DTO> customersFound = null;
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
+                    customersFound = rmiCustomer.findCustomer(customerSearchField.getText());
+                }else if (connection.equals("EJB")) {
+                    RemoteCustomerBeanFace remoteCustomerBeanFace = (RemoteCustomerBeanFace) EJBConnect.connect("CustomerEJB");
+                    customersFound = remoteCustomerBeanFace.findCustomer(customerSearchField.getText());
+                }
                 _customer = FXCollections.observableArrayList();
                 for (int i = 0; i < customersFound.size(); i++) {
                     HashMap<String, String> customerResult = customersFound.get(i).getAllData();

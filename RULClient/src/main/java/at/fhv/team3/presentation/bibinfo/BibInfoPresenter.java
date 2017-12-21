@@ -1,8 +1,8 @@
 package at.fhv.team3.presentation.bibinfo;
 
-import at.fhv.team3.application.EasyCrypt;
-import at.fhv.team3.application.LoggedInUser;
-import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.application.*;
+import at.fhv.team3.applicationbean.interfaces.RemoteLdapConnectionFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteMessageConsumerBeanFace;
 import at.fhv.team3.domain.dto.EmployeeDTO;
 import at.fhv.team3.presentation.home.HomeView;
 import at.fhv.team3.rmi.interfaces.RMILdap;
@@ -26,11 +26,19 @@ import java.util.ResourceBundle;
 public class BibInfoPresenter implements Initializable {
     private LoggedInUser _loggedInUser = null;
     private Boolean _firstVisit = false;
+
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
 
 
+
     public void initialize(URL location, ResourceBundle resources) {
+        serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
+        host = serverIP.getServer();
+        connection = connectionType.getConnection();
         //Login
         _loggedInUser = LoggedInUser.getInstance();
         if(_loggedInUser.isLoggedIn() == false){
@@ -39,8 +47,6 @@ public class BibInfoPresenter implements Initializable {
         } else {
             loginpane.setVisible(false);
         }
-        serverIP = ServerIP.getInstance();
-        host = serverIP.getServer();
     }
 
     @FXML
@@ -99,13 +105,23 @@ public class BibInfoPresenter implements Initializable {
         Registry registry = null;
         if(false == _loggedInUser.isLoggedIn()) {
             try {
-                registry = LocateRegistry.getRegistry(host, 1099);
-                RMILdap rmiEmployee = (RMILdap) registry.lookup("Ldap");
                 EmployeeDTO empoyeeToLoggin = null;
-                PublicKey pk = rmiEmployee.getPublicKey().getPublicKey();
-                EasyCrypt ecPub = new EasyCrypt(pk, "RSA");
-                if(!(username.getText().isEmpty()) || !(password.getText().isEmpty())){
-                   empoyeeToLoggin =  (EmployeeDTO) rmiEmployee.authenticateUser(ecPub.encrypt(username.getText()),ecPub.encrypt(password.getText()));
+                if(connection.equals("RMI")) {
+                    registry = LocateRegistry.getRegistry(host, 1099);
+                    RMILdap rmiEmployee = (RMILdap) registry.lookup("Ldap");
+
+                    PublicKey pk = rmiEmployee.getPublicKey().getPublicKey();
+                    EasyCrypt ecPub = new EasyCrypt(pk, "RSA");
+                    if (!(username.getText().isEmpty()) || !(password.getText().isEmpty())) {
+                        empoyeeToLoggin = (EmployeeDTO) rmiEmployee.authenticateUser(ecPub.encrypt(username.getText()), ecPub.encrypt(password.getText()));
+                    }
+                } else if (connection.equals("EJB")) {
+                    RemoteLdapConnectionFace remoteLdapConnectionFace = (RemoteLdapConnectionFace ) EJBConnect.connect("LdapEJB");
+                    PublicKey pk = remoteLdapConnectionFace.getPublicKey().getPublicKey();
+                    EasyCrypt ecPub = new EasyCrypt(pk, "RSA");
+                    if (!(username.getText().isEmpty()) || !(password.getText().isEmpty())) {
+                        empoyeeToLoggin = (EmployeeDTO) remoteLdapConnectionFace.authenticateUser(ecPub.encrypt(username.getText()), ecPub.encrypt(password.getText()));
+                    }
                 }
                 if (empoyeeToLoggin != null && empoyeeToLoggin.isLoggedIn()) {
                     _loggedInUser.setUser((EmployeeDTO)empoyeeToLoggin);

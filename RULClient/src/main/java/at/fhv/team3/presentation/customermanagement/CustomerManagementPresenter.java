@@ -1,6 +1,9 @@
 package at.fhv.team3.presentation.customermanagement;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteCustomerBeanFace;
 import at.fhv.team3.domain.dto.BookDTO;
 import at.fhv.team3.domain.dto.CustomerDTO;
 import at.fhv.team3.domain.dto.DTO;
@@ -35,6 +38,8 @@ public class CustomerManagementPresenter implements Initializable {
     private Label placeholder;
     CustomerDTO selectedItemfromComboBox;
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -42,7 +47,9 @@ public class CustomerManagementPresenter implements Initializable {
         resultCustomer.setPlaceholder(placeholder);
 
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
 
         resultCustomer.setOnAction((event) -> {
             selectedItemfromComboBox = resultCustomer.getSelectionModel().getSelectedItem();
@@ -109,11 +116,15 @@ public class CustomerManagementPresenter implements Initializable {
     public void findCustomer(){
         if((!(searchCostumerField.getText().trim().equals("")))) {
             try {
-                Registry registry = LocateRegistry.getRegistry(host, 1099);
-                RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
-
-                ArrayList<DTO> CustomersFound = rmiCustomer.findCustomer(searchCostumerField.getText());
-
+                ArrayList<DTO> CustomersFound = null;
+                if(connection.equals("RMI")) {
+                    Registry registry = LocateRegistry.getRegistry(host, 1099);
+                    RMICustomer rmiCustomer = (RMICustomer) registry.lookup("Customer");
+                    CustomersFound = rmiCustomer.findCustomer(searchCostumerField.getText());
+                }else if (connection.equals("EJB")) {
+                    RemoteCustomerBeanFace remoteCustomerBeanFace = (RemoteCustomerBeanFace) EJBConnect.connect("CustomerEJB");
+                    CustomersFound = remoteCustomerBeanFace.findCustomer(searchCostumerField.getText());
+                }
                 _customers = FXCollections.observableArrayList();
                 for (int i = 0; i < CustomersFound.size(); i++) {
                     HashMap<String, String> customerResult = CustomersFound.get(i).getAllData();

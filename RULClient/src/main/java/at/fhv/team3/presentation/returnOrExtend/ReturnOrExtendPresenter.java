@@ -1,6 +1,10 @@
 package at.fhv.team3.presentation.returnOrExtend;
 
+import at.fhv.team3.application.ConnectionType;
+import at.fhv.team3.application.EJBConnect;
 import at.fhv.team3.application.ServerIP;
+import at.fhv.team3.applicationbean.interfaces.RemoteBorrowBeanFace;
+import at.fhv.team3.applicationbean.interfaces.RemoteCustomerBeanFace;
 import at.fhv.team3.domain.dto.*;
 import at.fhv.team3.presentation.detailbook.DetailBookPresenter;
 import at.fhv.team3.presentation.detaildvd.DetailDvdPresenter;
@@ -36,11 +40,15 @@ public class ReturnOrExtendPresenter implements Initializable {
     private DetailBookPresenter dbp = null;
     private ValidationResult validationResult;
     private ServerIP serverIP;
+    private ConnectionType connectionType;
+    private String connection;
     private String host;
 
     public void initialize(URL location, ResourceBundle resources) {
         serverIP = ServerIP.getInstance();
+        connectionType = ConnectionType.getInstance();
         host = serverIP.getServer();
+        connection = connectionType.getConnection();
     }
 
     @FXML
@@ -127,15 +135,25 @@ public class ReturnOrExtendPresenter implements Initializable {
     // Der Kunde der derzeit das Medium ausgeliehen hat wird gesetzt
     public void setCustomerDTO(){
         try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
-
-            if (bookDTO != null) {
-                customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(bookDTO);
-            } else if (dvdDTO != null) {
-                customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(dvdDTO);
-            } else if (magazineDTO != null) {
-                customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(magazineDTO);
+            if(connection.equals("RMI")) {
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
+                RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
+                if (bookDTO != null) {
+                    customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(bookDTO);
+                } else if (dvdDTO != null) {
+                    customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(dvdDTO);
+                } else if (magazineDTO != null) {
+                    customerDTO = (CustomerDTO) rmiBorrow.getCustomerByMedia(magazineDTO);
+                }
+            }else if (connection.equals("EJB")) {
+                RemoteBorrowBeanFace remoteBorrowBeanFace = (RemoteBorrowBeanFace) EJBConnect.connect("BorrowEJB");
+                if (bookDTO != null) {
+                    customerDTO = (CustomerDTO) remoteBorrowBeanFace.getCustomerByMedia(bookDTO);
+                } else if (dvdDTO != null) {
+                    customerDTO = (CustomerDTO) remoteBorrowBeanFace.getCustomerByMedia(dvdDTO);
+                } else if (magazineDTO != null) {
+                    customerDTO = (CustomerDTO) remoteBorrowBeanFace.getCustomerByMedia(magazineDTO);
+                }
             }
         } catch (Exception e) {
             System.out.println("HelloClient exception: " + e.getMessage());
@@ -147,17 +165,26 @@ public class ReturnOrExtendPresenter implements Initializable {
     @FXML
     void borrowMediaExtendAction(ActionEvent event) {
         try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
-
-            if (bookDTO != null) {
-                validationResult = rmiBorrow.extend(bookDTO);
-            } else if (dvdDTO != null) {
-                validationResult = rmiBorrow.extend(dvdDTO);
-            } else if (magazineDTO != null) {
-                validationResult = rmiBorrow.extend(magazineDTO);
+            if(connection.equals("RMI")) {
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
+                RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
+                if (bookDTO != null) {
+                    validationResult = rmiBorrow.extend(bookDTO);
+                } else if (dvdDTO != null) {
+                    validationResult = rmiBorrow.extend(dvdDTO);
+                } else if (magazineDTO != null) {
+                    validationResult = rmiBorrow.extend(magazineDTO);
+                }
+            }else if (connection.equals("EJB")) {
+                RemoteBorrowBeanFace remoteBorrowBeanFace = (RemoteBorrowBeanFace) EJBConnect.connect("BorrowEJB");
+                if (bookDTO != null) {
+                    validationResult = remoteBorrowBeanFace.extend(bookDTO);
+                } else if (dvdDTO != null) {
+                    validationResult = remoteBorrowBeanFace.extend(dvdDTO);
+                } else if (magazineDTO != null) {
+                    validationResult = remoteBorrowBeanFace.extend(magazineDTO);
+                }
             }
-
             if (!validationResult.hasErrors()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium verlängert", ButtonType.OK);
                 alert.setTitle("Success");
@@ -189,17 +216,26 @@ public class ReturnOrExtendPresenter implements Initializable {
     @FXML
     void borrowMediaReturnAction(ActionEvent event) {
         try {
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
-
-            if (bookDTO != null) {
-                validationResult = rmiBorrow.handIn(bookDTO);
-            } else if (dvdDTO != null) {
-                validationResult = rmiBorrow.handIn(dvdDTO);
-            } else if (magazineDTO != null) {
-                validationResult = rmiBorrow.handIn(magazineDTO);
+            if(connection.equals("RMI")) {
+                Registry registry = LocateRegistry.getRegistry(host, 1099);
+                RMIBorrow rmiBorrow = (RMIBorrow) registry.lookup("Borrow");
+                if (bookDTO != null) {
+                    validationResult = rmiBorrow.handIn(bookDTO);
+                } else if (dvdDTO != null) {
+                    validationResult = rmiBorrow.handIn(dvdDTO);
+                } else if (magazineDTO != null) {
+                    validationResult = rmiBorrow.handIn(magazineDTO);
+                }
+            }else if (connection.equals("EJB")) {
+                RemoteBorrowBeanFace remoteBorrowBeanFace = (RemoteBorrowBeanFace) EJBConnect.connect("BorrowEJB");
+                if (bookDTO != null) {
+                    validationResult = remoteBorrowBeanFace.handIn(bookDTO);
+                } else if (dvdDTO != null) {
+                    validationResult = remoteBorrowBeanFace.handIn(dvdDTO);
+                } else if (magazineDTO != null) {
+                    validationResult = remoteBorrowBeanFace.handIn(magazineDTO);
+                }
             }
-
             if (!validationResult.hasErrors()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Erfolgreich Medium zurückgegeben", ButtonType.OK);
                 alert.setTitle("Success");
