@@ -1,6 +1,7 @@
 package at.fhv.team3.application;
 
 import at.fhv.team3.applicationbean.interfaces.RemoteSearchBeanFace;
+import org.apache.catalina.Server;
 
 import javax.naming.InitialContext;
 import java.io.Serializable;
@@ -8,10 +9,11 @@ import java.util.Properties;
 
 public class EJBConnect {
     static public Serializable connect(String ejbName) {
+
         try {
             //TODO: import jars
             Properties props = new Properties();
-            props.setProperty("org.omg.CORBA.ORBInitialHost", "localhost");
+            props.setProperty("org.omg.CORBA.ORBInitialHost", ServerIP.getInstance().getServer());
             props.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
             props.setProperty("java.naming.factory.initial",
                     "com.sun.enterprise.naming.SerialInitContextFactory");
