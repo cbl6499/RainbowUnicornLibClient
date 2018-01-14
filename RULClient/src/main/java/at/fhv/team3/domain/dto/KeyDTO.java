@@ -3,7 +3,7 @@ package at.fhv.team3.domain.dto;
 import java.security.PublicKey;
 import java.util.HashMap;
 
-public class KeyDTO extends DTO{
+public class KeyDTO extends DTO {
     private PublicKey publickey = null;
 
     public void setId(int id) {

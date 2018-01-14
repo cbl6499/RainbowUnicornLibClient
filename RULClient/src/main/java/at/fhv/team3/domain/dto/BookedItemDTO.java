@@ -1,5 +1,6 @@
 package at.fhv.team3.domain.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -104,7 +105,10 @@ public class BookedItemDTO extends DTO {
         HashMap<String, String> allData = new HashMap<String, String>();
         allData.put("id", ""+_bookingId);
         allData.put("customer", _customer.getFirstName() + " " + _customer.getLastName());
-        allData.put("date", _date.toString());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM HH:mm:ss z YYYY");
+        allData.put("date", sdf.format(_date));
+
         if (_book != null) {
             allData.put("book", _book.toString());
         } else if (_dvd != null) {

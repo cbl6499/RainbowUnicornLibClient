@@ -1,5 +1,6 @@
 package at.fhv.team3.domain.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -93,7 +94,9 @@ public class BorrowedItemDTO extends DTO {
         } else if (_customer != null) {
             allData.put("customer", _customer.toString());
         }
-        allData.put("date", _borrowedDate.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM HH:mm:ss z YYYY");
+        allData.put("borrowedDate", sdf.format(_borrowedDate));
+
         if (_book != null) {
             allData.put("book", _book.toString());
         } else if (_dvd != null) {
@@ -124,7 +127,7 @@ public class BorrowedItemDTO extends DTO {
             sb.append(map.get("customer") + " ");
         }
 
-        sb.append(map.get("date") + " ");
+        sb.append(map.get("borrowedDate") + " ");
 
         if (map.containsKey("book")) {
             sb.append(map.get("book"));

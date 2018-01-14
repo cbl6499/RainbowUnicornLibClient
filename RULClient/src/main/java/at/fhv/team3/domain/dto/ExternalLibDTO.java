@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by David on 10/30/2017.
  */
-public class ExternalLibDTO extends DTO{
+public class ExternalLibDTO extends DTO {
 
     private int _libId;
     private String _name;
@@ -13,6 +13,12 @@ public class ExternalLibDTO extends DTO{
 
     public ExternalLibDTO(){
 
+    }
+
+    public ExternalLibDTO(int id, String name, String accountData){
+        _libId = id;
+        _name = name;
+        _accountData = accountData;
     }
 
     public void setLibId(int id){

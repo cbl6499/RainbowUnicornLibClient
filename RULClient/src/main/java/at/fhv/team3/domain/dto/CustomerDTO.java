@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by David on 10/30/2017.
  */
-public class CustomerDTO extends DTO{
+public class CustomerDTO extends DTO {
 
     private int _customerId;
     private String _firstName;

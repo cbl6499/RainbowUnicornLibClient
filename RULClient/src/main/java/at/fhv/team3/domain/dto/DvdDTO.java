@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by David on 10/30/2017.
  */
-public class DvdDTO extends DTO{
+public class DvdDTO extends DTO {
 
     private int _dvdId;
     private String _title;

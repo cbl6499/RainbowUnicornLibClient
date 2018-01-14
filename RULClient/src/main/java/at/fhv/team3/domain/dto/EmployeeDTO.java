@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by David on 10/30/2017.
  */
-public class EmployeeDTO extends DTO{
+public class EmployeeDTO extends DTO {
 
     private int _employeeId;
     private String _firstName;

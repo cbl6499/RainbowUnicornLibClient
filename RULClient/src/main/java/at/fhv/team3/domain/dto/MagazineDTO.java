@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by David on 10/30/2017.
  */
-public class MagazineDTO extends DTO{
+public class MagazineDTO extends DTO {
 
     private int _magazineId;
     private String _title;
